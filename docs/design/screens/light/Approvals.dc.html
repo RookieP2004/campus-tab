@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Principal approvals</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1D4ED8}a:hover{color:#1E40AF}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; align-items: stretch; min-height: 100vh; background: #F8FAFC; font-family: Inter, system-ui, sans-serif; color: #0F172A">
+<dc-import name="Sidebar" active="approvals" role="Principal" person-name="Dr. Meera Iyer" initials="MI" hint-size="248px,960px"></dc-import>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 32px; background: #FFFFFF; border-bottom: 1px solid #E2E8F0">
+<label style="display: flex; align-items: center; gap: 8px; flex: 1 1 280px; max-width: 480px; height: 40px; padding: 0 12px; border: 1px solid #E2E8F0; border-radius: 10px; background: #F8FAFC; color: #475569; font-size: 14px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+<input type="search" aria-label="Search" placeholder="Search students, staff, receipts…" style="flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; color: #0F172A; outline: none">
+</label>
+<a href="Main.dc.html" style="margin-left: auto; font-size: 14px; font-weight: 500; text-decoration: none">Back to dashboard</a>
+</header>
+
+<div style="padding: 28px 32px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1180px; width: 100%; box-sizing: border-box">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div>
+<h1 style="margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.01em">Approvals</h1>
+<p style="margin: 4px 0 0; font-size: 14px; color: #475569">Leave, mark corrections and fee adjustments waiting for your decision.</p>
+</div>
+<div role="tablist" aria-label="Filter" style="display: flex; gap: 4px; padding: 4px; background: #F1F5F9; border-radius: 10px">
+<button type="button" role="tab" aria-selected="true" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #FFFFFF; font: 600 13px Inter, sans-serif; color: #0F172A">All 4</button>
+<button type="button" role="tab" aria-selected="false" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; font: 500 13px Inter, sans-serif; color: #475569">Leave 2</button>
+<button type="button" role="tab" aria-selected="false" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; font: 500 13px Inter, sans-serif; color: #475569">Marks 1</button>
+<button type="button" role="tab" aria-selected="false" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; font: 500 13px Inter, sans-serif; color: #475569">Fees 1</button>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+<ul style="flex: 1 1 320px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<li style="background: #EFF6FF; border: 2px solid #1D4ED8; border-radius: 12px; padding: 14px 16px"><div style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 12px; font-weight: 600; color: #334155">LEAVE</span><span style="font-size: 12px; color: #475569">26 Nov, 10:40</span></div><div style="font-size: 14px; font-weight: 600; margin-top: 4px">Anjali Verma · Casual leave</div><div style="font-size: 13px; color: #475569; margin-top: 2px">3–4 Dec · 2 days · verified by Clerk</div></li>
+<li style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 16px"><div style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 12px; font-weight: 600; color: #334155">MARKS</span><span style="font-size: 12px; color: #475569">26 Nov, 9:55</span></div><div style="font-size: 14px; font-weight: 600; margin-top: 4px">Science 8-A · Roll 14: 32 → 36</div><div style="font-size: 13px; color: #475569; margin-top: 2px">Unit Test 1 (locked) · requested by Rakesh Sharma</div></li>
+<li style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 16px"><div style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 12px; font-weight: 600; color: #334155">FEE</span><span style="font-size: 12px; color: #475569">25 Nov, 4:20</span></div><div style="font-size: 14px; font-weight: 600; margin-top: 4px">Waiver · Aarav Patel, 7-B</div><div style="font-size: 13px; color: #475569; margin-top: 2px">₹100 late fine · proposed by Clerk</div></li>
+<li style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 16px"><div style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 12px; font-weight: 600; color: #334155">LEAVE</span><span style="font-size: 12px; color: #475569">25 Nov, 3:05</span></div><div style="font-size: 14px; font-weight: 600; margin-top: 4px">Mohd. Imran · Sick leave</div><div style="font-size: 13px; color: #475569; margin-top: 2px">27 Nov · 1 day · verified by Clerk</div></li>
+</ul>
+
+<section style="flex: 2 1 520px; min-width: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #FCE7F3; color: #9D174D; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center">AV</div>
+<div style="flex: 1 1 200px"><h2 style="margin: 0; font-size: 18px; font-weight: 600">Anjali Verma</h2><div style="font-size: 13px; color: #475569">Class teacher 7-B · Mathematics</div></div>
+<sc-if value="{{pending}}" hint-placeholder-val="{{ true }}"><span style="font-size: 12px; font-weight: 600; color: #B45309; background: #FFFBEB; border-radius: 999px; padding: 5px 12px">Waiting for you</span></sc-if>
+<sc-if value="{{approved}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; color: #15803D; background: #F0FDF4; border-radius: 999px; padding: 5px 12px">Approved</span></sc-if>
+<sc-if value="{{rejected}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; color: #B91C1C; background: #FEF2F2; border-radius: 999px; padding: 5px 12px">Rejected</span></sc-if>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 140px; background: #F8FAFC; border-radius: 10px; padding: 12px 14px"><div style="font-size: 12px; color: #475569">Leave type</div><div style="font-size: 15px; font-weight: 600; margin-top: 2px">Casual leave</div></div>
+<div style="flex: 1 1 140px; background: #F8FAFC; border-radius: 10px; padding: 12px 14px"><div style="font-size: 12px; color: #475569">Dates</div><div style="font-size: 15px; font-weight: 600; margin-top: 2px">Wed 3 – Thu 4 Dec</div></div>
+<div style="flex: 1 1 140px; background: #F8FAFC; border-radius: 10px; padding: 12px 14px"><div style="font-size: 12px; color: #475569">Days</div><div style="font-size: 15px; font-weight: 600; margin-top: 2px">2</div></div>
+<div style="flex: 1 1 140px; background: #F8FAFC; border-radius: 10px; padding: 12px 14px"><div style="font-size: 12px; color: #475569">Casual leave balance</div><div style="font-size: 15px; font-weight: 600; margin-top: 2px">8 of 12 → 6 after</div></div>
+</div>
+
+<div><div style="font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px">REASON</div><p style="margin: 0; font-size: 14px">Family wedding in Indore. Lesson plans for both days are shared with the department.</p></div>
+
+<div>
+<div style="font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 10px">STEPS</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<li style="display: flex; gap: 12px"><div style="display: flex; flex-direction: column; align-items: center"><span style="width: 24px; height: 24px; border-radius: 50%; background: #15803D; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg></span><span style="width: 2px; flex: 1; min-height: 20px; background: #CBD5E1"></span></div><div style="padding-bottom: 14px"><div style="font-size: 14px; font-weight: 600">Submitted by Anjali Verma</div><div style="font-size: 13px; color: #475569">26 Nov, 9:12 am</div></div></li>
+<li style="display: flex; gap: 12px"><div style="display: flex; flex-direction: column; align-items: center"><span style="width: 24px; height: 24px; border-radius: 50%; background: #15803D; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg></span><span style="width: 2px; flex: 1; min-height: 20px; background: #CBD5E1"></span></div><div style="padding-bottom: 14px"><div style="font-size: 14px; font-weight: 600">Verified by Ramesh Kumar, Clerk</div><div style="font-size: 13px; color: #475569">26 Nov, 10:40 am · “Balance OK. No exams on these days. 6 periods need cover.”</div></div></li>
+<li style="display: flex; gap: 12px"><div style="display: flex; flex-direction: column; align-items: center">
+<sc-if value="{{pending}}" hint-placeholder-val="{{ true }}"><span style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 2px solid #B45309; background: #FFFBEB"></span></sc-if>
+<sc-if value="{{approved}}" hint-placeholder-val="{{ false }}"><span style="width: 24px; height: 24px; border-radius: 50%; background: #15803D; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg></span></sc-if>
+<sc-if value="{{rejected}}" hint-placeholder-val="{{ false }}"><span style="width: 24px; height: 24px; border-radius: 50%; background: #B91C1C; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></sc-if>
+</div><div><div style="font-size: 14px; font-weight: 600">Principal's decision</div><div style="font-size: 13px; color: #475569">{{stepNote}}</div></div></li>
+</ol>
+</div>
+
+<div>
+<div style="font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 6px">PERIODS THAT NEED COVER</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 420px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="background: #F8FAFC"><th style="text-align: left; font-size: 12px; font-weight: 600; color: #475569; padding: 8px 10px">Day</th><th style="text-align: left; font-size: 12px; font-weight: 600; color: #475569; padding: 8px 10px">Period</th><th style="text-align: left; font-size: 12px; font-weight: 600; color: #475569; padding: 8px 10px">Class</th><th style="text-align: left; font-size: 12px; font-weight: 600; color: #475569; padding: 8px 10px">Subject</th></tr></thead>
+<tbody>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 8px 10px">Wed 3 Dec</td><td style="padding: 8px 10px">1</td><td style="padding: 8px 10px">7-B</td><td style="padding: 8px 10px">Maths</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 8px 10px">Wed 3 Dec</td><td style="padding: 8px 10px">3</td><td style="padding: 8px 10px">7-B</td><td style="padding: 8px 10px">Maths</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 8px 10px">Wed 3 Dec</td><td style="padding: 8px 10px">5</td><td style="padding: 8px 10px">8-A</td><td style="padding: 8px 10px">Maths</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 8px 10px">Thu 4 Dec</td><td style="padding: 8px 10px">1</td><td style="padding: 8px 10px">7-B</td><td style="padding: 8px 10px">Maths</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 8px 10px">Thu 4 Dec</td><td style="padding: 8px 10px">2</td><td style="padding: 8px 10px">8-B</td><td style="padding: 8px 10px">Maths</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 8px 10px">Thu 4 Dec</td><td style="padding: 8px 10px">6</td><td style="padding: 8px 10px">8-B</td><td style="padding: 8px 10px">Maths</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<sc-if value="{{pending}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 12px; padding-top: 16px; border-top: 1px solid #E2E8F0">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #334155">Remark (required if you reject)<textarea rows="2" placeholder="Optional for approval" style="font: 400 14px Inter, sans-serif; padding: 10px 12px; border: 1px solid #CBD5E1; border-radius: 8px; resize: vertical"></textarea></label>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" onClick="{{approve}}" style="height: 44px; padding: 0 22px; border: 0; border-radius: 10px; background: #15803D; color: #FFFFFF; font: 600 14px Inter, sans-serif">Approve</button>
+<button type="button" style="height: 44px; padding: 0 18px; border: 1px solid #CBD5E1; border-radius: 10px; background: #FFFFFF; color: #0F172A; font: 600 14px Inter, sans-serif">Approve with other dates</button>
+<button type="button" onClick="{{reject}}" style="height: 44px; padding: 0 18px; border: 1px solid #FCA5A5; border-radius: 10px; background: #FFFFFF; color: #B91C1C; font: 600 14px Inter, sans-serif">Reject</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{decided}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 10px; background: #F8FAFC">
+<span style="flex: 1 1 260px; font-size: 14px">{{doneNote}}</span>
+<button type="button" onClick="{{reset}}" style="height: 40px; padding: 0 14px; border: 1px solid #CBD5E1; border-radius: 8px; background: #FFFFFF; font: 600 13px Inter, sans-serif; color: #0F172A">Undo (demo)</button>
+</div>
+</sc-if>
+</section>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1170}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { decision: null };
+  }
+  renderVals() {
+    const d = this.state.decision;
+    return {
+      pending: d === null,
+      approved: d === 'approved',
+      rejected: d === 'rejected',
+      decided: d !== null,
+      stepNote: d === 'approved' ? 'Approved by Dr. Meera Iyer · just now' : d === 'rejected' ? 'Rejected by Dr. Meera Iyer · just now' : 'Waiting for you',
+      doneNote: d === 'approved' ? 'Approved. Anjali Verma has been told, 2 days are taken from her balance, and the 6 periods are on the cover list.' : 'Rejected. Anjali Verma has been told, with your remark, and her balance is unchanged.',
+      approve: () => this.setState({ decision: 'approved' }),
+      reject: () => this.setState({ decision: 'rejected' }),
+      reset: () => this.setState({ decision: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

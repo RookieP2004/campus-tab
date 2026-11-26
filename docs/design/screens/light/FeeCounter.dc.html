@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fee counter</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1D4ED8}a:hover{color:#1E40AF}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; align-items: stretch; min-height: 100vh; background: #F8FAFC; font-family: Inter, system-ui, sans-serif; color: #0F172A">
+<dc-import name="Sidebar" active="fees" role="Clerk · Fee collector" person-name="Ramesh Kumar" initials="RK" hint-size="248px,960px"></dc-import>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 32px; background: #FFFFFF; border-bottom: 1px solid #E2E8F0">
+<label style="display: flex; align-items: center; gap: 8px; flex: 1 1 280px; max-width: 480px; height: 40px; padding: 0 12px; border: 1px solid #1D4ED8; border-radius: 10px; background: #FFFFFF; color: #475569; font-size: 14px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+<input type="search" aria-label="Find a student" value="Aarav Patel" readonly style="flex: 1; min-width: 0; border: 0; background: transparent; font: 500 14px Inter, sans-serif; color: #0F172A; outline: none">
+</label>
+<div style="margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="font-size: 13px; color: #475569">Your counter today: <strong style="color: #0F172A">9 receipts · ₹45,500</strong></span>
+<button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #CBD5E1; border-radius: 10px; background: #FFFFFF; font: 600 14px Inter, sans-serif; color: #0F172A">Close my day</button>
+</div>
+</header>
+
+<div style="padding: 28px 32px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 1180px; width: 100%; box-sizing: border-box">
+<h1 style="margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.01em">Fee counter</h1>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+<section style="flex: 3 1 520px; min-width: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center">
+<div style="width: 48px; height: 48px; border-radius: 50%; background: #DCFCE7; color: #166534; font-weight: 700; display: flex; align-items: center; justify-content: center">AP</div>
+<div style="flex: 1 1 220px"><h2 style="margin: 0; font-size: 18px; font-weight: 600">Aarav Patel</h2><div style="font-size: 13px; color: #475569">7-B · Roll 2 · Adm. no. SPS/2019/0457 · Regular · Bus route 4</div></div>
+<div style="font-size: 13px; color: #475569; text-align: right">Parent: Suresh Patel<br>Sibling: Riya Patel, 3-A</div>
+</div>
+
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="background: #F8FAFC"><th scope="col" style="width: 44px; padding: 10px"><span style="position: absolute; left: -9999px">Pay</span></th><th scope="col" style="text-align: left; padding: 10px 8px; font-size: 12px; font-weight: 600; color: #475569">Due</th><th scope="col" style="text-align: left; padding: 10px 8px; font-size: 12px; font-weight: 600; color: #475569">Due date</th><th scope="col" style="text-align: left; padding: 10px 8px; font-size: 12px; font-weight: 600; color: #475569">Status</th><th scope="col" style="text-align: right; padding: 10px 12px; font-size: 12px; font-weight: 600; color: #475569">Amount</th></tr></thead>
+<tbody>
+<sc-for list="{{dues}}" as="d" hint-placeholder-count="5">
+<tr style="border-top: 1px solid #F1F5F9">
+<td style="padding: 10px; text-align: center"><input type="checkbox" checked="{{d.checked}}" onChange="{{d.toggle}}" aria-label="{{d.aria}}" style="width: 18px; height: 18px; accent-color: #1D4ED8"></td>
+<td style="padding: 10px 8px; font-weight: 500">{{d.label}}</td>
+<td style="padding: 10px 8px; color: #475569">{{d.date}}</td>
+<td style="padding: 10px 8px"><span style="font-size: 12px; font-weight: 600; border-radius: 999px; padding: 4px 10px; color: {{d.chipFg}}; background: {{d.chipBg}}">{{d.status}}</span></td>
+<td style="padding: 10px 12px; text-align: right; font-weight: 600">₹{{d.amountText}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<div style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 10px; background: #FFFBEB; color: #78350F; font-size: 13px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+<span>The ₹100 late fine has a waiver waiting for the Principal. It is left unticked so the parent pays it only if the waiver is refused.</span>
+</div>
+</section>
+
+<section style="flex: 2 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Take payment</h2>
+<div><div style="font-size: 13px; color: #475569">Selected dues</div><div style="font-size: 32px; font-weight: 700; letter-spacing: -0.02em">₹{{totalText}}</div></div>
+<sc-if value="{{open}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div><div style="font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 8px">Paid by</div>
+<div role="group" aria-label="Payment mode" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="5"><button type="button" onClick="{{m.pick}}" aria-pressed="{{m.on}}" style="height: 40px; padding: 0 12px; border-radius: 8px; font: 600 13px Inter, sans-serif; border: 1px solid {{m.border}}; background: {{m.bg}}; color: {{m.fg}}">{{m.label}}</button></sc-for>
+</div></div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #334155">{{refLabel}}<input type="text" placeholder="{{refHint}}" style="height: 40px; padding: 0 12px; border: 1px solid #CBD5E1; border-radius: 8px; font: 400 14px Inter, sans-serif"></label>
+<sc-if value="{{isCheque}}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: #475569">The dues show <strong>Pending clearance</strong> until the cheque clears. A bounced cheque reverses the payment.</div></sc-if>
+<button type="button" onClick="{{collect}}" style="height: 48px; border: 0; border-radius: 10px; background: #1D4ED8; color: #FFFFFF; font: 600 15px Inter, sans-serif">Collect ₹{{totalText}} and print receipt</button>
+<div style="font-size: 12px; color: #475569">Next receipt: SPS/2026-27/004812 · numbers are never reused</div>
+</div>
+</sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 10px; background: #F0FDF4; color: #14532D">
+<div style="font-size: 15px; font-weight: 600">Receipt SPS/2026-27/004812</div>
+<div style="font-size: 14px">₹{{paidText}} received by {{paidMode}}. The receipt is printing and a copy is in Suresh Patel's app.</div>
+<button type="button" onClick="{{reset}}" style="align-self: flex-start; height: 40px; padding: 0 14px; border: 1px solid #86EFAC; border-radius: 8px; background: #FFFFFF; font: 600 13px Inter, sans-serif; color: #14532D">Next student</button>
+</div>
+</sc-if>
+</section>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 8px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Fee history · 2026-27</h2><span style="font-size: 13px; color: #475569">Entries are only added, never edited. A mistake is undone by a reversal the Principal approves.</span></div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 720px; border-collapse: collapse; font-size: 14px">
+<thead><tr style="background: #F8FAFC"><th scope="col" style="text-align: left; padding: 10px 12px; font-size: 12px; font-weight: 600; color: #475569">Date</th><th scope="col" style="text-align: left; padding: 10px 8px; font-size: 12px; font-weight: 600; color: #475569">Entry</th><th scope="col" style="text-align: left; padding: 10px 8px; font-size: 12px; font-weight: 600; color: #475569">Details</th><th scope="col" style="text-align: right; padding: 10px 8px; font-size: 12px; font-weight: 600; color: #475569">Added</th><th scope="col" style="text-align: right; padding: 10px 8px; font-size: 12px; font-weight: 600; color: #475569">Paid or reduced</th><th scope="col" style="text-align: right; padding: 10px 12px; font-size: 12px; font-weight: 600; color: #475569">Balance</th></tr></thead>
+<tbody>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 10px 12px; color: #475569">1 Apr</td><td style="padding: 10px 8px; font-weight: 500">Dues raised</td><td style="padding: 10px 8px; color: #475569">Annual charges</td><td style="padding: 10px 8px; text-align: right">₹6,000</td><td style="padding: 10px 8px; text-align: right">—</td><td style="padding: 10px 12px; text-align: right">₹6,000</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 10px 12px; color: #475569">5 Apr</td><td style="padding: 10px 8px; font-weight: 500">Payment</td><td style="padding: 10px 8px; color: #475569">Online, UPI · SPS/2026-27/000318</td><td style="padding: 10px 8px; text-align: right">—</td><td style="padding: 10px 8px; text-align: right; color: #15803D">₹6,000</td><td style="padding: 10px 12px; text-align: right">₹0</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td colspan="6" style="padding: 10px 12px; font-size: 13px; color: #475569">May to September: 10 entries, all paid on time · <a href="#" style="text-decoration: none; font-weight: 500">Show</a></td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 10px 12px; color: #475569">1 Oct</td><td style="padding: 10px 8px; font-weight: 500">Dues raised</td><td style="padding: 10px 8px; color: #475569">October tuition and transport</td><td style="padding: 10px 8px; text-align: right">₹4,400</td><td style="padding: 10px 8px; text-align: right">—</td><td style="padding: 10px 12px; text-align: right">₹4,400</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 10px 12px; color: #475569">20 Oct</td><td style="padding: 10px 8px; font-weight: 500">Late fine</td><td style="padding: 10px 8px; color: #475569">October tuition, 10 days late</td><td style="padding: 10px 8px; text-align: right">₹100</td><td style="padding: 10px 8px; text-align: right">—</td><td style="padding: 10px 12px; text-align: right">₹4,500</td></tr>
+<tr style="border-top: 1px solid #F1F5F9"><td style="padding: 10px 12px; color: #475569">1 Nov</td><td style="padding: 10px 8px; font-weight: 500">Dues raised</td><td style="padding: 10px 8px; color: #475569">November tuition and transport</td><td style="padding: 10px 8px; text-align: right">₹4,400</td><td style="padding: 10px 8px; text-align: right">—</td><td style="padding: 10px 12px; text-align: right">₹8,900</td></tr>
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}"><tr style="border-top: 1px solid #F1F5F9; background: #F0FDF4"><td style="padding: 10px 12px; color: #475569">26 Nov</td><td style="padding: 10px 8px; font-weight: 500">Payment</td><td style="padding: 10px 8px; color: #475569">Counter, {{paidMode}} · SPS/2026-27/004812 · Ramesh Kumar</td><td style="padding: 10px 8px; text-align: right">—</td><td style="padding: 10px 8px; text-align: right; color: #15803D">₹{{paidText}}</td><td style="padding: 10px 12px; text-align: right; font-weight: 600">₹{{balanceText}}</td></tr></sc-if>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: { t_oct: true, f_oct: false, tr_oct: true, t_nov: true, tr_nov: true }, mode: 'Cash', done: false, paid: 0, paidMode: '' };
+  }
+  renderVals() {
+    const fmt = (n) => n.toLocaleString('en-IN');
+    const defs = [
+      { id: 't_oct', label: 'Tuition · October', date: '10 Oct', amount: 3200, status: 'Overdue', chipFg: '#B91C1C', chipBg: '#FEF2F2' },
+      { id: 'f_oct', label: 'Late fine · October tuition', date: '20 Oct', amount: 100, status: 'Waiver proposed', chipFg: '#B45309', chipBg: '#FFFBEB' },
+      { id: 'tr_oct', label: 'Transport · October', date: '10 Oct', amount: 1200, status: 'Overdue', chipFg: '#B91C1C', chipBg: '#FEF2F2' },
+      { id: 't_nov', label: 'Tuition · November', date: '30 Nov', amount: 3200, status: 'Due', chipFg: '#334155', chipBg: '#F1F5F9' },
+      { id: 'tr_nov', label: 'Transport · November', date: '30 Nov', amount: 1200, status: 'Due', chipFg: '#334155', chipBg: '#F1F5F9' }
+    ];
+    const sel = this.state.sel;
+    let total = 0;
+    const dues = defs.map((d) => {
+      if (sel[d.id]) total += d.amount;
+      const paidNow = this.state.done && sel[d.id];
+      return Object.assign({}, d, paidNow ? { status: 'Paid', chipFg: '#15803D', chipBg: '#F0FDF4' } : {}, {
+        checked: !!sel[d.id], amountText: fmt(d.amount), aria: 'Pay ' + d.label,
+        toggle: () => this.setState({ sel: Object.assign({}, sel, { [d.id]: !sel[d.id] }), done: false })
+      });
+    });
+    const labels = { 'Cash': ['Cash received (₹)', 'e.g. 9,000'], 'UPI': ['UPI reference number', '12-digit UTR'], 'Cheque': ['Cheque number and bank', 'e.g. 004512, SBI'], 'DD': ['Demand draft number and bank', 'e.g. 778201, PNB'], 'Bank transfer': ['Transaction ID', 'From the bank statement'] };
+    const modes = ['Cash', 'UPI', 'Cheque', 'DD', 'Bank transfer'].map((m) => {
+      const on = m === this.state.mode;
+      return { label: m, on: on, border: on ? '#1D4ED8' : '#CBD5E1', bg: on ? '#EFF6FF' : '#FFFFFF', fg: on ? '#1D4ED8' : '#334155', pick: () => this.setState({ mode: m }) };
+    });
+    const lab = labels[this.state.mode];
+    return {
+      dues: dues, modes: modes, totalText: fmt(total),
+      refLabel: lab[0], refHint: lab[1], isCheque: this.state.mode === 'Cheque',
+      open: !this.state.done, done: this.state.done,
+      paidText: fmt(this.state.paid), paidMode: this.state.paidMode.toLowerCase(), balanceText: fmt(8900 - this.state.paid),
+      collect: () => { if (total > 0) this.setState({ done: true, paid: total, paidMode: this.state.mode }); },
+      reset: () => this.setState({ done: false, paid: 0, paidMode: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

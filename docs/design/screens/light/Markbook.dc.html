@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Markbook, 8-A Science</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1D4ED8}a:hover{color:#1E40AF}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; align-items: stretch; min-height: 100vh; background: #F8FAFC; font-family: Inter, system-ui, sans-serif; color: #0F172A">
+<dc-import name="Sidebar" active="tests" role="Subject teacher, Science" person-name="Rakesh Sharma" initials="RS" hint-size="248px,960px"></dc-import>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 32px; background: #FFFFFF; border-bottom: 1px solid #E2E8F0">
+<nav aria-label="Breadcrumb" style="font-size: 14px; color: #475569; display: flex; gap: 8px; flex-wrap: wrap"><a href="#" style="text-decoration: none">Tests and marks</a><span>/</span><a href="#" style="text-decoration: none">Unit Test 2</a><span>/</span><span style="color: #0F172A; font-weight: 600">8-A Science</span></nav>
+<span style="margin-left: auto; font-size: 13px; color: #475569">Saved automatically · 2 min ago</span>
+</header>
+
+<div style="padding: 28px 32px 40px; display: flex; flex-direction: column; gap: 18px; max-width: 1180px; width: 100%; box-sizing: border-box">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.01em">8-A · Science · Unit Test 2</h1>
+<span style="font-size: 12px; font-weight: 600; color: #B45309; background: #FFFBEB; border-radius: 999px; padding: 5px 12px">Open for entry · closes Fri 28 Nov, 5:00 pm</span>
+<div style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #CBD5E1; border-radius: 10px; background: #FFFFFF; font: 600 14px Inter, sans-serif; color: #0F172A">Paste from Excel</button>
+<sc-if value="{{noErrors}}" hint-placeholder-val="{{ false }}"><button type="button" style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #1D4ED8; font: 600 14px Inter, sans-serif; color: #FFFFFF">Submit to class teacher</button></sc-if>
+<sc-if value="{{hasErrors}}" hint-placeholder-val="{{ true }}"><button type="button" disabled style="height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #CBD5E1; font: 600 14px Inter, sans-serif; color: #334155">{{errorText}}</button></sc-if>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px; color: #334155">
+<span><strong>Max marks</strong> 40</span><span><strong>Test date</strong> Mon 24 Nov</span><span><strong>Syllabus</strong> Chapters 8–10</span><span><strong>Codes</strong> AB absent · ML medical</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px"><div style="font-size: 12px; color: #475569">Entered</div><div style="font-size: 20px; font-weight: 700">{{entered}} <span style="font-size: 14px; font-weight: 500; color: #475569">of 38</span></div></div>
+<div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px"><div style="font-size: 12px; color: #475569">Average</div><div style="font-size: 20px; font-weight: 700">{{average}}</div></div>
+<div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px"><div style="font-size: 12px; color: #475569">Highest</div><div style="font-size: 20px; font-weight: 700">{{highest}}</div></div>
+<div style="flex: 1 1 150px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px"><div style="font-size: 12px; color: #475569">Absent</div><div style="font-size: 20px; font-weight: 700">{{absent}}</div></div>
+</div>
+
+<div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; overflow-x: auto">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+<thead>
+<tr style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0">
+<th scope="col" style="width: 56px; text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 600; color: #475569">Roll</th>
+<th scope="col" style="text-align: left; padding: 12px 8px; font-size: 12px; font-weight: 600; color: #475569">Student</th>
+<th scope="col" style="width: 140px; text-align: left; padding: 12px 8px; font-size: 12px; font-weight: 600; color: #475569">Marks out of 40</th>
+<th scope="col" style="width: 170px; text-align: left; padding: 12px 8px; font-size: 12px; font-weight: 600; color: #475569">Lab file out of 10 <span style="margin-left: 4px; font-size: 11px; font-weight: 600; color: #6D28D9; background: #F5F3FF; border-radius: 4px; padding: 2px 6px">Your column</span></th>
+<th scope="col" style="text-align: left; padding: 12px 16px 12px 8px; font-size: 12px; font-weight: 600; color: #475569">Remark</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{rows}}" as="row" hint-placeholder-count="12">
+<tr style="border-top: 1px solid #F1F5F9">
+<td style="padding: 8px 16px; color: #475569">{{row.roll}}</td>
+<td style="padding: 8px; font-weight: 500">{{row.name}}</td>
+<td style="padding: 8px; vertical-align: top">
+<input type="text" inputmode="numeric" aria-label="{{row.marksLabel}}" value="{{row.marks}}" onChange="{{row.onMarks}}" style="width: 88px; height: 36px; box-sizing: border-box; padding: 0 10px; border: 1px solid {{row.marksBorder}}; background: {{row.marksBg}}; border-radius: 8px; font: 600 14px Inter, sans-serif; color: #0F172A">
+<sc-if value="{{row.marksBad}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-size: 12px; font-weight: 600; color: #B91C1C">{{row.marksMsg}}</div></sc-if>
+</td>
+<td style="padding: 8px; vertical-align: top">
+<input type="text" inputmode="numeric" aria-label="{{row.labLabel}}" value="{{row.lab}}" onChange="{{row.onLab}}" style="width: 88px; height: 36px; box-sizing: border-box; padding: 0 10px; border: 1px solid {{row.labBorder}}; background: {{row.labBg}}; border-radius: 8px; font: 600 14px Inter, sans-serif; color: #0F172A">
+<sc-if value="{{row.labBad}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-size: 12px; font-weight: 600; color: #B91C1C">{{row.labMsg}}</div></sc-if>
+</td>
+<td style="padding: 8px 16px 8px 8px; vertical-align: top"><input type="text" aria-label="{{row.remarkLabel}}" value="{{row.remark}}" onChange="{{row.onRemark}}" placeholder="Optional" style="width: 100%; min-width: 160px; height: 36px; box-sizing: border-box; padding: 0 10px; border: 1px solid #CBD5E1; border-radius: 8px; font: 400 14px Inter, sans-serif; color: #0F172A"></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<div style="padding: 12px 16px; border-top: 1px solid #E2E8F0; font-size: 13px; color: #475569">Showing rolls 1–12 of 38 · Tab moves across, Enter moves down, paste a column straight from Excel</div>
+</div>
+
+<div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 10px; background: #EFF6FF; color: #1E3A8A; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg>
+<span>After you submit, Pooja Saxena (class teacher, 8-A) checks the class's papers, then the Principal or Clerk locks them and results go to students and parents. Once locked, a mark can change only with the Principal's approval.</span>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1140}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { rows: [
+      { roll: 1, name: 'Aditya Kulkarni', marks: '34', lab: '9', remark: '' },
+      { roll: 2, name: 'Ananya Bose', marks: '38', lab: '10', remark: 'Neat diagrams' },
+      { roll: 3, name: 'Bhavya Jain', marks: '29', lab: '7', remark: '' },
+      { roll: 4, name: 'Chirag Mehta', marks: 'AB', lab: '', remark: 'Absent, fever' },
+      { roll: 5, name: 'Devika Pillai', marks: '36', lab: '9', remark: '' },
+      { roll: 6, name: 'Eshan Reddy', marks: '43', lab: '8', remark: '' },
+      { roll: 7, name: 'Fatima Siddiqui', marks: '31', lab: '8', remark: '' },
+      { roll: 8, name: 'Gaurav Thakur', marks: '27', lab: '6', remark: '' },
+      { roll: 9, name: 'Harini Subramaniam', marks: '39', lab: '10', remark: '' },
+      { roll: 10, name: 'Ishaan Chopra', marks: '', lab: '', remark: '' },
+      { roll: 11, name: 'Jaya Mishra', marks: '', lab: '', remark: '' },
+      { roll: 12, name: 'Karan Malhotra', marks: '', lab: '', remark: '' }
+    ] };
+  }
+  update(i, field, value) {
+    const rows = this.state.rows.slice();
+    rows[i] = Object.assign({}, rows[i], { [field]: value });
+    this.setState({ rows: rows });
+  }
+  renderVals() {
+    const check = (v, max) => {
+      const t = String(v).trim().toUpperCase();
+      if (t === '') return { ok: true, empty: true };
+      if (t === 'AB' || t === 'ML') return { ok: true, code: true };
+      const n = Number(t);
+      if (!Number.isFinite(n) || n < 0) return { ok: false, msg: 'Use 0–' + max + ', AB or ML' };
+      if (n > max) return { ok: false, msg: 'More than ' + max };
+      return { ok: true, n: n };
+    };
+    let entered = 0, absent = 0, sum = 0, cnt = 0, high = 0, errors = 0;
+    const rows = this.state.rows.map((r, i) => {
+      const m = check(r.marks, 40);
+      const l = check(r.lab, 10);
+      if (m.ok && !m.empty) entered++;
+      if (m.code) absent++;
+      if (m.n !== undefined) { sum += m.n; cnt++; if (m.n > high) high = m.n; }
+      if (!m.ok) errors++;
+      if (!l.ok) errors++;
+      return Object.assign({}, r, {
+        marksBorder: m.ok ? '#CBD5E1' : '#B91C1C', marksBg: m.ok ? '#FFFFFF' : '#FEF2F2', marksBad: !m.ok, marksMsg: m.msg || '',
+        labBorder: l.ok ? '#CBD5E1' : '#B91C1C', labBg: l.ok ? '#FFFFFF' : '#FEF2F2', labBad: !l.ok, labMsg: l.msg || '',
+        marksLabel: 'Marks for ' + r.name, labLabel: 'Lab file for ' + r.name, remarkLabel: 'Remark for ' + r.name,
+        onMarks: (e) => this.update(i, 'marks', e.target.value),
+        onLab: (e) => this.update(i, 'lab', e.target.value),
+        onRemark: (e) => this.update(i, 'remark', e.target.value)
+      });
+    });
+    return {
+      rows: rows, entered: entered, absent: absent, errors: errors,
+      errorText: errors === 1 ? 'Fix 1 mark to submit' : 'Fix ' + errors + ' marks to submit',
+      hasErrors: errors > 0, noErrors: errors === 0,
+      average: cnt ? (sum / cnt).toFixed(1) : '–', highest: cnt ? String(high) : '–'
+    };
+  }
+}
+</script>
+</body>
+</html>
