@@ -88,10 +88,21 @@ jobs:
         run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
 
       - name: Pest
-        run: vendor/bin/pest
+        run: vendor/bin/pest --parallel
 
       - name: Generated report sections are up to date
         run: php artisan report:generate --check
+
+      # The OpenAPI spec is generated from the code; the committed copy in
+      # packages/api must match it (the frontend job checks the client).
+      - name: OpenAPI spec is up to date
+        run: |
+          php artisan scramble:export --path=/tmp/openapi.json
+          if ! cmp -s /tmp/openapi.json ../packages/api/openapi.json; then
+            echo "packages/api/openapi.json is out of date. Run: docker compose exec api php artisan scramble:export"
+            diff <(head -c 4000 ../packages/api/openapi.json) <(head -c 4000 /tmp/openapi.json) || true
+            exit 1
+          fi
 
   frontend:
     name: Frontend (ESLint, tsc, Vitest, build)
@@ -106,6 +117,9 @@ jobs:
 
       - name: Install npm packages
         run: npm ci --no-audit --no-fund
+
+      - name: API client is up to date with the OpenAPI spec
+        run: npm run check --workspace @campus-tab/api
 
       - name: ESLint
         run: npm run lint --workspace @campus-tab/frontend

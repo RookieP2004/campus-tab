@@ -20,9 +20,12 @@ function changedFiles() {
   return out.split('\n').map((f) => f.trim()).filter(Boolean);
 }
 
+/** Module folders whose report page has a longer name. */
+const PAGE_ALIASES = { Identity: 'identity-and-access' };
+
 /** "AcademicStructure" -> "academic-structure" */
 function kebab(name) {
-  return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  return PAGE_ALIASES[name] ?? name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 const CODE = /^(backend|frontend|packages|apps|infra)\//;

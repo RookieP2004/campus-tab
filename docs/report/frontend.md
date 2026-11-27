@@ -67,6 +67,53 @@ The web app in [`frontend/`](../../frontend/) is one React 19 + TypeScript codeb
 - **Below 1024 px:** the sidebar hides and the top bar shows the compact brand lockup (28 px mark).
 - Phase 3 completes it: icon rail at 768-1023 px, bottom tabs under 768 px, search, notifications and the profile menu.
 
+## Talking to the API (Phase 1 part C)
+
+- **The client.** Every request goes through the typed client in [`packages/api`](../../packages/api/src/index.ts). It is generated from the OpenAPI spec (`packages/api/openapi.json`), which is exported from the Laravel code. [`lib/api.ts`](../../frontend/src/lib/api.ts) makes the one client and adds `apiGet()` for TanStack queries.
+- **Cookie only.** The web app signs in with the session cookie only. No token, challenge or password is ever written to localStorage or sessionStorage; a test checks this. localStorage holds only display preferences and the public school code.
+- **CSRF.** Changes send `X-XSRF-TOKEN` from Laravel's cookie (fetched from `/sanctum/csrf-cookie` when missing; one retry on 419).
+- **Background requests.** A refetch of data already on screen, or anything polled, sends `X-Background-Request: 1` and never extends the idle time. [`stores/activity.ts`](../../frontend/src/stores/activity.ts) remembers the last real request, and the idle warning counts from it.
+- **Session ended.** A 401 `session_expired` / `session_revoked` sets [`stores/session.ts`](../../frontend/src/stores/session.ts). [`RequireSession`](../../frontend/src/features/auth/RequireSession.tsx) then shows sign-in over the page without unmounting it, so forms keep their input.
+
+## Screens before sign-in and the console
+
+| Path | Screen |
+| --- | --- |
+| `/school` | School code, with the school's branding from the public config |
+| `/sign-in`, `/sign-in/parent` | Password then MFA or recovery code; parent SMS code |
+| `/password/forgot`, `/password/set`, `/password/reset` | Forgot password; links from email |
+| `/activate` | Licence key → code → Chief Admin |
+| `/mfa/enrol` | QR code, key, recovery codes (download, print) |
+| `/account/sessions` | Signed-in devices |
+| `/console/…` | The platform console ([modules/platform.md](modules/platform.md)) |
+
+Brand stack top-left on every screen: Campus TAB, then the school's logo and name, with the school's accent as a thin strip. Every string is in `locales/en` and `locales/hi`.
+
+## Phase 2 screens (signed-in shell)
+
+| Path | Screen | File |
+| --- | --- | --- |
+| `/setup` | Setup wizard: profile and logo, year, classes and sections, subjects, staff and teaching, import | [`features/setup/SetupWizardPage.tsx`](../../frontend/src/features/setup/SetupWizardPage.tsx) |
+| `/students` | Student list: TanStack Table, the person's custom columns, a column chooser remembered per user, section filter, search | [`features/people/StudentListPage.tsx`](../../frontend/src/features/people/StudentListPage.tsx) |
+| `/students/new` | Admit: duplicate check, seat message, PEN/APAAR consent, Aadhaar last 4 only | [`features/people/AdmitStudentPage.tsx`](../../frontend/src/features/people/AdmitStudentPage.tsx) |
+| `/students/:id` | Profile with tabs: details, guardians and parent login, custom fields, consents and IDs | [`features/people/StudentProfilePage.tsx`](../../frontend/src/features/people/StudentProfilePage.tsx) |
+| `/staff`, `/staff/:id` | Staff list and profile; "Draft for the Principal"; approve or reject drafts; a setup code shown once | [`features/people/StaffPages.tsx`](../../frontend/src/features/people/StaffPages.tsx) |
+| `/imports/:entity` | Import: template, upload, progress (polled as background requests), seat check first, row report, download, commit | [`features/people/ImportPage.tsx`](../../frontend/src/features/people/ImportPage.tsx) |
+| `/sections/:id/setup-codes` | Student setup codes for the class, printable | [`features/people/SetupCodesPage.tsx`](../../frontend/src/features/people/SetupCodesPage.tsx) |
+| `/settings/custom-fields` | Custom-field manager, filtered by the person's level; the scope picker offers only their own scopes | [`features/customisation/CustomFieldsPage.tsx`](../../frontend/src/features/customisation/CustomFieldsPage.tsx) |
+
+- **API calls:** `features/{academic,people,customisation}/api.ts`.
+- **Permissions in the UI:** [`features/auth/permissions.ts`](../../frontend/src/features/auth/permissions.ts).
+- **Downloads:** templates and reports, through [`lib/requests.ts`](../../frontend/src/lib/requests.ts), with the session cookie.
+- **Errors:** `unwrap()` and `apiErrorFrom()` in `packages/api` build the error from the body openapi-fetch already read, so the server's code and message reach the screen.
+
+**Console additions** ([`features/console/ConsoleSchoolExtras.tsx`](../../frontend/src/features/console/ConsoleSchoolExtras.tsx)):
+
+- **School page cards:** usage and seats, the security overview (counts), the client record, payments, licence history, support grants.
+- **Renew:** a dialog.
+- **Alerts:** a page at `/console/alerts`.
+- **School list:** plan, end date, seats used, active users, modules and open alerts.
+
 ## Local development notes
 
 - Open the app at **http://127.0.0.1:5173**, never `localhost`: sign-in cookies (Phase 1) are tied to one host name.

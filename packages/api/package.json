@@ -2,8 +2,26 @@
   "name": "@campus-tab/api",
   "version": "0.1.0",
   "private": true,
-  "description": "Typed client for the Campus TAB API, generated from the OpenAPI spec (Phase 1).",
+  "description": "Typed client for the Campus TAB API, generated from the OpenAPI spec.",
   "author": "Sujal Chandel",
   "license": "UNLICENSED",
-  "type": "module"
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "files": [
+    "src",
+    "openapi.json"
+  ],
+  "scripts": {
+    "generate": "openapi-typescript openapi.json --output src/schema.ts --root-types --alphabetize",
+    "check": "node scripts/check-generated.mjs"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.17.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.13.0"
+  }
 }

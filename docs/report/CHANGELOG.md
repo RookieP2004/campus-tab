@@ -2,6 +2,310 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-27 · Phase 2 · School setup, people and customisation (items 1–7)
+
+**What changed:**
+
+- **Academic Structure (item 1):**
+  - years, one of them current
+  - classes and sections, each section with a wing and a class teacher
+  - subjects, and teaching assignments (one teacher per subject-section)
+- **People (item 2):**
+  - students, guardians, enrolments, staff and consents
+  - siblings share a guardian with the same phone
+  - PEN and APAAR are kept only with a consent record
+- **Excel import (item 3):**
+  - an .xlsx template that includes the school-wide custom fields
+  - a queued dry run (`RunImport` on Horizon) with progress and a downloadable report: ok, error or duplicate per row
+  - duplicates checked on name + date of birth + guardian phone
+  - a queued commit, where every record carries `meta.import_batch_id` in the audit log (`AuditRecorder::withMeta`) and one `import.committed` entry closes it
+- **Custom fields (item 4):**
+  - owner level and scope: school, wing, section, subject-section
+  - values in `custom`; section columns sit on the year's enrolment
+  - archive instead of delete; promote to school-wide (Principal or Chief)
+  - level and scope checked on every change
+  - at most 50 per scope; duplicate labels blocked
+- **Screens (items 5 and 6):** setup wizard, student list (TanStack Table with custom columns and a column chooser), student profile with tabs, admit, staff list and profile, custom-field manager, import, student setup codes. See [frontend.md](frontend.md).
+- **Demo school (item 7):** `DemoSchoolSeeder`, Sunrise Public School (`SUNRISE-BPL`), with the made-up people of `docs/design/`.
+- **Owner's rules:**
+  1. **Scope resolvers** come from records:
+     - **child:** guardians linked to the account
+     - **class:** sections' class teacher
+     - **subject:** teaching assignments
+     - **wing:** the staff record's wings
+
+     Only the current year counts. The stored `users.access` field is gone. `GET /me` returns `scope`. Each resolver has its own test.
+  2. **Parent login** on a guardian makes one Parent account (phone required, SMS-code sign-in) for all that guardian's children. A teacher who is also a parent gets the Parent role added instead.
+  3. **The Clerk's draft for the Principal:** no account until the Principal approves; then it is made with the drafted roles, checked against the approver's level. Drafts can also be rejected.
+  4. **Student sign-in** is the setting `sign_in.methods` containing `student_login`, off by default. Class teachers print setup codes (48 hours); students sign in with a login name made from the admission number. With the setting off, student password sign-in gets the same answer as a wrong password.
+  5. **Aadhaar:**
+     - `no-aadhaar` middleware on every school request refuses any field holding a full Aadhaar number (12 digits passing the Verhoeff check), alone or in text; import cells are checked too
+     - custom fields for Aadhaar or bank numbers are refused (English and Hindi)
+     - only `ids.aadhaar_last4` may be kept
+  6. **Import** is queued with progress; the report can be downloaded; the commit is audited under one batch id.
+  7. **Seats** (see the part C addendum below for staff seats): past the licence is refused with a clear message, and the dry run shows it first.
+  8. **The demo seeder's one known dev password** (`sunrise-demo-2026`); it refuses to run outside `APP_ENV` local or testing. The sign-ins are in [how-to/demo-school.md](how-to/demo-school.md).
+- **Also:**
+  - school logo upload (`POST /config/logo`; served by `GET /public/tenants/{code}/logo`; SVG refused)
+  - `identity:sync-roles --with-new-permissions` gives existing schools the Phase 2 permissions
+  - new abilities: `academic.*`, `students.admit`, `students.login_codes`, `guardians.manage`, `staff.*`, `imports.*`
+  - `packages/api`: `unwrap()` now builds errors from the body openapi-fetch already read. Before, every non-401 error showed as a network error.
+
+**Why:** Phase 2 of `docs/BUILD-PROMPTS.md`, with the owner's rules 1–8.
+
+**Files:**
+
+- **Back end:**
+  - `backend/app/Modules/{AcademicStructure,People,Customisation}/**` (new)
+  - `backend/app/Support/{Models/SchoolModel.php,Privacy/*}`
+  - `backend/app/Modules/Identity/{Domain/Scopes/{AccessScopeSource,SubjectScope}.php,Domain/{SignInService,PasswordLinks,SystemRoles}.php,Console/SyncRolesCommand.php,Models/{User,SchoolRole}.php,Http/Controllers/MeController.php}`
+  - `backend/app/Modules/Tenancy/{Http/Controllers/SchoolLogoController.php,routes.php,Schemas/school-config.schema.json}`
+  - `backend/app/Modules/Audit/Domain/AuditRecorder.php`
+  - `backend/bootstrap/{app,providers}.php`
+  - `backend/config/{permissions,audit}.php`
+  - `backend/database/migrations/2026_11_28_000002_create_people_and_structure_collections.php`
+  - `backend/database/seeders/DemoSchoolSeeder.php`
+- **Tests:**
+  - `backend/tests/Concerns/BuildsSchoolRecords.php`
+  - `backend/tests/Feature/{People,Customisation}/*`
+  - `backend/tests/Feature/Tenancy/SchoolLogoTest.php`
+  - `backend/tests/Feature/Identity/{SyncRolesTest,RolesAndPermissionsTest,RoutePermissionTest}.php`
+- **Front end and packages:**
+  - `frontend/src/features/{setup,people,customisation,academic}/**`
+  - `frontend/src/{lib/requests.ts,features/auth/permissions.ts,app/routes.tsx,features/shell/navItems.ts,locales/*}`
+  - `packages/api/{openapi.json,src/*}`
+
+**Report pages updated:**
+
+- `modules/academic-structure.md`, `modules/people.md`, `modules/customisation.md` (in full)
+- `modules/identity-and-access.md`, `modules/tenancy.md`, `modules/audit.md`
+- `permissions.md` (Phase 2 abilities), `configuration.md`, `operations.md`, `frontend.md`
+- `decisions/0011-people-privacy-and-imports.md`, `how-to/demo-school.md`, `how-to/README.md`
+- the generated blocks
+
+**How to test:**
+
+1. **Containers and data:**
+   - `cd infra && docker compose up -d` (it now includes `scheduler`)
+   - `docker compose restart horizon`
+   - `docker compose exec api php artisan migrate`
+   - `docker compose exec api php artisan identity:sync-roles --with-new-permissions` (for schools made earlier)
+   - `docker compose exec api php artisan db:seed --class=DemoSchoolSeeder`
+2. **Checks:** `docker compose exec api composer test`, `composer lint`, `php artisan report:generate --check`. Then `docker compose exec web npm test -w @campus-tab/frontend`, plus `lint`, `typecheck`, `build` and `npm run check -w @campus-tab/api`.
+3. **In the browser:** follow the Phase 2 steps in the session summary, then sign in as each demo role from [how-to/demo-school.md](how-to/demo-school.md).
+
+## 2026-11-27 · Phase 1 part C, addendum · Client records, numbers, alerts, renewals and two seat limits
+
+**What changed:**
+
+- **Two seat limits on a licence:**
+  - students: active, not left, not in the recycle bin
+  - staff: every account that is not inactive, except accounts that are only Parent and/or Student; parents never count
+- **Where they are checked:** creating users, staff, approved drafts, both imports, turning a parent into staff, restoring from the recycle bin, and re-activating. The refusal is `422 seat_limit_reached` with `details.kind`, and the dry-run report shows the check first. `Seats` moved from People to `Licensing\Domain\Seats`.
+- **Client record per school:** contact, package, price, billing period, paid-until, notes, plus an append-only payment history (corrections are negative entries with a note). Every change is in the platform audit log.
+- **School list and page:**
+  - plan, licence state and end date, modules
+  - students and staff against seats
+  - active users in 7 and 30 days, last activity, storage
+  - licence history (issued, renewed, changed, revoked), support grants (our agent, scope, times, status), the client record and payments
+- **Security overview, counts only:**
+  - failed sign-ins, lockouts, password resets, MFA resets, Chief added or removed
+  - counted for the last hour, 24 h, 7 days and 30 days
+  - **alerts:** a metric reaching its minimum and 5 times its usual rate in the last hour raises one, emailed to every platform admin with counts only, and shown at `/console/alerts`
+- **Where the numbers come from:** the job `CollectSchoolStats` (every 15 minutes, new `scheduler` container; `platform:collect-stats` by hand) works them out inside each school with `TenantContext::run` and stores only numbers in `school_stats`.
+  - The console no longer reads any school collection: the chief and user counts it used to read are gone.
+  - Reading school data still needs a support grant; a test checks that a console session opens no school endpoint.
+- **Renew** (`POST /platform/schools/{code}/licence/renew`) and changes to seats, plan or modules take effect at once and go in both audit logs.
+- **Modules:** a removed module stops at once; an added module is switched on by the Chief, because the console never writes school settings.
+
+**Why:** the owner's additions to part C and to the Phase 2 seat rule.
+
+**Files:**
+
+- **Back end:**
+  - `backend/app/Modules/Licensing/Domain/Seats.php`
+  - `backend/app/Modules/Platform/{Domain/{SchoolStatsCollector,SecurityAlerts,SchoolConsole}.php,Jobs/CollectSchoolStats.php,Console/CollectStatsCommand.php,Models/{SchoolClient,SchoolPayment,SchoolStats,PlatformAlert}.php,Mail/SecurityAlertMail.php,Http/Controllers/{ConsoleSchoolController,ConsoleAlertController}.php,routes.php}`
+  - `backend/app/Modules/{Identity/Domain/UserAdmin.php,Audit/Domain/RecycleBin.php,People/Domain/*}`
+  - `backend/routes/console.php`, `backend/config/{identity,tenancy}.php`
+  - `backend/database/migrations/2026_11_28_000003_create_platform_client_and_stats_collections.php`
+- **Tests:** `backend/tests/Feature/{Platform/ConsoleClientsAndStatsTest,People/SeatsTest}.php`
+- **Infra:** `infra/docker-compose.yml` (`scheduler`)
+- **Front end:** `frontend/src/features/console/{ConsoleSchoolExtras.tsx,ConsoleSchoolsPages.tsx,ConsoleLayout.tsx,api.ts,console.test.tsx}`, locales
+
+**Report pages updated:** `modules/platform.md`, `modules/licensing.md`, `modules/people.md`, `modules/identity-and-access.md`, `modules/audit.md`, `configuration.md`, `operations.md`, `frontend.md`, `decisions/0010` (addendum).
+
+**How to test:**
+
+1. `docker compose up -d scheduler`, then `docker compose exec api php artisan platform:collect-stats`.
+2. Open a school in the console: the usage, security, client, payments, history and grants cards are there.
+3. Renew it and check the school's audit log (as its Chief) for `platform.licence.renewed`.
+
+## 2026-11-27 · Phase 1 part C · Platform console, sign-in screens, API client (items 10–12)
+
+**What changed:**
+
+- **Parallel tests.** `composer test` runs `pest --parallel` (paratest).
+  - Each process has its own database `campus_tab_<n>_test`, named before the app boots. Purging the connection after boot would drop the tenant query guard's listener; that was caught and fixed on the way.
+  - `RefreshMongoDatabase` migrates once per process, then empties the collections between tests.
+  - The full suite went from about 7.5 minutes to about 1 minute.
+- **Platform console (item 10).** New `Platform` module:
+  - **Admins** come only from `php artisan platform:create-admin` (invited, no password, a one-time link for 48 h; `--resend`).
+  - **Sign-in** needs the password and a TOTP code every time; the first sign-in is enrol-only. Lockout and IP limits match school sign-in.
+  - **Sessions:** session cookie only (guard `console`), 15 minutes idle, 8 hours in total, remote sign-out, step-up.
+  - **Schools and licences:** list and create schools; issue a key (shown once); change plan, seats, modules and end date (payload signed again); revoke (step-up plus the school code typed again).
+  - **`platform:revoke-licence`** does the same from the command line. `platform:create-school` and `platform:issue-licence` are now audited too.
+  - **Audit:** every action goes in the new append-only `platform_audit_logs`. Every action on a school also goes in that school's `audit_logs`, as `platform.<action>` with actor type `platform_admin`.
+  - **Sole-Chief recovery**, only with exactly one active Chief:
+    - step-up, then a code to the school's registered contact, then the code plus a written reason (20+ characters)
+    - it resets only the Chief's MFA (still required) and ends the Chief's sessions; the password is never touched
+    - it is a security event in the school's log
+- **Idle time counts only real use.** Requests with `X-Background-Request: 1` are checked but never extend a school or console session. Tests cover both.
+- **Screens (item 11):**
+  - school code with public branding
+  - sign-in with password, then an MFA or recovery code
+  - parent SMS-code sign-in
+  - MFA enrolment: a QR code drawn in the browser, the key for typing in, recovery codes once with download and print
+  - licence activation
+  - set, reset and forgot password
+  - device sessions with remote sign-out
+  - the console
+  - an idle warning one minute ahead, and sign-in over the page when the session ends (the page stays mounted, so typed input is kept)
+  - light and dark themes, phone and desktop widths, every string in English and Hindi
+- **No token in the browser.** The web app uses the session cookie only; a test checks that nothing but display preferences and the public school code is stored.
+- **API client (item 12).** Scramble exports the OpenAPI spec to `packages/api/openapi.json`, and `openapi-typescript` and `openapi-fetch` build the typed client in `packages/api`. CI fails when either is out of date. The api container now mounts `packages/api`.
+- **Part B test:** an invited account or a parent account (no password, or an empty one stored) never signs in by password, whatever is typed.
+- **CI:** `.github/scripts/check-report.mjs` now maps the `Identity` module to `identity-and-access.md` (it looked for `identity.md`).
+
+**Why:** Phase 1 items 10–12 of `docs/BUILD-PROMPTS.md`, with the owner's rules for part C.
+
+**Files:**
+
+- **Back end:**
+  - `backend/app/Modules/Platform/**` (new)
+  - `backend/app/Modules/Audit/{Domain/PlatformAuditRecorder.php,Models/PlatformAuditLog.php,Models/AuditLogBuilder.php,Domain/AuditRecorder.php}`
+  - `backend/app/Modules/Identity/{Domain/Mfa.php,Domain/SessionIssuer.php,Http/Middleware/TrackDeviceSession.php,Models/PlatformAdmin.php}`
+  - `backend/app/Modules/Licensing/{Domain/LicenceIssuer.php,Domain/ActivationService.php,Console/IssueLicenceCommand.php}`
+  - `backend/app/Modules/Tenancy/{Console/CreateSchoolCommand.php,Models/Tenant.php}`
+  - `backend/app/Providers/AppServiceProvider.php`, `backend/bootstrap/app.php`
+  - `backend/config/{auth,identity,tenancy,scramble}.php`
+  - `backend/database/migrations/2026_11_28_000001_create_platform_console_collections.php`
+  - `backend/composer.{json,lock}` (`dedoc/scramble`, `openspout/openspout`, dev `brianium/paratest`)
+- **Tests:**
+  - `backend/tests/{TestCase.php,Concerns/RefreshMongoDatabase.php}`
+  - `backend/tests/Feature/Platform/ConsoleTest.php`
+  - `backend/tests/Feature/Identity/{BackgroundAndPasswordlessTest.php,RoutePermissionTest.php}`
+- **Front end and packages:**
+  - `packages/api/**`
+  - `frontend/src/{lib/api.ts,stores/{activity,session,school}.ts,components/ui/form.tsx,features/auth/**,features/console/**,features/shell/{AppShell.tsx,SchoolCard.tsx,navItems.ts},app/routes.tsx,locales/{en,hi}/common.json,test/*}`
+  - `frontend/{package.json,tsconfig.app.json}`, `package-lock.json`
+- **Infra and CI:** `infra/docker-compose.yml`, `.github/workflows/ci.yml`, `.github/scripts/check-report.mjs`
+
+**Report pages updated:**
+
+- `modules/platform.md` (new), `decisions/0010-platform-console.md` (new)
+- `modules/identity-and-access.md`, `modules/audit.md`, `modules/licensing.md`, `modules/tenancy.md`
+- `frontend.md`, `operations.md`, `configuration.md`, and the generated blocks
+
+**How to test:**
+
+1. `cd infra && docker compose up -d api horizon reverb web` (recreates the api containers with the new `packages/api` mount), then `docker compose exec api php artisan migrate`.
+2. `docker compose exec api composer test` (parallel, about a minute), `composer lint`, `composer analyse`, `php artisan report:generate --check`. Then `docker compose exec web npm test -w @campus-tab/frontend`, plus `lint`, `typecheck`, `build` and `npm run check -w @campus-tab/api`.
+3. In the browser, follow the Phase 1 "done when" steps at the end of the session summary: create an admin, sign in at http://127.0.0.1:5173/console, create a school, issue its key, activate it at `/activate`, and sign in as its Chief with MFA.
+
+## 2026-11-27 · Phase 1 part B · Identity, roles, audit and support access (items 6–9)
+
+**What changed:**
+
+- **Sign-in (item 6).**
+  - **Password sign-in** finds the school by code, then the user by email, phone or login name.
+    - Every failure gets one answer, `401 sign_in_failed` ("Those details didn't work, or there were too many tries…").
+    - While an account is locked its password is not checked at all.
+    - 5 failures in a row, wrong MFA codes included, lock it for 15 minutes. `GET /users` shows the lock, and the Principal or Chief can unlock.
+    - Per-IP limits are roomy config values for bulk abuse only.
+  - **TOTP MFA** is mandatory from level 60 and asked at every sign-in. The secret is encrypted, the 10 recovery codes are stored as HMACs, and a code can't be replayed. An enrol-only session never becomes a full one.
+  - **Step-up MFA:** one middleware and a named list in `config/identity.php` (`export`, `permanent_delete`, `role_edit`, `marks_unlock`, `support_grant`, `mfa_reset`), valid 10 minutes on that device. `role_edit` also covers changing a user's roles.
+  - **Parent OTP** is for Parent-only accounts without MFA. Only a hash is stored, the code lasts 5 minutes, and sends and failures are limited per phone and per IP, with the same replies for known and unknown numbers. The `log` and `array` SMS drivers work only in local and testing; anywhere else a missing driver stops the app at start-up.
+  - **Sign in every time:** browser session cookie only; idle limit 15 minutes at level 60 and up, 30 below; 8 hours in total. Device sessions hold only the token id or a hash of the session id, and can be listed and signed out remotely.
+  - **Per-user language** (any language the app ships) and theme. The school setting `user_can_choose_language` is gone; `available_languages` is now `featured_languages`.
+- **Passwords.**
+  - **New accounts** start `invited` with no password. The person gets a one-time set link (48 h) by email or SMS, or the Principal gets a one-time setup code shown once. Resending cancels the old link.
+  - **Forgot password** gives the same reply for everyone. Its link lasts 30 minutes, with limits per account and per IP. The Principal or Chief can send a reset link to anyone below them.
+  - **Changing your own** needs the current password.
+  - **Any set, change or reset** ends every session and token, keeps MFA, and tells the user.
+  - **Rules:** 10+ characters, not the login or name, not on the bundled common list.
+  - **Lost authenticator:** recovery codes first; otherwise an MFA reset with step-up by someone above (another Chief for a Chief).
+- **Roles and permissions (item 7).**
+  - **The form:** `module.action:scope` from a catalogue in `config/permissions.php`.
+  - **Seeded roles:** nine levels plus two duties, Fee Collector and the new Attendance Officer (staff-attendance entry only; Phase 4 must stop anyone entering their own attendance through it). Command `identity:sync-roles` adds them to existing schools.
+  - **Checks:** six scope resolvers, no escalation, Chief over Chief, the last-Chief guard, and Chief changes recorded as security events.
+  - **Every route** names its permission; a route test enforces it. `SchoolConfigPolicy` now uses `config.view`, `config.edit` and `config.edit_policies`.
+- **Audit (item 8).**
+  - **The log** is append-only, with no update or delete path and no soft deletes, and never holds passwords, codes, links or tokens. Support actions record the agent and the grant id. The Chief sees all, the Principal academic entries and their own, a Clerk their own.
+  - **Recycle bin** with restore; the Chief's permanent purge needs step-up, 30 days and the record's typed name.
+- **Support grants (item 9).** Created by the Chief with step-up: read-only by default, ending 15 minutes to 72 hours ahead with no extension, revocable. Agents act only inside an active grant, checked on every request. The school sees each grant and its activity.
+- **Bugs the tenant query guard and the new tests caught on the way:**
+  - `Model::refresh()` skips the tenant scope.
+  - A right password used to reset the count of wrong MFA codes.
+  - The driver rewrites `actor.id` to `actor._id` in queries, so entries now also carry `actor_id`.
+
+**Why:** Phase 1 items 6–9 of `docs/BUILD-PROMPTS.md`, with the owner's changes for part B.
+
+**Files:**
+- **Back end:**
+  - `backend/app/Modules/Identity/**`, `backend/app/Modules/Audit/**` (new);
+  - `backend/app/Modules/Tenancy/{Http/Middleware/SetTenantFromUser.php,Policies/SchoolConfigPolicy.php,Models/SchoolConfig.php,Domain/{TenantProvisioner,PublicConfig,DefaultConfig}.php,Schemas/school-config.schema.json,routes.php}`;
+  - `backend/app/Modules/Licensing/{Domain/ActivationService.php,Http/Controllers/ActivationController.php,Http/Middleware/EnsureLicenceAllows.php}`;
+  - `backend/app/Support/Otp/OtpService.php`, `backend/app/Providers/AppServiceProvider.php`, `backend/bootstrap/{app,providers}.php`.
+- **Config and data:**
+  - `backend/config/{identity,permissions,audit,licensing,services,session}.php`;
+  - `backend/database/migrations/2026_11_27_000003_create_identity_and_audit_collections.php`;
+  - `backend/resources/security/common-passwords.txt`;
+  - `backend/.env.example`, `backend/composer.{json,lock}` (`pragmarx/google2fa` ^8.0).
+- **Tests:**
+  - `backend/tests/Concerns/{CreatesSchools,TestData}.php`;
+  - `backend/tests/Feature/Identity/*`, `backend/tests/Feature/Audit/*`, `backend/tests/Feature/Tenancy/PublicConfigTest.php`.
+- **Docs:** `docs/CONVENTIONS.md`.
+
+**Report pages updated:** `modules/identity-and-access.md` and `modules/audit.md` (in full), `modules/tenancy.md`, `modules/licensing.md`, `permissions.md` (the matrix as coded), `configuration.md`, decisions `0006`–`0009` (0008 holds the open question for the legal review), and the generated blocks.
+
+**How to test:**
+
+1. `cd infra && docker compose exec api php artisan migrate`, then `docker compose exec api php artisan identity:sync-roles` (adds the roles to schools made in part A).
+2. `docker compose exec api composer test`, `composer lint`, `composer analyse`, then `docker compose exec api php artisan report:generate --check`.
+3. Create and activate a school as in part A (step 3–5 below). The activation response now carries `device_session_id` and an enrol-only token.
+4. With that token: `POST /api/v1/me/mfa/enrol` → `secret`; add it to an authenticator app; `POST /api/v1/me/mfa/enrol/confirm {"code":"<6 digits>"}` → 10 recovery codes and a full token. `GET /api/v1/me` → roles, permissions, `session.idle_minutes: 15`.
+5. Sign out, then `POST /api/v1/auth/login {"school_code":"TEST-BPL","login":"<chief email>","password":"…"}` → `mfa_required` and a `challenge`; `POST /api/v1/auth/mfa/verify {"challenge":"…","code":"…"}` → token.
+6. Try a wrong password 5 times, then the right one → the same `sign_in_failed` body every time.
+7. As the Chief: `POST /api/v1/users {"name":"Made Up Teacher","email":"teacher@test-bpl.test","roles":["class_teacher"]}` → `status: invited`; the set link is in Mailpit (http://127.0.0.1:8025). `POST /api/v1/auth/password/set` with the link's `token` → then the teacher can sign in.
+8. `PUT /api/v1/roles/staff` with the Chief's token → `403 step_up_required`; `POST /api/v1/auth/step-up {"code":"…"}` → then it works.
+9. `GET /api/v1/audit-logs` as the Chief → every step above, without any password, code or token.
+
+## 2026-11-27 · Phase 1 part A · Tenancy and licensing (items 1–5)
+
+**What changed:**
+
+- **Platform collections (item 1):** `tenants`, `licences`, `support_grants`, `school_configs`, plus `platform_admins` (our team, separate from school users) and `personal_access_tokens` (Sanctum tokens on MongoDB). Migrations create every collection and index; every index on school data starts with `tenant_id`. The placeholder `App\Models\User` is replaced by the tenant-scoped `Identity\Models\User`.
+- **Licence keys (item 2):** `CTAB-XXXX-XXXX-XXXX-XXXX`, only an HMAC stored, Ed25519-signed payload (keys from `.env`, `php artisan licence:keygen --write`). `POST /licences/activate/otp` sends a code to the school's registered email and phone (SMS driver interface; `log` driver in dev); `POST /licences/activate` creates the Chief with MFA required, writes config version 1, activates the school and returns a token that only allows MFA enrolment. Middleware `licence` (15 grace days with `X-Licence-State: grace`, then read-only with exports allowed) and `module:<name>` (`403 module_disabled`). Commands `platform:create-school` and `platform:issue-licence` (brought forward from item 10 so part A can be checked).
+- **Public config (item 3):** `GET /public/tenants/{code}/config` returns public branding only, from an allow-list.
+- **School config (item 4):** versioned, JSON-schema-validated, diff per save, rollback as a new version, `ETag`/`If-Match` conflicts. Edit rights by section: the Chief edits everything; the Principal edits `policies.attendance|leave|marks|fees` and `academic` only; both view. `SchoolConfigPolicy` checks every changed path. The schema has no setting that lets a clerk change locked marks. A module can't be switched on unless the licence includes it.
+- **Keeping schools apart (item 5):** `BelongsToTenant` (scope that throws with no school set, creating hook, tenant-checked updates and deletes) and `TenantQueryGuard`, which fails any test that sends a school-data query without `tenant_id`. Sign-in and token lookup are the one documented exception (decision 0005); password sign-in finds the school by code first.
+- The API error renderer now keeps a Policy's own error code (for example `config_section_forbidden`).
+
+**Why:** Phase 1 items 1–5 of `docs/BUILD-PROMPTS.md`, with the owner's changes: edit rights by config section, the sign-in lookup exception, and a MongoDB-backed Sanctum token model in part A.
+
+**Files:** `backend/app/Modules/{Tenancy,Licensing,Identity}/**`, `backend/app/Support/{Tenancy,Otp,Sms}/**`, `backend/app/Support/Http/ApiExceptionRenderer.php`, `backend/app/Providers/AppServiceProvider.php`, `backend/bootstrap/{app,providers}.php`, `backend/config/{auth,services,tenancy,licensing}.php`, `backend/database/migrations/2026_11_27_00000{1,2}_*.php`, `backend/.env.example`, `backend/phpunit.xml`, `backend/composer.{json,lock}` (`opis/json-schema` ^2.4), `backend/tests/{TestCase.php,Concerns/CreatesSchools.php,Feature/Tenancy/*,Feature/Licensing/*,Feature/Identity/*}`, `backend/tests/Feature/Support/RefreshMongoDatabaseTest.php`; removed `backend/app/Models/User.php` and `backend/database/factories/UserFactory.php`. `docs/CONVENTIONS.md` (tenancy rules).
+
+**Report pages updated:** `modules/tenancy.md`, `modules/licensing.md`, `modules/identity-and-access.md` (part A), `configuration.md` (new variables, code settings, every school config key), `permissions.md` (rules coded so far), `decisions/0004-licence-keys.md`, `decisions/0005-tenant-scope-and-sign-in-exception.md`, and the generated blocks in `README.md`, `api.md`, `data-dictionary.md`.
+
+**How to test:**
+
+1. `cd infra && docker compose up -d`, then `docker compose exec api php artisan licence:keygen --write` (once; adds the keys to `backend/.env`) and `docker compose exec api php artisan migrate`.
+2. `docker compose exec api composer test` → 124 tests pass; `docker compose exec api composer lint` and `composer analyse` → clean; `docker compose exec api php artisan report:generate --check` → up to date.
+3. `docker compose exec api php artisan platform:create-school TEST-BPL "Test Public School" --email=office@test-bpl.test --phone=+919800000009`, then `docker compose exec api php artisan platform:issue-licence TEST-BPL` → note the key it prints.
+4. `curl -X POST http://127.0.0.1:8000/api/v1/licences/activate/otp -H "Accept: application/json" -H "Content-Type: application/json" -d "{\"key\":\"<key>\"}"` → masked destinations. The code is in Mailpit (http://127.0.0.1:8025) and in `backend/storage/logs/laravel.log` ("SMS (log driver)").
+5. `POST /api/v1/licences/activate` with the key, the code and a made-up Chief (`name`, `email`, `phone`, `password` of 12+ letters and digits, `password_confirmation`) → 201 with a token and `"token_abilities":["mfa:enrol"]`. `GET /api/v1/config` with that token → `403 mfa_enrolment_required`. Asking for a code again → `409 licence_already_activated`.
+6. http://127.0.0.1:8000/api/v1/public/tenants/test-bpl/config → only code, name, short_name, logo_url, accent, languages, login_methods.
+
 ## 2026-11-27 · Phase 0 · Foundations
 
 **What changed:** the Campus TAB monorepo was set up from "System architecture > Repository layout":

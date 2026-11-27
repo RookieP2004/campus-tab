@@ -62,6 +62,36 @@ The empty `backend/vendor` folder on D: is only the mount point Docker creates; 
 
 When `composer.lock` or `package-lock.json` changes (for example after a `git pull`), the next start of `api` or `web` reinstalls automatically.
 
+## Tests run in parallel
+
+`composer test` runs `pest --parallel`: one process per CPU, each with its own database `campus_tab_<n>_test` (the name still ends in `_test`). Each process migrates once, then empties the collections between tests. A full run takes about a minute. To run one file: `docker compose exec api php vendor/bin/pest tests/Feature/Platform`.
+
+## The API client and the OpenAPI spec
+
+After changing a route or a request's validation:
+
+1. `docker compose exec api php artisan scramble:export` writes `packages/api/openapi.json` (the api container mounts `packages/api`).
+2. `docker compose exec web npm run generate -w @campus-tab/api` writes `packages/api/src/schema.ts`.
+3. Commit both. CI fails when either is out of date ("OpenAPI spec is up to date", "API client is up to date").
+
+## Platform console accounts
+
+- Create an admin: `docker compose exec api php artisan platform:create-admin "Full Name" person@example.test`. It prints a one-time link (also emailed, see Mailpit).
+- Send a new link: `platform:create-admin --resend=person@example.test`.
+- Revoke a licence: `platform:revoke-licence CODE --reason="…"` (asks for the code again).
+
+## Demo school
+
+`docker compose exec api php artisan db:seed --class=DemoSchoolSeeder` loads Sunrise Public School (local and testing only). The sign-ins are in [how-to/demo-school.md](how-to/demo-school.md).
+
+## Queue
+
+Imports run on the Redis queue through Horizon (the `horizon` container). After changing job code, restart it: `docker compose restart horizon`. The Horizon dashboard (local only) is at http://127.0.0.1:8000/horizon.
+
+## Scheduler
+
+The `scheduler` container runs `php artisan schedule:work`. It works out the console's per-school numbers every 15 minutes and raises security alerts (sent to Mailpit locally). Start it with `docker compose up -d scheduler` after pulling, and restart it after changing scheduled code. To run the job now: `docker compose exec api php artisan platform:collect-stats`.
+
 ## Line endings
 
 `.gitattributes` keeps every file LF (CRLF only for `.ps1`/`.bat`). Shell scripts with CRLF fail inside Linux containers with `/bin/sh^M: bad interpreter`. If that happens: `git add --renormalize .` and re-checkout the file.

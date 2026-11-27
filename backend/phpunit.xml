@@ -39,6 +39,11 @@
         <server name="QUEUE_CONNECTION" value="sync" force="true"/>
         <env name="SESSION_DRIVER" value="array" force="true"/>
         <server name="SESSION_DRIVER" value="array" force="true"/>
+        <env name="SMS_DRIVER" value="array" force="true"/>
+        <server name="SMS_DRIVER" value="array" force="true"/>
+        <!-- Any school-data query without tenant_id fails the test (Tests\TestCase). -->
+        <env name="TENANCY_QUERY_GUARD" value="record" force="true"/>
+        <server name="TENANCY_QUERY_GUARD" value="record" force="true"/>
         <env name="PULSE_ENABLED" value="false" force="true"/>
         <server name="PULSE_ENABLED" value="false" force="true"/>
         <env name="TELESCOPE_ENABLED" value="false" force="true"/>

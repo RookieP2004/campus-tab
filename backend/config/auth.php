@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\User;
+use App\Modules\Identity\Models\PlatformAdmin;
+use App\Modules\Identity\Models\User;
 
 return [
 
@@ -42,6 +43,26 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // API tokens and the SPA cookie for school users (auth:sanctum).
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
+
+        // Our platform team's support tokens (support sessions): separate
+        // accounts and provider.
+        'platform' => [
+            'driver' => 'sanctum',
+            'provider' => 'platform_admins',
+        ],
+
+        // The platform console in the web app: session cookie only, never a
+        // token. Checked by the console middleware (Platform module).
+        'console' => [
+            'driver' => 'session',
+            'provider' => 'platform_admins',
+        ],
     ],
 
     /*
@@ -62,9 +83,16 @@ return [
     */
 
     'providers' => [
+        // Loads a user by id without the tenant scope: the documented sign-in
+        // exception (decision 0005). See Identity\Auth\SchoolUserProvider.
         'users' => [
+            'driver' => 'school-users',
+            'model' => User::class,
+        ],
+
+        'platform_admins' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            'model' => PlatformAdmin::class,
         ],
 
         // 'users' => [

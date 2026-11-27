@@ -22,7 +22,7 @@ describe('AppShell', () => {
     expect(logo).toHaveAttribute('src', '/logo-mark.svg');
     expect(logo).toHaveAttribute('width', '40');
     expect(stack).toHaveTextContent('Campus TAB');
-    expect(within(stack).getByTestId('school-card')).toHaveTextContent('Your school');
+    expect(await within(stack).findByText('Sunrise Public School')).toBeInTheDocument();
   });
 
   it('renders the empty home screen', async () => {

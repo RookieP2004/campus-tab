@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://campustab.local/schemas/school-config.json",
+  "title": "Campus TAB school config",
+  "description": "Every school-level choice. tenant_id and config_version are kept outside the body by the server. There is deliberately no setting that lets a clerk change locked marks: that rule is fixed in code.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["school", "branding", "locale", "academic", "modules", "sign_in", "policies"],
+  "$defs": {
+    "language": { "enum": ["en", "hi", "bn", "mr", "gu", "pa", "ta", "te", "kn", "ml", "or", "ur"] }
+  },
+  "properties": {
+    "school": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "short_name", "board"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "short_name": { "type": "string", "minLength": 1, "maxLength": 20 },
+        "logo_url": { "type": ["string", "null"], "maxLength": 300 },
+        "board": { "enum": ["CBSE", "ICSE", "STATE", "IB", "CAMBRIDGE", "OTHER"] },
+        "affiliation_no": { "type": ["string", "null"], "maxLength": 40 }
+      }
+    },
+    "branding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accent"],
+      "properties": {
+        "accent": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+      }
+    },
+    "locale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_language", "featured_languages", "timezone", "date_format"],
+      "properties": {
+        "default_language": { "$ref": "#/$defs/language" },
+        "featured_languages": { "type": "array", "items": { "$ref": "#/$defs/language" }, "minItems": 1, "uniqueItems": true },
+        "timezone": { "type": "string", "minLength": 3, "maxLength": 64 },
+        "date_format": { "enum": ["DD-MM-YYYY", "DD/MM/YYYY", "YYYY-MM-DD"] }
+      }
+    },
+    "academic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["year_start_month", "terms"],
+      "properties": {
+        "year_start_month": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "terms": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 40 }, "minItems": 1, "maxItems": 4, "uniqueItems": true }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attendance", "leave", "assessment", "reports", "fees", "communication"],
+      "properties": {
+        "attendance": { "type": "boolean" },
+        "leave": { "type": "boolean" },
+        "assessment": { "type": "boolean" },
+        "reports": { "type": "boolean" },
+        "fees": { "type": "boolean" },
+        "communication": { "type": "boolean" }
+      }
+    },
+    "sign_in": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["methods"],
+      "properties": {
+        "methods": { "type": "array", "items": { "enum": ["password", "parent_otp", "student_login"] }, "minItems": 1, "uniqueItems": true }
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attendance", "leave", "marks", "fees"],
+      "properties": {
+        "attendance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["student_mode", "edit_window_hours", "min_percent_alert"],
+          "properties": {
+            "student_mode": { "enum": ["daily", "period"] },
+            "edit_window_hours": { "type": "integer", "minimum": 0, "maximum": 168 },
+            "min_percent_alert": { "type": "integer", "minimum": 0, "maximum": 100 }
+          }
+        },
+        "leave": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["chain", "clerk_can_reject", "remind_after_hours", "escalate_after_hours"],
+          "properties": {
+            "chain": { "type": "array", "items": { "enum": ["clerk", "principal"] }, "minItems": 1, "uniqueItems": true },
+            "clerk_can_reject": { "type": "boolean" },
+            "remind_after_hours": { "type": "integer", "minimum": 1, "maximum": 168 },
+            "escalate_after_hours": { "type": "integer", "minimum": 1, "maximum": 336 }
+          }
+        },
+        "marks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["auto_publish_class_tests"],
+          "properties": {
+            "auto_publish_class_tests": { "type": "boolean" }
+          }
+        },
+        "fees": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gateway", "waiver_by", "receipt_prefix"],
+          "properties": {
+            "gateway": { "enum": ["none", "razorpay"] },
+            "waiver_by": { "enum": ["principal", "chief"] },
+            "receipt_prefix": { "type": ["string", "null"], "maxLength": 30 }
+          }
+        }
+      }
+    }
+  }
+}
