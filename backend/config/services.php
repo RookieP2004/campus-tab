@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    // Text messages (OTP). Drivers: log (development), array (tests).
+    'sms' => [
+        'driver' => env('SMS_DRIVER', 'log'),
+    ],
+
 ];

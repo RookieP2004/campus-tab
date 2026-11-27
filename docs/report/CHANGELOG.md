@@ -2,6 +2,32 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-27 · Phase 1 part A · Tenancy and licensing (items 1–5)
+
+**What changed:**
+
+- **Platform collections (item 1):** `tenants`, `licences`, `support_grants`, `school_configs`, plus `platform_admins` (our team, separate from school users) and `personal_access_tokens` (Sanctum tokens on MongoDB). Migrations create every collection and index; every index on school data starts with `tenant_id`. The placeholder `App\Models\User` is replaced by the tenant-scoped `Identity\Models\User`.
+- **Licence keys (item 2):** `CTAB-XXXX-XXXX-XXXX-XXXX`, only an HMAC stored, Ed25519-signed payload (keys from `.env`, `php artisan licence:keygen --write`). `POST /licences/activate/otp` sends a code to the school's registered email and phone (SMS driver interface; `log` driver in dev); `POST /licences/activate` creates the Chief with MFA required, writes config version 1, activates the school and returns a token that only allows MFA enrolment. Middleware `licence` (15 grace days with `X-Licence-State: grace`, then read-only with exports allowed) and `module:<name>` (`403 module_disabled`). Commands `platform:create-school` and `platform:issue-licence` (brought forward from item 10 so part A can be checked).
+- **Public config (item 3):** `GET /public/tenants/{code}/config` returns public branding only, from an allow-list.
+- **School config (item 4):** versioned, JSON-schema-validated, diff per save, rollback as a new version, `ETag`/`If-Match` conflicts. Edit rights by section: the Chief edits everything; the Principal edits `policies.attendance|leave|marks|fees` and `academic` only; both view. `SchoolConfigPolicy` checks every changed path. The schema has no setting that lets a clerk change locked marks. A module can't be switched on unless the licence includes it.
+- **Keeping schools apart (item 5):** `BelongsToTenant` (scope that throws with no school set, creating hook, tenant-checked updates and deletes) and `TenantQueryGuard`, which fails any test that sends a school-data query without `tenant_id`. Sign-in and token lookup are the one documented exception (decision 0005); password sign-in finds the school by code first.
+- The API error renderer now keeps a Policy's own error code (for example `config_section_forbidden`).
+
+**Why:** Phase 1 items 1–5 of `docs/BUILD-PROMPTS.md`, with the owner's changes: edit rights by config section, the sign-in lookup exception, and a MongoDB-backed Sanctum token model in part A.
+
+**Files:** `backend/app/Modules/{Tenancy,Licensing,Identity}/**`, `backend/app/Support/{Tenancy,Otp,Sms}/**`, `backend/app/Support/Http/ApiExceptionRenderer.php`, `backend/app/Providers/AppServiceProvider.php`, `backend/bootstrap/{app,providers}.php`, `backend/config/{auth,services,tenancy,licensing}.php`, `backend/database/migrations/2026_11_27_00000{1,2}_*.php`, `backend/.env.example`, `backend/phpunit.xml`, `backend/composer.{json,lock}` (`opis/json-schema` ^2.4), `backend/tests/{TestCase.php,Concerns/CreatesSchools.php,Feature/Tenancy/*,Feature/Licensing/*,Feature/Identity/*}`, `backend/tests/Feature/Support/RefreshMongoDatabaseTest.php`; removed `backend/app/Models/User.php` and `backend/database/factories/UserFactory.php`. `docs/CONVENTIONS.md` (tenancy rules).
+
+**Report pages updated:** `modules/tenancy.md`, `modules/licensing.md`, `modules/identity-and-access.md` (part A), `configuration.md` (new variables, code settings, every school config key), `permissions.md` (rules coded so far), `decisions/0004-licence-keys.md`, `decisions/0005-tenant-scope-and-sign-in-exception.md`, and the generated blocks in `README.md`, `api.md`, `data-dictionary.md`.
+
+**How to test:**
+
+1. `cd infra && docker compose up -d`, then `docker compose exec api php artisan licence:keygen --write` (once; adds the keys to `backend/.env`) and `docker compose exec api php artisan migrate`.
+2. `docker compose exec api composer test` → 124 tests pass; `docker compose exec api composer lint` and `composer analyse` → clean; `docker compose exec api php artisan report:generate --check` → up to date.
+3. `docker compose exec api php artisan platform:create-school TEST-BPL "Test Public School" --email=office@test-bpl.test --phone=+919800000009`, then `docker compose exec api php artisan platform:issue-licence TEST-BPL` → note the key it prints.
+4. `curl -X POST http://127.0.0.1:8000/api/v1/licences/activate/otp -H "Accept: application/json" -H "Content-Type: application/json" -d "{\"key\":\"<key>\"}"` → masked destinations. The code is in Mailpit (http://127.0.0.1:8025) and in `backend/storage/logs/laravel.log` ("SMS (log driver)").
+5. `POST /api/v1/licences/activate` with the key, the code and a made-up Chief (`name`, `email`, `phone`, `password` of 12+ letters and digits, `password_confirmation`) → 201 with a token and `"token_abilities":["mfa:enrol"]`. `GET /api/v1/config` with that token → `403 mfa_enrolment_required`. Asking for a code again → `409 licence_already_activated`.
+6. http://127.0.0.1:8000/api/v1/public/tenants/test-bpl/config → only code, name, short_name, logo_url, accent, languages, login_methods.
+
 ## 2026-11-27 · Phase 0 · Foundations
 
 **What changed:** the Campus TAB monorepo was set up from "System architecture > Repository layout":

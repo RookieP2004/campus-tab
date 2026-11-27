@@ -40,11 +40,17 @@ class ApiExceptionRenderer
 
     public static function toResponse(Throwable $e): JsonResponse
     {
+        // Laravel wraps a Policy denial in AccessDeniedHttpException before
+        // render callbacks run; unwrap it to keep the Policy's own code.
+        if ($e instanceof HttpExceptionInterface && $e->getPrevious() instanceof AuthorizationException) {
+            $e = $e->getPrevious();
+        }
+
         [$status, $code, $message, $details] = match (true) {
             $e instanceof ApiException => [$e->status, $e->errorCode, $e->getMessage(), $e->details],
             $e instanceof ValidationException => [422, 'validation_failed', 'The given data was invalid.', $e->errors()],
             $e instanceof AuthenticationException => [401, 'unauthenticated', 'Sign in to continue.', []],
-            $e instanceof AuthorizationException => [403, 'forbidden', 'You do not have permission to do this.', []],
+            $e instanceof AuthorizationException => self::authorizationError($e),
             $e instanceof ModelNotFoundException => [404, 'not_found', 'The record was not found.', []],
             $e instanceof HttpExceptionInterface => [
                 $e->getStatusCode(),
@@ -68,6 +74,25 @@ class ApiExceptionRenderer
                 'details' => (object) $details,
             ],
         ], $status, $headers);
+    }
+
+    /**
+     * A Policy may deny with its own code and message:
+     *   Response::deny('Only the Chief Admin can change: branding.accent.', 'config_section_forbidden')
+     *
+     * @return array{0: int, 1: string, 2: string, 3: array<string, mixed>}
+     */
+    private static function authorizationError(AuthorizationException $e): array
+    {
+        $code = $e->response()?->code();
+        $message = $e->getMessage();
+
+        return [
+            403,
+            is_string($code) && $code !== '' ? $code : 'forbidden',
+            $message !== '' && $message !== 'This action is unauthorized.' ? $message : 'You do not have permission to do this.',
+            [],
+        ];
     }
 
     private static function codeForStatus(int $status): string

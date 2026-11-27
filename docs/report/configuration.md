@@ -30,6 +30,11 @@ Defined in [`backend/.env.example`](../../backend/.env.example). In Docker, [`in
 | `MAIL_FROM_ADDRESS` | `no-reply@campustab.local` | Sender address |
 | `AWS_*` | empty, `ap-south-1` | Object storage for files (from Phase 2) |
 | `REPORT_PATH` | `/docs/report` in Docker, else `../docs/report` | Where `report:generate` writes |
+| `LICENCE_KEY_PEPPER` | none; `php artisan licence:keygen --write` | Secret for hashing licence keys. Changing it invalidates every issued key |
+| `LICENCE_SIGNING_SECRET_KEY`, `LICENCE_SIGNING_PUBLIC_KEY` | none; `php artisan licence:keygen --write` | Ed25519 pair (base64) that signs and checks licence payloads; secret |
+| `LICENCE_GRACE_DAYS` | `15` | Days after the licence ends with a banner, before read-only |
+| `SMS_DRIVER` | `log` | Text messages (OTP): `log` writes them to `storage/logs/laravel.log`; `array` keeps them in memory (tests) |
+| `TENANCY_QUERY_GUARD` | `log` | `log` warns about school-data queries without `tenant_id`; `record` (tests) fails the test; `off` |
 
 ## Environment variables (front end)
 
@@ -47,6 +52,45 @@ Set on the `web` container only: `VITE_USE_POLLING=true` (watch files by polling
 
 Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `WEB_PORT` 5173, `REVERB_PORT` 8080, `MONGO_PORT` 27017, `REDIS_PORT` 6379, `MAILPIT_SMTP_PORT` 1025, `MAILPIT_UI_PORT` 8025.
 
+## Code settings (`backend/config/`)
+
+| File | Key | What it changes |
+| --- | --- | --- |
+| `licensing.php` | `plans` | Plans a licence may name: `starter`, `standard`, `premium` |
+| `licensing.php` | `modules` | Modules a licence can switch on: attendance, leave, assessment, reports, fees, communication |
+| `licensing.php` | `activation.*` | OTP minutes (10), tries (5), sends per 10 minutes (3), enrolment-token minutes (30) |
+| `tenancy.php` | `platform_collections` | Collections that are not school data (decision 0005) |
+
 ## School config keys
 
-_Phase 1._
+Each school's versioned config, validated by [`school-config.schema.json`](../../backend/app/Modules/Tenancy/Schemas/school-config.schema.json). Every object forbids unknown keys. "Edits" says who may change the key (Tenancy page, section 9).
+
+| Key | Values (default) | Edits |
+| --- | --- | --- |
+| `school.name`, `school.short_name` | text (from the school record) | Chief |
+| `school.logo_url` | storage path or null (null) | Chief |
+| `school.board` | CBSE, ICSE, STATE, IB, CAMBRIDGE, OTHER (CBSE) | Chief |
+| `school.affiliation_no` | text or null (null) | Chief |
+| `branding.accent` | `#RRGGBB` (`#0F766E`) | Chief |
+| `locale.default_language` | en, hi, bn, mr, gu, pa, ta, te, kn, ml, or, ur (en) | Chief |
+| `locale.available_languages` | list of the above (en, hi) | Chief |
+| `locale.user_can_choose_language` | true/false (true) | Chief |
+| `locale.timezone` | IANA name (Asia/Kolkata) | Chief |
+| `locale.date_format` | DD-MM-YYYY, DD/MM/YYYY, YYYY-MM-DD (DD-MM-YYYY) | Chief |
+| `academic.year_start_month` | 1–12 (4) | Chief, Principal |
+| `academic.terms` | 1–4 names (Term 1, Term 2) | Chief, Principal |
+| `modules.attendance` … `modules.communication` | true/false (true when licensed); can't be on unless licensed | Chief |
+| `sign_in.methods` | password, parent_otp (both) | Chief |
+| `policies.attendance.student_mode` | daily, period (daily) | Chief, Principal |
+| `policies.attendance.edit_window_hours` | 0–168 (4) | Chief, Principal |
+| `policies.attendance.min_percent_alert` | 0–100 (75) | Chief, Principal |
+| `policies.leave.chain` | clerk, principal (both) | Chief, Principal |
+| `policies.leave.clerk_can_reject` | true/false (false) | Chief, Principal |
+| `policies.leave.remind_after_hours` | 1–168 (24) | Chief, Principal |
+| `policies.leave.escalate_after_hours` | 1–336 (48) | Chief, Principal |
+| `policies.marks.auto_publish_class_tests` | true/false (true) | Chief, Principal |
+| `policies.fees.gateway` | none, razorpay (none) | Chief, Principal |
+| `policies.fees.waiver_by` | principal, chief (principal) | Chief, Principal |
+| `policies.fees.receipt_prefix` | text or null (null) | Chief, Principal |
+
+There is deliberately no setting that lets a clerk change locked marks: that rule is fixed in code.

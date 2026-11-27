@@ -21,8 +21,8 @@ Every coding session reads this file first and follows it for the whole session.
 
 ## 3. Coding rules
 
-1. **Tenancy.** Every school model uses the `BelongsToTenant` trait. It adds the tenant filter to every query and sets `tenant_id` when a record is created.
-2. **`tenant_id` comes only from the signed-in user,** never from the request body, query string or headers.
+1. **Tenancy.** Every school model uses the `BelongsToTenant` trait. It adds the tenant filter to every query and sets `tenant_id` when a record is created. With no school set, a query throws instead of reading every school. Platform code names the school with `TenantContext::run($tenantId, fn)`. The only way around the scope is `TenantContext::bypass()`, used solely for the sign-in exception in decision 0005; a new bypass needs a new decision record. The tenant query guard fails any test that sends a school-data query without `tenant_id`.
+2. **`tenant_id` comes only from the signed-in user,** never from the request body, query string or headers. Password sign-in finds the school from its code first, then the user inside that school.
 3. **Every permission check goes through a Policy.** Controllers call `authorize()` (or `Gate`); no inline role checks. Hiding something in the UI is never the protection.
 4. **Soft deletes on every school model.** Deleted records go to the recycle bin; only the Chief Admin can purge permanently.
 5. **Every write is audit-logged** with before and after values, actor, IP and device.

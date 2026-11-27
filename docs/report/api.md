@@ -24,6 +24,14 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 
 | Method | Path | Name | Handler | Middleware |
 | --- | --- | --- | --- | --- |
+| GET | `/api/v1/config` | config.show | `SchoolConfigController` | api, auth:sanctum, tenant, mfa.enrolled, licence |
+| PUT | `/api/v1/config` | config.update | `SchoolConfigController` | api, auth:sanctum, tenant, mfa.enrolled, licence |
+| GET | `/api/v1/config/versions` | config.versions.index | `SchoolConfigController` | api, auth:sanctum, tenant, mfa.enrolled, licence |
+| GET | `/api/v1/config/versions/{version}` | config.versions.show | `SchoolConfigController` | api, auth:sanctum, tenant, mfa.enrolled, licence |
+| POST | `/api/v1/config/versions/{version}/rollback` | config.versions.rollback | `SchoolConfigController` | api, auth:sanctum, tenant, mfa.enrolled, licence |
 | GET | `/api/v1/health` | system.health | `HealthController` | api |
+| POST | `/api/v1/licences/activate` | licences.activate | `ActivationController` | api, throttle:activation |
+| POST | `/api/v1/licences/activate/otp` | licences.activate.otp | `ActivationController` | api, throttle:activation |
+| GET | `/api/v1/public/tenants/{code}/config` | public.tenants.config | `PublicConfigController` | api, throttle:public |
 
 <!-- generated:routes:end -->
