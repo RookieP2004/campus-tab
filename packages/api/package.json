@@ -1,0 +1,9 @@
+{
+  "name": "@campus-tab/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Typed client for the Campus TAB API, generated from the OpenAPI spec (Phase 1).",
+  "author": "Sujal Chandel",
+  "license": "UNLICENSED",
+  "type": "module"
+}

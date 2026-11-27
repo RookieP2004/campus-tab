@@ -1,0 +1,58 @@
+/*
+ * Maps the Campus TAB tokens to Tailwind CSS v4 utilities, so components use
+ * classes such as bg-surface, text-muted, border-border, bg-primary-solid,
+ * text-danger, bg-status-pending-bg. Import after tokens.css and tailwindcss.
+ *
+ * `inline` keeps the var() references, so switching data-theme on <html>
+ * re-colours everything without rebuilding.
+ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --font-sans: var(--ct-font-sans);
+
+  --color-primary: var(--ct-primary-text);
+  --color-primary-solid: var(--ct-primary-solid);
+  --color-primary-solid-hover: var(--ct-primary-solid-hover);
+  --color-primary-soft: var(--ct-primary-soft);
+  --color-on-solid: var(--ct-on-solid);
+  --color-school-accent: var(--ct-school-accent);
+
+  --color-success: var(--ct-success-text);
+  --color-success-solid: var(--ct-success-solid);
+  --color-warning: var(--ct-warning-text);
+  --color-warning-solid: var(--ct-warning-solid);
+  --color-danger: var(--ct-danger-text);
+  --color-danger-solid: var(--ct-danger-solid);
+  --color-info: var(--ct-info-text);
+  --color-info-solid: var(--ct-info-solid);
+
+  --color-bg: var(--ct-bg);
+  --color-surface: var(--ct-surface);
+  --color-surface-muted: var(--ct-surface-muted);
+  --color-fg: var(--ct-text);
+  --color-muted: var(--ct-text-muted);
+  --color-border: var(--ct-border);
+  --color-ring: var(--ct-focus-ring);
+
+  --color-status-draft-bg: var(--ct-status-draft-bg);
+  --color-status-draft-fg: var(--ct-status-draft-fg);
+  --color-status-pending-bg: var(--ct-status-pending-bg);
+  --color-status-pending-fg: var(--ct-status-pending-fg);
+  --color-status-verified-bg: var(--ct-status-verified-bg);
+  --color-status-verified-fg: var(--ct-status-verified-fg);
+  --color-status-approved-bg: var(--ct-status-approved-bg);
+  --color-status-approved-fg: var(--ct-status-approved-fg);
+  --color-status-returned-bg: var(--ct-status-returned-bg);
+  --color-status-returned-fg: var(--ct-status-returned-fg);
+  --color-status-rejected-bg: var(--ct-status-rejected-bg);
+  --color-status-rejected-fg: var(--ct-status-rejected-fg);
+  --color-status-locked-bg: var(--ct-status-locked-bg);
+  --color-status-locked-fg: var(--ct-status-locked-fg);
+  --color-status-published-bg: var(--ct-status-published-bg);
+  --color-status-published-fg: var(--ct-status-published-fg);
+
+  --radius-card: var(--ct-radius-card);
+  --radius-input: var(--ct-radius-input);
+}

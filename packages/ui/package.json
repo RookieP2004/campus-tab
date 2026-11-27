@@ -1,0 +1,19 @@
+{
+  "name": "@campus-tab/ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Campus TAB design tokens (light and dark), logo files and shared components.",
+  "author": "Sujal Chandel",
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./src/tokens.css",
+    "./theme.css": "./src/theme.css",
+    "./assets/*": "./assets/*"
+  },
+  "files": [
+    "src",
+    "assets"
+  ]
+}

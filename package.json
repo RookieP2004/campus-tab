@@ -1,0 +1,22 @@
+{
+  "name": "campus-tab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Campus TAB: one multi-tenant school platform for attendance, leave, marks, report cards and fees.",
+  "author": "Sujal Chandel",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "frontend",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace frontend",
+    "build": "npm run build --workspace frontend",
+    "lint": "npm run lint --workspace frontend",
+    "typecheck": "npm run typecheck --workspace frontend",
+    "test": "npm run test --workspace frontend"
+  }
+}

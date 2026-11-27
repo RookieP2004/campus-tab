@@ -1,0 +1,148 @@
+/*
+ * Campus TAB theme tokens — the "Theme tokens" table in docs/BLUEPRINT.md.
+ *
+ * Light is the default. The app sets data-theme="light" or data-theme="dark"
+ * on <html> (Match device resolves to one of them). If no data-theme is set,
+ * the device's colour-scheme preference decides.
+ *
+ * Naming: --ct-<role>. "-text" is for coloured text and icons, "-solid" for
+ * filled buttons and badges that carry white text. In dark mode text colours
+ * are lightened for contrast while solid fills stay deep.
+ *
+ * Status colours never change meaning anywhere in the product.
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Brand */
+  --ct-primary-text: #1d4ed8;
+  --ct-primary-solid: #1d4ed8;
+  --ct-primary-solid-hover: #1e40af;
+  --ct-on-solid: #ffffff;
+  --ct-primary-soft: #dbeafe;
+
+  /* School accent: replaced per school from the config. Never used for status. */
+  --ct-school-accent: #0f766e;
+
+  /* Feedback */
+  --ct-success-text: #15803d;
+  --ct-success-solid: #15803d;
+  --ct-warning-text: #b45309;
+  --ct-warning-solid: #b45309;
+  --ct-danger-text: #b91c1c;
+  --ct-danger-solid: #b91c1c;
+  --ct-info-text: #0369a1;
+  --ct-info-solid: #0369a1;
+
+  /* Surfaces and text */
+  --ct-bg: #f8fafc;
+  --ct-surface: #ffffff;
+  --ct-surface-muted: #f1f5f9;
+  --ct-text: #0f172a;
+  --ct-text-muted: #475569;
+  --ct-border: #e2e8f0;
+  --ct-focus-ring: #1d4ed8;
+
+  /* Status chips: background / text */
+  --ct-status-draft-bg: #f1f5f9;
+  --ct-status-draft-fg: #475569;
+  --ct-status-pending-bg: #fef3c7;
+  --ct-status-pending-fg: #92400e;
+  --ct-status-verified-bg: #dbeafe;
+  --ct-status-verified-fg: #1e40af;
+  --ct-status-approved-bg: #dcfce7;
+  --ct-status-approved-fg: #166534;
+  --ct-status-returned-bg: #ede9fe;
+  --ct-status-returned-fg: #5b21b6;
+  --ct-status-rejected-bg: #fee2e2;
+  --ct-status-rejected-fg: #991b1b;
+  --ct-status-locked-bg: #e2e8f0;
+  --ct-status-locked-fg: #334155;
+  --ct-status-published-bg: #ccfbf1;
+  --ct-status-published-fg: #115e59;
+
+  /* Shape, space, motion */
+  --ct-radius-card: 8px;
+  --ct-radius-input: 6px;
+  --ct-space: 4px;
+  --ct-motion: 180ms;
+
+  /* Type */
+  --ct-font-latin: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ct-font-devanagari: "Noto Sans Devanagari Variable", "Noto Sans Devanagari", sans-serif;
+  --ct-font-sans: var(--ct-font-latin), var(--ct-font-devanagari);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ct-primary-text: #60a5fa;
+  --ct-primary-solid: #2563eb;
+  --ct-primary-solid-hover: #1d4ed8;
+  --ct-on-solid: #ffffff;
+  --ct-primary-soft: #1e3a8a;
+
+  --ct-success-text: #4ade80;
+  --ct-success-solid: #15803d;
+  --ct-warning-text: #fbbf24;
+  --ct-warning-solid: #b45309;
+  --ct-danger-text: #f87171;
+  --ct-danger-solid: #b91c1c;
+  --ct-info-text: #38bdf8;
+  --ct-info-solid: #0369a1;
+
+  --ct-bg: #0b1220;
+  --ct-surface: #111827;
+  --ct-surface-muted: #1f2937;
+  --ct-text: #e5e7eb;
+  --ct-text-muted: #94a3b8;
+  --ct-border: #1f2937;
+  --ct-focus-ring: #60a5fa;
+
+  --ct-status-draft-bg: #1f2937;
+  --ct-status-draft-fg: #cbd5e1;
+  --ct-status-pending-bg: #78350f;
+  --ct-status-pending-fg: #fde68a;
+  --ct-status-verified-bg: #1e3a8a;
+  --ct-status-verified-fg: #bfdbfe;
+  --ct-status-approved-bg: #14532d;
+  --ct-status-approved-fg: #bbf7d0;
+  --ct-status-returned-bg: #4c1d95;
+  --ct-status-returned-fg: #ddd6fe;
+  --ct-status-rejected-bg: #7f1d1d;
+  --ct-status-rejected-fg: #fecaca;
+  --ct-status-locked-bg: #334155;
+  --ct-status-locked-fg: #e2e8f0;
+  --ct-status-published-bg: #134e4a;
+  --ct-status-published-fg: #99f6e4;
+}
+
+/* No explicit choice yet: follow the device. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --ct-primary-text: #60a5fa;
+    --ct-primary-solid: #2563eb;
+    --ct-primary-solid-hover: #1d4ed8;
+    --ct-primary-soft: #1e3a8a;
+    --ct-success-text: #4ade80;
+    --ct-warning-text: #fbbf24;
+    --ct-danger-text: #f87171;
+    --ct-info-text: #38bdf8;
+    --ct-bg: #0b1220;
+    --ct-surface: #111827;
+    --ct-surface-muted: #1f2937;
+    --ct-text: #e5e7eb;
+    --ct-text-muted: #94a3b8;
+    --ct-border: #1f2937;
+    --ct-focus-ring: #60a5fa;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ct-motion: 0ms;
+  }
+}

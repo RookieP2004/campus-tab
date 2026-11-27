@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend (Pint, PHPStan, Pest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s --health-retries 20
+
+    env:
+      DB_CONNECTION: mongodb
+      MONGODB_URI: mongodb://127.0.0.1:27017/?replicaSet=rs0
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Service containers cannot pass --replSet, so MongoDB starts here as a
+      # single-node replica set (rs0), the same as infra/docker-compose.yml.
+      - name: Start MongoDB 8 replica set
+        working-directory: .
+        run: |
+          docker run -d --name mongo -p 27017:27017 mongo:8.0 mongod --replSet rs0 --bind_ip_all
+          for i in $(seq 1 30); do
+            docker exec mongo mongosh --quiet --eval "db.adminCommand('ping').ok" >/dev/null 2>&1 && break
+            sleep 2
+          done
+          docker exec mongo mongosh --quiet --eval "rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: '127.0.0.1:27017' }] })"
+          for i in $(seq 1 60); do
+            if [ "$(docker exec mongo mongosh --quiet --eval 'db.hello().isWritablePrimary')" = "true" ]; then
+              echo "MongoDB is primary"; exit 0
+            fi
+            sleep 2
+          done
+          echo "MongoDB did not become primary"; docker logs mongo; exit 1
+
+      - name: Set up PHP 8.4 (same as the api container)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mongodb-2.5.9, redis, pcntl, intl, bcmath, sockets, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Get Composer cache folder
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Install Composer packages
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+
+      - name: Pint
+        run: vendor/bin/pint --test
+
+      - name: PHPStan (level 6)
+        run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
+
+      - name: Pest
+        run: vendor/bin/pest
+
+      - name: Generated report sections are up to date
+        run: php artisan report:generate --check
+
+  frontend:
+    name: Frontend (ESLint, tsc, Vitest, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install npm packages
+        run: npm ci --no-audit --no-fund
+
+      - name: ESLint
+        run: npm run lint --workspace @campus-tab/frontend
+
+      - name: TypeScript
+        run: npm run typecheck --workspace @campus-tab/frontend
+
+      - name: Vitest
+        run: npm run test --workspace @campus-tab/frontend
+
+      - name: Build
+        run: npm run build --workspace @campus-tab/frontend
+
+  report:
+    name: Application Report updated
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Code changes come with their report pages and a change-log entry
+        run: node .github/scripts/check-report.mjs "origin/${{ github.base_ref }}"
