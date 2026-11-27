@@ -66,6 +66,8 @@ export interface StudentProfile extends StudentRow {
   guardians: Guardian[];
   consents: Record<string, Consent | null>;
   columns: CustomColumn[];
+  /** Decrypted sensitive values, sent only to people who may fill them; shown only after "Show". */
+  sensitive_values?: Record<string, unknown>;
   can: { edit: boolean; manage_guardians: boolean; delete: boolean };
 }
 

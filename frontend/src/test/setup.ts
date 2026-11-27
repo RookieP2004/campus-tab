@@ -2,12 +2,25 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeEach, vi } from 'vitest';
 
-/** jsdom has no matchMedia; tests flip `prefersDark` to simulate the device. */
-export const device = { prefersDark: false };
+/**
+ * jsdom has no matchMedia; tests flip `prefersDark` to simulate the device,
+ * and set `width` (CSS pixels) for the phone, tablet and desktop layouts.
+ */
+export const device = { prefersDark: false, width: 1280 };
+
+/** Whether a media query such as "(min-width: 1024px)" matches the fake device. */
+function mediaMatches(query: string): boolean {
+  if (query.includes('prefers-color-scheme')) return query.includes('dark') ? device.prefersDark : !device.prefersDark;
+  const min = /min-width:\s*(\d+)px/.exec(query);
+  const max = /max-width:\s*(\d+)px/.exec(query);
+  if (min || max) return (!min || device.width >= Number(min[1])) && (!max || device.width <= Number(max[1]));
+  return false;
+}
 
 /** A made-up signed-in user for screens behind RequireSession. */
 export const demoUser = {
   id: 'u_1',
+  tenant_id: 't_01HZZZZZZZZZZZZZZZZZZZZZZZ',
   name: 'Anita Verma',
   email: 'chief@sunrise.test',
   phone: '+919800000001',
@@ -22,7 +35,7 @@ export const demoUser = {
   session: { idle_minutes: 15, ends_at: null },
 };
 
-type Handler = (request: Request) => Response | Promise<Response> | undefined;
+type Handler = (request: Request) => Response | Promise<Response | undefined> | undefined;
 
 /**
  * A tiny fake API. Each test can add handlers; `fakeApi.me` is what GET /me
@@ -38,6 +51,7 @@ export const json = (body: unknown, status = 200) => new Response(JSON.stringify
 
 beforeEach(() => {
   device.prefersDark = false;
+  device.width = 1280;
   localStorage.clear();
   sessionStorage.clear();
   document.documentElement.removeAttribute('data-theme');
@@ -48,7 +62,7 @@ beforeEach(() => {
   vi.stubGlobal(
     'matchMedia',
     vi.fn((query: string) => ({
-      matches: query.includes('dark') ? device.prefersDark : false,
+      matches: query.includes('dark') ? device.prefersDark : mediaMatches(query),
       media: query,
       onchange: null,
       addEventListener: vi.fn(),
@@ -71,6 +85,8 @@ beforeEach(() => {
       const path = new URL(request.url).pathname;
       if (path.endsWith('/health')) return json({ status: 'ok', db: 'ok', queue: 'ok' });
       if (path.endsWith('/sanctum/csrf-cookie')) return new Response(null, { status: 204 });
+      if (path.endsWith('/me/dashboard')) return json({ data: { role: fakeApi.me?.roles[0] ?? null, roles: [], cards: [] } });
+      if (path.endsWith('/me/notifications')) return json({ data: [], unread: 0 });
       if (path.endsWith('/me')) {
         return fakeApi.me ? json({ data: fakeApi.me }) : json({ error: { code: 'unauthenticated', message: 'Sign in to continue.', details: {} } }, 401);
       }

@@ -55,7 +55,7 @@ _Screens arrive in Phase 1 part C: school-code entry, sign-in (password + MFA, O
 | `POST /auth/otp/request` | `school_code`, `phone` | `202`, the same message for every number | `429 otp_rate_limited` |
 | `POST /auth/otp/verify` | `school_code`, `phone`, `code` | a session | `422 otp_invalid` (one answer for every failure), `401 sign_in_failed` after too many |
 | `POST /auth/password/forgot` | `school_code`, `login` | `202`, the same message whether or not it matches | `429` per IP |
-| `POST /auth/password/set` | `school_code`, `token` (link secret or setup code), `password`, `password_confirmation` | `200` | `422 password_link_invalid`, `422 validation_failed` |
+| `POST /auth/password/set` | `school_code`, `token` (link secret or setup code), `password`, `password_confirmation`, `language?` | `200` | `422 password_link_invalid`, `422 validation_failed` |
 
 **What a session looks like:**
 - **From the web app** (a request from `FRONTEND_URL`): `{mode: "browser", device_session_id}` plus the session cookie.
@@ -68,7 +68,7 @@ _Screens arrive in Phase 1 part C: school-code entry, sign-in (password + MFA, O
 | --- | --- |
 | `POST /auth/logout` | Ends this device |
 | `POST /auth/step-up` `{code}` | Marks this device stepped-up for 10 minutes |
-| `GET /me` | Profile, roles, level, permissions (for hiding only), language, theme, MFA state, `session.idle_minutes`, `session.ends_at` |
+| `GET /me` | Profile (with `tenant_id`), roles, level, permissions (for hiding only), language, theme, MFA state, `session.idle_minutes`, `session.ends_at` |
 | `PATCH /me/preferences` | `language` (any the app ships), `theme` (`light`, `dark`, `system`) |
 | `PUT /me/password` | Needs `current_password`; ends every session including this one |
 | `GET /me/sessions`, `DELETE /me/sessions/{id}`, `POST /me/sessions/revoke-others` | Devices, remote sign-out |
@@ -104,6 +104,13 @@ _Screens arrive in Phase 1 part C: school-code entry, sign-in (password + MFA, O
 - **Student sign-in** is refused while the school setting `student_login` is off, with the same answer as a wrong password.
 - **`PasswordLinks::send()`** takes an optional validity, so student setup codes last 48 hours.
 - **`identity:sync-roles --with-new-permissions`** adds new phases' permissions to existing schools.
+
+**Session 2.**
+
+- **`GET /me`** also returns `tenant_id`, so the web app can name its own private notification channel, `school.<tenant_id>.user.<id>` (see [communication.md](communication.md)). The server still checks the channel against the signed-in user.
+- **`POST /auth/password/set`** and **licence activation** (`chief.language` in the activation body) accept an optional `language`, one of the languages the app ships. The language chosen on that page becomes the person's own preference.
+- **Policy "not found".** When a Policy answers `Response::denyAsNotFound()`, the API error renderer ([`Support/Http/ApiExceptionRenderer.php`](../../../backend/app/Support/Http/ApiExceptionRenderer.php)) now returns `404 not_found` ("The record was not found.") instead of a 403, so a record the person may not see is not admitted to exist. Attendance uses this for registers outside the person's scope.
+- **Phase 4 permissions:** `calendar.view`, `calendar.manage`, `calendar.approve`; `staff_attendance.enter` for the Chief, Principal and Vice Principal as well as the Attendance Officer duty (see [permissions.md](../permissions.md)).
 
 ## 4. Code map
 
@@ -180,7 +187,7 @@ flowchart TD
 
 | Collection | Fields | Indexes |
 | --- | --- | --- |
-| `users` (school) | `tenant_id`, `name`, `email`, `phone`, `username`, `password` (hashed or null), `roles[]`, `status`, `mfa {enabled, enrolled_at, last_timestep}`, `mfa_secret` (encrypted), `mfa_pending_secret` (encrypted), `mfa_recovery_codes` (HMACs), `failed_sign_ins`, `locked_until`, `last_sign_in_at`, `access {children, class_sections, subject_sections, wings}`, `language`, `theme`, timestamps, `deleted_at` | `tenant_id + email` / `+ phone` / `+ username` unique (partial), `tenant_id + roles` |
+| `users` (school) | `tenant_id`, `name`, `email`, `phone`, `username`, `password` (hashed or null), `roles[]`, `status`, `mfa {enabled, enrolled_at, last_timestep}`, `mfa_secret` (encrypted), `mfa_pending_secret` (encrypted), `mfa_recovery_codes` (HMACs), `failed_sign_ins`, `locked_until`, `last_sign_in_at`, `access {children, class_sections, subject_sections, wings}`, `language`, `theme`, `notification_prefs {push, email, muted[]}` (Phase 3), timestamps, `deleted_at` | `tenant_id + email` / `+ phone` / `+ username` unique (partial), `tenant_id + roles` |
 | `roles` (school) | `tenant_id`, `name`, `label`, `level`, `duty`, `permissions[]`, `is_system`, `deleted_at` | `tenant_id + name` unique |
 | `device_sessions` (school) | `tenant_id`, `user_id`, `kind`, `token_id` or `session_hash`, `name`, `user_agent`, `ip`, `method`, `limited`, `last_seen_at`, `step_up_at`, `revoked_at`, `revoked_reason` | `tenant_id + user_id + revoked_at`, `tenant_id + token_id`, `tenant_id + session_hash` |
 | `password_tokens` (school) | `tenant_id`, `user_id`, `purpose`, `token_hash`, `expires_at`, `used_at`, `created_by` | `tenant_id + token_hash` unique, `tenant_id + user_id + used_at` |
@@ -270,3 +277,4 @@ The matrix as coded and the fixed rules are in [permissions.md](../permissions.m
 | 2026-11-27 | 1C | Sign-in, OTP, MFA enrolment, activation, password and device screens; background requests do not extend the idle time; idle warning and sign-in over the page; MFA code shared with platform admins; test that a passwordless account never signs in | Phase 1 items 11 and 12 with the owner's rules for part C |
 | 2026-11-27 | 2 | Scope facts from records; `scope` in `GET /me`; student sign-in setting; setup-code validity; `--with-new-permissions` | Phase 2 rule 1 and rule 4 |
 | 2026-11-27 | 1C | A new staff account, or a parent becoming staff, is refused past the licence's staff seats | The owner's seat rule |
+| 2026-11-27 | Session 2 | `GET /me` returns `tenant_id`; set-password and activation take an optional `language`; `denyAsNotFound` answers 404 `not_found`; `notification_prefs` on users; calendar and staff-attendance permissions | Phase 3 notifications, the sign-in pages' language picker, Phase 4 |

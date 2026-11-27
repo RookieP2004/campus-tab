@@ -60,7 +60,7 @@ class User extends Authenticatable implements Recyclable
 
     /** @var list<string> */
     protected $fillable = [
-        'tenant_id', 'name', 'email', 'phone', 'username', 'password', 'roles', 'mfa', 'status', 'language', 'theme',
+        'tenant_id', 'name', 'email', 'phone', 'username', 'password', 'roles', 'mfa', 'status', 'language', 'theme', 'notification_prefs',
     ];
 
     /** @var list<string> */

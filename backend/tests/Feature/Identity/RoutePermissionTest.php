@@ -37,6 +37,22 @@ const OPEN_ROUTES = [
     'POST api/v1/me/mfa/enrol/confirm',
     'POST api/v1/me/mfa/recovery-codes',
     'DELETE api/v1/me/mfa',
+    // Phase 3: my dashboard (cards built from what I may see), search, notifications
+    'GET api/v1/me/dashboard',
+    'GET api/v1/me/search',
+    'GET api/v1/me/notifications',
+    'POST api/v1/me/notifications/{id}/read',
+    'POST api/v1/me/notifications/read-all',
+    'GET api/v1/me/notification-preferences',
+    'PUT api/v1/me/notification-preferences',
+    'POST api/v1/me/push-devices',
+    'DELETE api/v1/me/push-devices',
+    // Reverb channel auth: the channel callback checks it is my own channel
+    'GET api/v1/broadcasting/auth',
+    // A notice attachment, only through a short-lived signed link
+    'GET api/v1/files/notices/{tenant}/{notice}/{attachment}',
+    // A late entry's paper-register photo, only through a short-lived signed link
+    'GET api/v1/files/attendance/{tenant}/{day}',
     // Platform accounts only (auth:platform); the school side is checked per grant
     'POST api/v1/platform/support/sessions',
 ];

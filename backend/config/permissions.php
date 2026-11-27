@@ -82,6 +82,10 @@ return [
         // Entering other staff's attendance (the Attendance Officer duty).
         'staff_attendance.enter' => ['school'],
         'staff_attendance.view' => ['school', 'own'],
+        // Holiday calendar (Phase 4): the Clerk keeps it, the Principal approves.
+        'calendar.view' => ['school'],
+        'calendar.manage' => ['school'],
+        'calendar.approve' => ['school'],
 
         // Leave (Phase 5)
         'leave.apply' => ['own'],
@@ -152,6 +156,7 @@ return [
                 'staff.view:school', 'staff.create:school', 'staff.approve:school', 'staff.edit:school', 'staff.deactivate:school',
                 'imports.students:school', 'imports.staff:school',
                 'attendance.view:school', 'attendance.mark:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
+                'staff_attendance.enter:school', 'staff_attendance.view:school', 'staff_attendance.mark:own', 'calendar.view:school', 'calendar.manage:school', 'calendar.approve:school',
                 'leave.apply:own', 'leave.decide_principal:school', 'student_leave.approve:school',
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
                 'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.unlock:school', 'marks.correction_request:school',
@@ -174,6 +179,7 @@ return [
                 'staff.view:school', 'staff.create:school', 'staff.approve:school', 'staff.edit:school', 'staff.deactivate:school',
                 'imports.students:school', 'imports.staff:school',
                 'attendance.view:school', 'attendance.mark:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
+                'staff_attendance.enter:school', 'staff_attendance.view:school', 'staff_attendance.mark:own', 'calendar.view:school', 'calendar.approve:school',
                 'leave.apply:own', 'leave.fast_track:school', 'leave.decide:school', 'student_leave.approve:school',
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
                 'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.unlock:school', 'marks.correction_approve:school',
@@ -190,6 +196,7 @@ return [
                 'users.view:school', 'audit.view:own',
                 'students.view:wing', 'students.edit:wing', 'students.login_codes:wing', 'academic.view:school', 'staff.view:school',
                 'attendance.view:wing', 'attendance.mark:wing', 'attendance.edit_after_window:wing',
+                'staff_attendance.enter:school', 'staff_attendance.mark:own', 'calendar.view:school',
                 'leave.apply:own', 'leave.fast_track:wing', 'leave.decide:wing', 'student_leave.approve:wing',
                 'tests.create:wing', 'marks.enter:wing', 'marks.verify:wing', 'marks.lock:wing',
                 'results.publish:wing', 'remarks.edit:wing', 'custom_fields.manage:wing',
@@ -204,6 +211,7 @@ return [
                 'students.view:school', 'students.edit:school', 'students.admit:school', 'guardians.manage:school',
                 'academic.view:school', 'staff.view:school', 'staff.draft:school', 'imports.students:school',
                 'attendance.view:school', 'attendance.correct:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
+                'staff_attendance.view:school', 'staff_attendance.mark:own', 'calendar.view:school', 'calendar.manage:school',
                 'leave.apply:own', 'leave.verify:school',
                 'assessment.setup:school', 'exams.schedule:school', 'tests.create:school',
                 'marks.enter:school', 'marks.lock:school', 'marks.correction_request:school',
@@ -217,7 +225,7 @@ return [
             'level' => 50,
             'permissions' => [
                 'students.view:class', 'students.edit:class', 'students.login_codes:class', 'academic.view:school',
-                'attendance.view:class', 'attendance.mark:class', 'attendance.request_edit:class', 'staff_attendance.mark:own',
+                'attendance.view:class', 'attendance.mark:class', 'attendance.request_edit:class', 'staff_attendance.mark:own', 'calendar.view:school',
                 'leave.apply:own', 'student_leave.approve:class',
                 'tests.create:class', 'marks.enter:class', 'marks.verify:class', 'marks.correction_request:class',
                 'remarks.edit:class', 'custom_fields.manage:class', 'notices.send:class', 'notices.view:own',
@@ -229,7 +237,7 @@ return [
             'level' => 40,
             'permissions' => [
                 'students.view:subject', 'academic.view:school',
-                'attendance.view:subject', 'attendance.mark:subject', 'attendance.request_edit:subject', 'staff_attendance.mark:own',
+                'attendance.view:subject', 'attendance.mark:subject', 'attendance.request_edit:subject', 'staff_attendance.mark:own', 'calendar.view:school',
                 'leave.apply:own', 'tests.create:subject', 'marks.enter:subject', 'marks.correction_request:subject',
                 'remarks.edit:subject', 'custom_fields.manage:subject', 'notices.send:subject', 'notices.view:own',
             ],
@@ -237,20 +245,20 @@ return [
         'staff' => [
             'label' => 'Staff',
             'level' => 30,
-            'permissions' => ['staff_attendance.mark:own', 'leave.apply:own', 'notices.view:own'],
+            'permissions' => ['staff_attendance.mark:own', 'leave.apply:own', 'notices.view:own', 'calendar.view:school'],
         ],
         'parent' => [
             'label' => 'Parent / Guardian',
             'level' => 20,
             'permissions' => [
                 'students.view:child', 'students.request_edit:child', 'attendance.view:child', 'student_leave.apply:child',
-                'results.view:child', 'notices.view:own', 'export.own_data:child', 'fees.dues_view:child', 'fees.pay_online:child',
+                'results.view:child', 'notices.view:own', 'export.own_data:child', 'calendar.view:school', 'fees.dues_view:child', 'fees.pay_online:child',
             ],
         ],
         'student' => [
             'label' => 'Student',
             'level' => 10,
-            'permissions' => ['students.view:own', 'attendance.view:own', 'results.view:own', 'notices.view:own', 'export.own_data:own'],
+            'permissions' => ['students.view:own', 'attendance.view:own', 'results.view:own', 'notices.view:own', 'export.own_data:own', 'calendar.view:school'],
         ],
         'fee_collector' => [
             'label' => 'Fee Collector',

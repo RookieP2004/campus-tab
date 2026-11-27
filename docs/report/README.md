@@ -45,6 +45,13 @@ Parts marked "Written by `php artisan report:generate`" are produced from the co
 | Test database reset | — | — | [`tests/Concerns/RefreshMongoDatabase.php`](../../backend/tests/Concerns/RefreshMongoDatabase.php) | drops `campus_tab_test` |
 | Report generator | — | `php artisan report:generate` | [`System/Console/ReportGenerateCommand.php`](../../backend/app/Modules/System/Console/ReportGenerateCommand.php) | `docs/report/*.md` |
 | Report check in CI | — | — | [`.github/scripts/check-report.mjs`](../../.github/scripts/check-report.mjs) | — |
+| Sensitive custom fields (encrypted, masked) | Student profile, Show button: [`StudentProfilePage.tsx`](../../frontend/src/features/people/StudentProfilePage.tsx) | `GET /students/{id}` → `sensitive_values` | [`Support/Privacy/SensitiveValue.php`](../../backend/app/Support/Privacy/SensitiveValue.php), [`People/Domain/StudentRecords.php`](../../backend/app/Modules/People/Domain/StudentRecords.php) | `students.custom`, `enrolments.custom` |
+| Notices and attachments | `/notices`: [`features/notices/`](../../frontend/src/features/notices/) | `GET/POST /notices`, `POST /notices/{id}/attachments/{aid}/link` | [`Communication/Domain/Notices.php`](../../backend/app/Modules/Communication/Domain/Notices.php), [`NoticeAudience.php`](../../backend/app/Modules/Communication/Domain/NoticeAudience.php) | `notices`, `notice_reads` |
+| Notifications, bell, preferences | `/notifications`, `/account/notifications`: [`features/notifications/`](../../frontend/src/features/notifications/) | `GET /me/notifications`, `PUT /me/notification-preferences` | [`Communication/Domain/Notifier.php`](../../backend/app/Modules/Communication/Domain/Notifier.php) | `notifications`, `push_devices` |
+| My dashboard and search | `/`: [`features/dashboard/`](../../frontend/src/features/dashboard/) | `GET /me/dashboard`, `GET /me/search` | [`Dashboard/Domain/Cards/`](../../backend/app/Modules/Dashboard/Domain/Cards/) | none (reads) |
+| Student register, late entry, upload | not built yet | `GET/PUT /attendance/sections/{id}/days/{date}` | [`Attendance/Domain/AttendanceRegister.php`](../../backend/app/Modules/Attendance/Domain/AttendanceRegister.php) | `attendance_days` |
+| Staff check-in, QR, manual entry | not built yet | `POST /attendance/staff/check-in`, `POST /attendance/staff/{id}/manual` | [`Attendance/Domain/StaffAttendanceService.php`](../../backend/app/Modules/Attendance/Domain/StaffAttendanceService.php) | `staff_attendance` |
+| Holiday calendar | not built yet | `GET/POST /calendar`, `POST /calendar/{id}/approve` | [`Attendance/Http/Controllers/CalendarController.php`](../../backend/app/Modules/Attendance/Http/Controllers/CalendarController.php) | `calendar_events` |
 
 Each phase adds its rows here.
 
@@ -58,9 +65,12 @@ The thirteen business modules from the blueprint each have a page in [modules/](
 | Module | Code | API routes | Report page |
 | --- | --- | --- | --- |
 | AcademicStructure | [`backend/app/Modules/AcademicStructure/`](../../backend/app/Modules/AcademicStructure/) | 17 | [modules/academic-structure.md](modules/academic-structure.md) |
+| Attendance | [`backend/app/Modules/Attendance/`](../../backend/app/Modules/Attendance/) | 25 | [modules/attendance.md](modules/attendance.md) |
 | Audit | [`backend/app/Modules/Audit/`](../../backend/app/Modules/Audit/) | 4 | [modules/audit.md](modules/audit.md) |
+| Communication | [`backend/app/Modules/Communication/`](../../backend/app/Modules/Communication/) | 13 | [modules/communication.md](modules/communication.md) |
 | Customisation | [`backend/app/Modules/Customisation/`](../../backend/app/Modules/Customisation/) | 6 | [modules/customisation.md](modules/customisation.md) |
-| Identity | [`backend/app/Modules/Identity/`](../../backend/app/Modules/Identity/) | 33 | [modules/identity.md](modules/identity.md) |
+| Dashboard | [`backend/app/Modules/Dashboard/`](../../backend/app/Modules/Dashboard/) | 2 | [modules/dashboard.md](modules/dashboard.md) |
+| Identity | [`backend/app/Modules/Identity/`](../../backend/app/Modules/Identity/) | 33 | [modules/identity-and-access.md](modules/identity-and-access.md) |
 | Licensing | [`backend/app/Modules/Licensing/`](../../backend/app/Modules/Licensing/) | 2 | [modules/licensing.md](modules/licensing.md) |
 | People | [`backend/app/Modules/People/`](../../backend/app/Modules/People/) | 23 | [modules/people.md](modules/people.md) |
 | Platform | [`backend/app/Modules/Platform/`](../../backend/app/Modules/Platform/) | 26 | [modules/platform.md](modules/platform.md) |

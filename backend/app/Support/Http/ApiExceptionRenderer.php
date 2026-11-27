@@ -87,6 +87,11 @@ class ApiExceptionRenderer
         $code = $e->response()?->code();
         $message = $e->getMessage();
 
+        // Response::denyAsNotFound(): a record the user may not see is not admitted to exist.
+        if ($e->status() === 404) {
+            return [404, 'not_found', 'The record was not found.', []];
+        }
+
         return [
             403,
             is_string($code) && $code !== '' ? $code : 'forbidden',

@@ -6,6 +6,7 @@ use App\Modules\AcademicStructure\Domain\Structure;
 use App\Modules\AcademicStructure\Models\AcademicYear;
 use App\Modules\AcademicStructure\Models\Section;
 use App\Modules\AcademicStructure\Models\Subject;
+use App\Modules\Attendance\Models\CalendarEvent;
 use App\Modules\Audit\Domain\AuditRecorder;
 use App\Modules\Customisation\Models\CustomField;
 use App\Modules\Identity\Domain\Role;
@@ -119,6 +120,16 @@ class DemoSchoolSeeder extends Seeder
             $user = $this->account($name, $email, '+9198000000'.str_pad((string) (10 + $n), 2, '0', STR_PAD_LEFT), $roles);
             $staff[$key] = $this->staffRecord($user, $designation, $n++, $key === 'vp' ? ['primary'] : [], $key === 'kamla' ? 'non_teaching' : 'teaching');
         }
+
+        // Ramesh, the Clerk, is also the Attendance Officer (a duty the Principal gives).
+        $clerkUser = User::query()->find($staff['clerk']->user_id);
+        $clerkUser?->forceFill(['roles' => array_values(array_unique([...$clerkUser->roles, 'attendance_officer']))])->save();
+
+        // Holidays: one approved, one waiting for the Principal.
+        $by = ['id' => (string) $clerkUser?->getKey(), 'name' => 'Ramesh Kumar'];
+        CalendarEvent::create(['date' => '2026-12-25', 'end_date' => '2026-12-25', 'type' => 'holiday', 'title' => 'Christmas', 'status' => 'approved',
+            'created_by' => $by, 'decided_by' => ['id' => (string) $staff['principal']->user_id, 'name' => 'Dr. Meera Iyer']]);
+        CalendarEvent::create(['date' => '2027-01-26', 'end_date' => '2027-01-26', 'type' => 'holiday', 'title' => 'Republic Day', 'status' => 'pending', 'created_by' => $by]);
 
         // Year, classes, sections, subjects, teachers.
         $structure = app(Structure::class);

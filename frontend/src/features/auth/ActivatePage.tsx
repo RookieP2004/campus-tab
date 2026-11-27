@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Alert, Field, Input } from '@/components/ui/form';
+import { usePreferences } from '@/stores/preferences';
 import { useSchoolCode } from '@/stores/school';
 import { useSessionState } from '@/stores/session';
 import { activation } from './api';
@@ -109,7 +110,15 @@ function ChiefStep({ keyValue, school, sentTo }: { keyValue: string; school: { c
       await activation.activate({
         key: keyValue,
         otp: v.otp,
-        chief: { name: v.name, email: v.email, phone: v.phone, password: v.password, password_confirmation: v.password_confirmation },
+        chief: {
+          name: v.name,
+          email: v.email,
+          phone: v.phone,
+          password: v.password,
+          password_confirmation: v.password_confirmation,
+          // The language picked on this page becomes the Chief's own.
+          language: usePreferences.getState().language,
+        },
       });
       setCode(school.code);
       resume();

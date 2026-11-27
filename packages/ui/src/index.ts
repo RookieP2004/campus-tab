@@ -1,6 +1,7 @@
 /**
- * @campus-tab/ui — shared design tokens, brand constants and (from Phase 3)
- * shared components. CSS lives in tokens.css and theme.css.
+ * @campus-tab/ui — shared design tokens, brand constants and the shared
+ * React components (Phase 3). CSS lives in tokens.css and theme.css. The
+ * components take every string as a prop: the package has no i18n.
  */
 
 export const brand = {
@@ -30,3 +31,10 @@ export type ResolvedTheme = 'light' | 'dark';
 
 /** Sizes from "Logo and brand mark": sidebar, phone header, favicon. */
 export const logoSizes = { sidebar: 40, phoneHeader: 28, favicon: 16 } as const;
+
+export { StatusChip, type StatusChipProps } from './components/StatusChip';
+export { KpiCard, type KpiCardProps } from './components/KpiCard';
+export { TodoList, type TodoItem, type TodoListProps } from './components/TodoList';
+export { EmptyState, type EmptyStateProps } from './components/EmptyState';
+export { TypedConfirmDialog, type TypedConfirmDialogProps } from './components/TypedConfirmDialog';
+export { ApprovalTimeline, type ApprovalStep, type ApprovalTimelineProps } from './components/ApprovalTimeline';

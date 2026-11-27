@@ -8,11 +8,11 @@ import { useSchoolCode } from '@/stores/school';
  * public config (GET /public/tenants/{code}/config). Until a school is
  * chosen it shows a neutral placeholder, so the layout never jumps.
  */
-export function SchoolCard({ code }: { code?: string | null }) {
+export function SchoolCard({ code, compact = false }: { code?: string | null; compact?: boolean }) {
   const remembered = useSchoolCode((s) => s.code);
   const { data } = usePublicConfig(code ?? remembered);
 
-  return <SchoolBadge config={data ?? null} />;
+  return <SchoolBadge config={data ?? null} compact={compact} />;
 }
 
 export function SchoolBadge({ config, compact = false }: { config: PublicConfig | null; compact?: boolean }) {

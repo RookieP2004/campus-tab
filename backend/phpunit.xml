@@ -39,6 +39,8 @@
         <server name="QUEUE_CONNECTION" value="sync" force="true"/>
         <env name="SESSION_DRIVER" value="array" force="true"/>
         <server name="SESSION_DRIVER" value="array" force="true"/>
+        <env name="PUSH_DRIVER" value="array" force="true"/>
+        <server name="PUSH_DRIVER" value="array" force="true"/>
         <env name="SMS_DRIVER" value="array" force="true"/>
         <server name="SMS_DRIVER" value="array" force="true"/>
         <!-- Any school-data query without tenant_id fails the test (Tests\TestCase). -->

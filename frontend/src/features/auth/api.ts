@@ -14,6 +14,8 @@ export interface PublicConfig {
 
 export interface Me {
   id: string;
+  /** For the notification socket: the private channel is school.<tenant_id>.user.<id>. */
+  tenant_id: string;
   name: string;
   email: string | null;
   phone: string | null;
@@ -101,8 +103,9 @@ export const signIn = {
   verifyOtp: (body: { school_code: string; phone: string; code: string }) =>
     unwrap<SignInResult>(api.POST('/auth/otp/verify', { body })),
   forgot: (body: { school_code: string; login: string }) => unwrap<{ message: string }>(api.POST('/auth/password/forgot', { body })),
-  setPassword: (body: { school_code: string; token: string; password: string; password_confirmation: string }) =>
-    unwrap<{ message: string }>(api.POST('/auth/password/set', { body })),
+  /** `language`: the one picked on the page becomes the person's own. */
+  setPassword: (body: { school_code: string; token: string; password: string; password_confirmation: string; language?: string }) =>
+    unwrap<{ message: string }>(api.POST('/auth/password/set', { body: body as never })),
   logout: () => unwrap(api.POST('/auth/logout')),
   stepUp: (code: string) => unwrap<{ stepped_up_until: string }>(api.POST('/auth/step-up', { body: { code } })),
 };
@@ -120,7 +123,7 @@ export const activation = {
   activate: (body: {
     key: string;
     otp: string;
-    chief: { name: string; email: string; phone: string; password: string; password_confirmation: string };
+    chief: { name: string; email: string; phone: string; password: string; password_confirmation: string; language?: string };
   }) => unwrap<{ school: { code: string; name: string }; mfa_enrolment_required: boolean }>(api.POST('/licences/activate', { body: body as never })),
 };
 

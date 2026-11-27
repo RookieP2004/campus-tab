@@ -43,5 +43,5 @@ Clerk and above (and anyone with a teacher role, if they choose) **set up an aut
 - **Dr. Meera Iyer** sees every class and both custom columns (*House* is school-wide).
 - **Kavita Joshi** sees only the primary wing (3-A).
 - **Suresh Patel** sees exactly his two children.
-- **Ramesh Kumar** can admit students, import them, and draft staff for the Principal to approve.
+- **Ramesh Kumar** can admit students, import them, and draft staff for the Principal to approve. He is also the **Attendance Officer**, so he can enter a teacher's or staff member's check-in by hand (never his own), and he keeps the holiday calendar: Christmas (25 December 2026) is approved, Republic Day (26 January 2027) waits for Dr. Meera Iyer's approval.
 - **Student sign-in** is switched on in the demo school, so Anjali can print setup codes for 7-B.

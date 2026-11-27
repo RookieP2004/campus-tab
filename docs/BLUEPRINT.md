@@ -188,6 +188,7 @@ Ten levels rank who can do what. A user can manage only people below their own l
 - **"Delete staff" means deactivate.** The Principal removes access and the record moves to the recycle bin; history stays for audit. Only the Chief can purge it permanently, after 30 days. This is a deliberate safety change to your brief: one wrong click should never erase years of attendance and marks.
 
 * **Fee Collector is a duty, not a level.** The Principal gives it to any staff member or clerk who takes fees at the counter; it adds fee-collection rights and nothing else.
+* **Attendance Officer is a duty, not a level.** The Principal gives it, usually to the Clerk, to enter staff attendance for people who couldn't check in themselves. It adds only that, and only for people below the officer's own level: nobody enters their own attendance through it.
 * **Language is personal.** Every account starts in English. Each person can switch to a regional language at sign-up or later in settings, and it changes only their own screens.
 
 ## Permission matrix
@@ -208,7 +209,7 @@ The Vice Principal gets the Principal's column, limited to their wing. Platform 
 | Admit or edit student | School | School | School | Limited fields, Class | — | — | Request edit, Child | — |
 | Mark student attendance | School | School | Corrections | Class | Subj (period mode) | — | View, Child | View, Own |
 | Edit attendance after window | School | School | With reason | Req | Req | — | — | — |
-| Staff attendance | School | School | Manage | Own | Own | Own | — | — |
+| Staff attendance | School | School | Manage (Attendance Officer: enter for others below them) | Own | Own | Own | — | — |
 | Apply for leave | Own | Own | Own | Own | Own | Own | Child (student leave) | — |
 | Leave stage 1: verify | — | Fast-track | School | — | — | — | — | — |
 | Leave stage 2: decide | Principal's own leave | School | — | — | — | — | — | — |
@@ -280,12 +281,14 @@ Parent applies with dates, reason and an optional attachment → Class Teacher a
 
 1. Each school picks a mode: *daily* (class teacher, once a day — the v1 default) or *period-wise* (subject teacher, each period).
 2. The screen opens with everyone present; the teacher taps the absentees. Codes: Present, Absent, Late, Half-day, Leave (filled from approved leave), Holiday (from the calendar).
-3. Teachers can edit until the window closes (default 4 hours after school starts). After that, a correction needs the Clerk or Principal and a reason.
-4. An absence notifies the parent by push now, by WhatsApp in v1.5.
-5. Marking works offline and syncs later. A sync into a locked day is held as a conflict for the Clerk, never written silently.
+3. Teachers can edit until the window closes (default 4 hours after school starts). After that, a correction needs the Clerk or Principal and a reason. Every change is audited.
+4. An absence notifies the parent by push now, by WhatsApp in v1.5. For a day entered late, the notice goes out when the entry is saved and names the date ("Aarav was absent on 3 December").
+5. Marking is online. If the internet fails, the teacher keeps the register on paper and enters it once the problem is fixed, on the same screen or by Excel upload (template, dry-run check, then commit), within a set number of days (school setting, default 7). A late entry needs a reason, can carry a photo of the paper register, only fills a day that was never marked, shows as a late entry and is audited. Past the limit, the Clerk or the Principal enters it with a reason.
 6. Reports: daily summary, monthly register, attendance % for the report card, and an alert below the school's threshold (e.g. 75%).
 
-**Staff:** check-in by app (optional geofence), office QR code, biometric device import, or manual entry by the Clerk. Late-arrival rules are configurable, and approved leave fills itself in.
+**Staff:** check-in by app button (optional geofence: only whether the check-in was inside the area is stored, never the location), office QR code, biometric device import (CSV), or manual entry by the Attendance Officer for staff who couldn't check in, with the time and a reason. A manual entry always comes from someone at a higher level than the person it is for, never from the person themself: the Attendance Officer records teachers and staff, the Vice Principal or Principal records the Clerk, the Principal records the Vice Principal, the Chief records the Principal. Late-arrival rules are configurable, and approved leave fills itself in.
+
+**Holidays:** the Clerk keeps the holiday calendar; the Principal approves it.
 
 ### Tests and marks
 

@@ -8,8 +8,10 @@ use App\Modules\Identity\Domain\PasswordPolicy;
 use App\Modules\Identity\Domain\SessionIssuer;
 use App\Modules\Identity\Domain\SignInService;
 use App\Modules\Identity\Models\User;
+use App\Support\Tenancy\TenantContext;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 /**
  * Signing in and out.
@@ -93,9 +95,15 @@ class AuthController
             'school_code' => ['required', 'string', 'max:30'],
             'token' => ['required', 'string', 'max:200'],
             'password' => PasswordPolicy::rules(),
+            // The language picked on the set-password page becomes the person's own.
+            'language' => ['sometimes', 'string', Rule::in(config('identity.languages'))],
         ]);
 
-        $links->consume($input['school_code'], $input['token'], $input['password']);
+        $user = $links->consume($input['school_code'], $input['token'], $input['password']);
+
+        if (isset($input['language'])) {
+            app(TenantContext::class)->run($user->tenant_id, fn () => $user->forceFill(['language' => $input['language']])->save());
+        }
 
         return response()->json(['data' => ['message' => 'Your password is set. Sign in with it now.']]);
     }

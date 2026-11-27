@@ -17,7 +17,7 @@
 - **Only known strings.** Any permission string not in the catalogue is refused, so no setting can create a new power. There is no ability to change a locked mark: that happens only through a correction the Principal approves from their own account (Phase 6).
 - **Duties** (no level; the Principal gives them) hold only their allow-list:
   - **Fee Collector:** `fees.*`.
-  - **Attendance Officer:** `staff_attendance.enter`, `staff_attendance.view`. **Phase 4 rule:** nobody can enter or change their own attendance through this duty.
+  - **Attendance Officer:** `staff_attendance.enter`, `staff_attendance.view`. The Principal gives it, usually to the Clerk (as with Fee Collector). **Phase 4 rule, coded:** nobody can enter their own attendance by hand, through this duty or any role, and a manual entry is only for someone below the person's level (`Authority::outranks`, the same check as user management).
 - **"Delete staff" means deactivate:** the account goes to the recycle bin, and only the Chief can purge, after 30 days.
 - **Support agents** hold only their grant's permissions. They can never touch support grants, purge, edit roles or a user's roles, export, unlock marks, approve corrections, or do any step-up action.
 - **Fee records are append-only**; reversals instead of edits (Phase 8).
@@ -48,6 +48,28 @@
   - **subject:** teaching assignments
   - **wing:** the staff record's wings
 - **Existing schools** get these with `php artisan identity:sync-roles --with-new-permissions`.
+
+## Phase 3 and 4 abilities (as coded)
+
+Phase 3 (notices) uses `notices.send` and `notices.view`, already in the catalogue; the audience rules are in [modules/communication.md](modules/communication.md). The dashboard, search and notification routes are self-service and need no ability.
+
+Phase 4 adds the calendar abilities and gives the staff-attendance abilities to more roles:
+
+| Ability | Chief | Principal | Vice Principal | Clerk | Class T. | Subject T. | Staff | Parent | Student | Attendance Officer (duty) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `attendance.view` | School | School | Wing | School | Class | Subj | — | Child | Own | — |
+| `attendance.mark` | School | School | Wing | — | Class | Subj (period mode only) | — | — | — | — |
+| `attendance.edit_after_window` (late edits, old late entries) | School | School | Wing | School | — | — | — | — | — | — |
+| `staff_attendance.mark` (own check-in) | Own | Own | Own | Own | Own | Own | Own | — | — | — |
+| `staff_attendance.view` | School | School | — | School | — | — | — | — | — | School |
+| `staff_attendance.manage` (QR screen, biometric import) | School | School | — | School | — | — | — | — | — | — |
+| `staff_attendance.enter` (manual entry for someone below you) | School | School | School | — | — | — | — | — | — | School |
+| `calendar.view` | School | School | School | School | School | School | School | School | School | — |
+| `calendar.manage` (keep the calendar) | School | — | — | School | — | — | — | — | — | — |
+| `calendar.approve` | School | School | — | — | — | — | — | — | — | — |
+
+- **Existing schools** get these with `php artisan identity:sync-roles --with-new-permissions`.
+- **Fixed rules in code:** see [modules/attendance.md](modules/attendance.md), section 9.
 
 ## Step-up actions (`config/identity.php`)
 
@@ -80,6 +102,8 @@ Levels: Chief 90, Principal 80, Vice Principal 70, Clerk 60, Class Teacher 50, S
 | Fee Collector (duty) | fees.collect:school, fees.receipt_cancel_request:school, fees.dues_view:school, fees.reports:own |
 | Attendance Officer (duty) | staff_attendance.enter:school, staff_attendance.view:school |
 
+Phase 4 added `calendar.*`, `staff_attendance.enter`, `staff_attendance.view` and `staff_attendance.mark:own` to these roles as shown in "Phase 3 and 4 abilities" above; `calendar.view:school` reaches every level role.
+
 The Chief can edit any role except Chief (within the rules above) and add custom roles below their own level. Existing schools get new system roles with `php artisan identity:sync-roles`.
 
 ## Where each Phase 1 rule lives
@@ -95,3 +119,7 @@ The Chief can edit any role except Chief (within the rules above) and add custom
 | School data only for its own users | middleware `tenant`, `BelongsToTenant` |
 | Read-only licence | middleware `licence` (account safety routes exempt) |
 | Module not licensed | middleware `module:<name>` |
+| Notice audiences | [`NoticeAudience`](../../backend/app/Modules/Communication/Domain/NoticeAudience.php) |
+| Registers, late entries, edit window | [`AttendancePolicy`](../../backend/app/Modules/Attendance/Policies/AttendancePolicy.php), [`AttendanceRegister::rules`](../../backend/app/Modules/Attendance/Domain/AttendanceRegister.php) |
+| Manual staff attendance | [`StaffAttendanceService::manual`](../../backend/app/Modules/Attendance/Domain/StaffAttendanceService.php) with [`Authority::outranks`](../../backend/app/Modules/Identity/Domain/Authority.php) |
+| Dashboard cards | each provider in [`Dashboard/Domain/Cards/`](../../backend/app/Modules/Dashboard/Domain/Cards/) |

@@ -36,6 +36,279 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/attendance/below-threshold": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["attendance.below-threshold"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/days/{id}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["attendance.days.photo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/days/{id}/photo/link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["attendance.days.photo-link"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["attendance.register"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/sections/{id}/days/{date}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["attendance.days.show"];
+        put: operations["attendance.days.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/sections/{id}/days/{date}/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["attendance.days.import"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/sections/{id}/template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["attendance.template"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["attendance.settings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff-attendance.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/staff/{staffId}/manual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff-attendance.manual"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/staff/check-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff-attendance.check-in"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/staff/check-out": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff-attendance.check-out"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/staff/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff-attendance.import"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/staff/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff-attendance.mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/staff/qr": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff-attendance.qr"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/students/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One student's attendance: the parent, the student, and those who may see that student */
+        get: operations["attendance.student"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attendance/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["attendance.summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/audit-logs": {
         parameters: {
             query?: never;
@@ -174,6 +447,87 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["auth.step-up"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/broadcasting/auth": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Authenticate the request for channel access */
+        get: operations["broadcast.authenticate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["calendar.index"];
+        put?: never;
+        post: operations["calendar.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calendar/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["calendar.destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["calendar.update"];
+        trace?: never;
+    };
+    "/calendar/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["calendar.approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calendar/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["calendar.reject"];
         delete?: never;
         options?: never;
         head?: never;
@@ -372,6 +726,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/files/attendance/{tenant}/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Only through the signed link above */
+        get: operations["files.attendance-photo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/files/notices/{tenant}/{notice}/{attachment}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Served only through a signed link (middleware "signed"); the link was issued after a permission check */
+        get: operations["files.notice-attachment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/guardians/{id}": {
         parameters: {
             query?: never;
@@ -548,6 +936,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["me.dashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/mfa": {
         parameters: {
             query?: never;
@@ -612,6 +1016,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["me.notification-preferences.show"];
+        put: operations["me.notification-preferences.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["me.notifications.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["me.notifications.read"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["me.notifications.read-all"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/password": {
         parameters: {
             query?: never;
@@ -646,6 +1114,38 @@ export interface paths {
         options?: never;
         head?: never;
         patch: operations["me.preferences"];
+        trace?: never;
+    };
+    "/me/push-devices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["me.push-devices.store"];
+        delete: operations["me.push-devices.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["me.search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/me/sessions": {
@@ -690,6 +1190,70 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["me.sessions.revoke-others"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["notices.index"];
+        put?: never;
+        post: operations["notices.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notices/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["notices.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notices/{id}/attachments/{attachment}/link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["notices.attachments.link"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notices/{id}/receipts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["notices.receipts"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1809,6 +2373,975 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "attendance.below-threshold": {
+        parameters: {
+            query?: {
+                section_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            students: unknown[][];
+                            threshold: number;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "attendance.days.photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Maximum file size: 5120 kilobytes.
+                     */
+                    photo: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            has_photo: boolean;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "attendance.days.photo-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            url: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "attendance.register": {
+        parameters: {
+            query: {
+                month: string;
+                section_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            dates: string[];
+                            late_entries: string;
+                            month: string;
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                            students: unknown[][];
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "attendance.days.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                date: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            day_id: string | null;
+                            holiday: {
+                                title: string;
+                            } | null;
+                            late_entry: {
+                                by_office: boolean;
+                                entered_at: string;
+                                entered_by: string | null;
+                                has_photo: boolean;
+                                reason: string;
+                            } | null;
+                            marked: boolean;
+                            marked_at: string | null;
+                            marked_by: string | null;
+                            mode: string;
+                            period: number;
+                            rules: {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_entry";
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_entry";
+                                /** @constant */
+                                refusal: "late_entry_past_limit";
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_edit";
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_edit";
+                                /** @constant */
+                                refusal: "attendance_window_closed";
+                                /** @constant */
+                                refusal_message: "The edit window for this day has closed. Ask the Clerk or the Principal to make the change, with a reason.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "attendance_forbidden";
+                                /** @constant */
+                                refusal_message: "You cannot mark this section's register.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "holiday";
+                                /** @constant */
+                                refusal_message: "This day is a holiday in the school calendar.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "future_date";
+                                /** @constant */
+                                refusal_message: "A register cannot be marked for a day that has not come yet.";
+                                window_closes_at: string;
+                            };
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                            source: string | null;
+                            students: unknown[];
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "attendance.days.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                date: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    period?: number;
+                    reason?: string | null;
+                    statuses: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            day_id: string | null;
+                            holiday: {
+                                title: string;
+                            } | null;
+                            late_entry: {
+                                by_office: boolean;
+                                entered_at: string;
+                                entered_by: string | null;
+                                has_photo: boolean;
+                                reason: string;
+                            } | null;
+                            marked: boolean;
+                            marked_at: string | null;
+                            marked_by: string | null;
+                            mode: string;
+                            period: number;
+                            rules: {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_entry";
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_entry";
+                                /** @constant */
+                                refusal: "late_entry_past_limit";
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_edit";
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_edit";
+                                /** @constant */
+                                refusal: "attendance_window_closed";
+                                /** @constant */
+                                refusal_message: "The edit window for this day has closed. Ask the Clerk or the Principal to make the change, with a reason.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "attendance_forbidden";
+                                /** @constant */
+                                refusal_message: "You cannot mark this section's register.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "holiday";
+                                /** @constant */
+                                refusal_message: "This day is a holiday in the school calendar.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "future_date";
+                                /** @constant */
+                                refusal_message: "A register cannot be marked for a day that has not come yet.";
+                                window_closes_at: string;
+                            };
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                            source: string | null;
+                            students: unknown[];
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "attendance.days.import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                date: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    commit?: boolean;
+                    /**
+                     * Format: binary
+                     * @description Maximum file size: 2048 kilobytes.
+                     */
+                    file: string;
+                    period?: number;
+                    reason?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            absent: number;
+                            committed: boolean;
+                            errors: number;
+                            ok: number;
+                            rows: {
+                                label: string;
+                                messages: (string | ("A full Aadhaar number is not allowed in any column." | "status must be P, A, L or HD."))[];
+                                row: number;
+                                /** @enum {string} */
+                                status: "ok" | "error";
+                            }[];
+                            rules: {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_entry";
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_entry";
+                                /** @constant */
+                                refusal: "late_entry_past_limit";
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_edit";
+                                refusal: string;
+                                refusal_message: string;
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                /** @constant */
+                                reason_kind: "late_edit";
+                                /** @constant */
+                                refusal: "attendance_window_closed";
+                                /** @constant */
+                                refusal_message: "The edit window for this day has closed. Ask the Clerk or the Principal to make the change, with a reason.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "attendance_forbidden";
+                                /** @constant */
+                                refusal_message: "You cannot mark this section's register.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "holiday";
+                                /** @constant */
+                                refusal_message: "This day is a holiday in the school calendar.";
+                                window_closes_at: string;
+                            } | {
+                                can_save: boolean;
+                                late_entry_until: string;
+                                needs_reason: boolean;
+                                office_only: boolean;
+                                reason_kind: null;
+                                /** @constant */
+                                refusal: "future_date";
+                                /** @constant */
+                                refusal_message: "A register cannot be marked for a day that has not come yet.";
+                                window_closes_at: string;
+                            };
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "attendance.template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @example attachment; filename=.xlsx */
+                    "Content-Disposition": string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "attendance.settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            edit_window_hours: number;
+                            late_entry_days: number;
+                            min_percent_alert: number;
+                            periods_per_day: number;
+                            school_starts_at: string;
+                            staff: {
+                                geofence: {
+                                    enabled: boolean;
+                                };
+                                late_after: string;
+                            };
+                            student_mode: string;
+                            timezone: string;
+                            today: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "staff-attendance.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            staff: {
+                                designation: string | null;
+                                name: string;
+                                record: {
+                                    date: string;
+                                    entered_by: string | null;
+                                    id: string;
+                                    in: string | null;
+                                    inside_area: boolean | null;
+                                    late: boolean;
+                                    out: string | null;
+                                    reason: string | null;
+                                    source: string;
+                                    staff_id: string;
+                                    status: string;
+                                } | null;
+                                roles: string | string[];
+                                staff_id: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "staff-attendance.manual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                staffId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date */
+                    date: string;
+                    in?: string | null;
+                    out?: string | null;
+                    reason: string;
+                    /** @enum {string} */
+                    status: "P" | "A" | "L" | "HD" | "LV";
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            entered_by: string | null;
+                            id: string;
+                            in: string | null;
+                            inside_area: boolean | null;
+                            late: boolean;
+                            out: string | null;
+                            reason: string | null;
+                            source: string;
+                            staff_id: string;
+                            status: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "staff-attendance.check-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            entered_by: string | null;
+                            id: string;
+                            in: string | null;
+                            inside_area: boolean | null;
+                            late: boolean;
+                            out: string | null;
+                            reason: string | null;
+                            source: string;
+                            staff_id: string;
+                            status: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "staff-attendance.check-out": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            entered_by: string | null;
+                            id: string;
+                            in: string | null;
+                            inside_area: boolean | null;
+                            late: boolean;
+                            out: string | null;
+                            reason: string | null;
+                            source: string;
+                            staff_id: string;
+                            status: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "staff-attendance.import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    commit?: boolean;
+                    /**
+                     * Format: binary
+                     * @description Maximum file size: 2048 kilobytes.
+                     */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            errors: number;
+                            ok: number;
+                            rows: {
+                                label: string;
+                                messages: (string | ("No active staff member has employee_code ." | "date must be a past or today's date, YYYY-MM-DD."))[];
+                                row: number;
+                                /** @enum {string} */
+                                status: "ok" | "error";
+                            }[];
+                            written: number;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "staff-attendance.mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            days: {
+                                date: string;
+                                entered_by: string | null;
+                                id: string;
+                                in: string | null;
+                                inside_area: boolean | null;
+                                late: boolean;
+                                out: string | null;
+                                reason: string | null;
+                                source: string;
+                                staff_id: string;
+                                status: string;
+                            }[];
+                            geofence: boolean;
+                            is_staff: string;
+                            late_after: string;
+                            today: {
+                                date: string;
+                                entered_by: string | null;
+                                id: string;
+                                in: string | null;
+                                inside_area: boolean | null;
+                                late: boolean;
+                                out: string | null;
+                                reason: string | null;
+                                source: string;
+                                staff_id: string;
+                                status: string;
+                            } | null;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "staff-attendance.qr": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            expires_at: string;
+                            token: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "attendance.student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            days: {
+                                date: string;
+                                late_entry: boolean;
+                                status: string | null;
+                            }[];
+                            month: string;
+                            percent: number | null;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                            threshold: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "attendance.summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            sections: {
+                                counts: string;
+                                late_entry: boolean;
+                                marked: string;
+                                percent: number | null;
+                                section: string;
+                                section_id: string;
+                            }[];
+                            staff: {
+                                late: number;
+                                not_in: unknown;
+                                present: number;
+                                total: number;
+                            };
+                            totals: {
+                                /** @constant */
+                                absent: 0;
+                                /** @constant */
+                                marked_sections: 0;
+                                percent: number | null;
+                                /** @constant */
+                                present: 0;
+                                sections: number;
+                                /** @constant */
+                                students: 0;
+                            };
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
     "audit-logs.index": {
         parameters: {
             query?: {
@@ -2067,6 +3600,11 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
+                    /**
+                     * @description The language picked on the set-password page becomes the person's own.
+                     * @enum {string}
+                     */
+                    language?: "en" | "hi" | "bn" | "mr" | "gu" | "pa" | "ta" | "te" | "kn" | "ml" | "or" | "ur";
                     password: string;
                     password_confirmation: string;
                     school_code: string;
@@ -2119,6 +3657,219 @@ export interface operations {
                 };
             };
             422: components["responses"]["ValidationException"];
+        };
+    };
+    "broadcast.authenticate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    "calendar.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        can: {
+                            approve: boolean;
+                            manage: boolean;
+                        };
+                        data: {
+                            created_by: string;
+                            date: string;
+                            decided_by: string | null;
+                            decision_note: string | null;
+                            end_date: string;
+                            id: string;
+                            status: string;
+                            title: string;
+                            type: string;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "calendar.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            created_by: string;
+                            date: string;
+                            decided_by: string | null;
+                            decision_note: string | null;
+                            end_date: string;
+                            id: string;
+                            status: string;
+                            title: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "calendar.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            deleted: boolean;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "calendar.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            created_by: string;
+                            date: string;
+                            decided_by: string | null;
+                            decision_note: string | null;
+                            end_date: string;
+                            id: string;
+                            status: string;
+                            title: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "calendar.approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            created_by: string;
+                            date: string;
+                            decided_by: string | null;
+                            decision_note: string | null;
+                            end_date: string;
+                            id: string;
+                            status: string;
+                            title: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "calendar.reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            created_by: string;
+                            date: string;
+                            decided_by: string | null;
+                            decision_note: string | null;
+                            end_date: string;
+                            id: string;
+                            status: string;
+                            title: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
         };
     };
     "classes.index": {
@@ -2855,6 +4606,75 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "files.attendance-photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day: string;
+                tenant: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Error overview. */
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    "files.notice-attachment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment: string;
+                notice: string;
+                tenant: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Error overview. */
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
     "guardians.update": {
         parameters: {
             query?: never;
@@ -3217,6 +5037,8 @@ export interface operations {
                     chief: {
                         /** Format: email */
                         email: string;
+                        /** @enum {string} */
+                        language?: "en" | "hi" | "bn" | "mr" | "gu" | "pa" | "ta" | "te" | "kn" | "ml" | "or" | "ur";
                         name: string;
                         password: string;
                         password_confirmation: string;
@@ -3349,7 +5171,36 @@ export interface operations {
                                 ends_at: string | null;
                                 idle_minutes: number;
                             };
+                            /** @description For the socket: the private channel is school.<tenant_id>.user.<id>. */
+                            tenant_id: string;
                             theme: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "me.dashboard": {
+        parameters: {
+            query?: {
+                as?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cards: string[];
+                            role: string | unknown[] | null;
+                            roles: unknown[];
                         };
                     };
                 };
@@ -3475,6 +5326,157 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "me.notification-preferences.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            email: boolean;
+                            muted: unknown[];
+                            push: boolean;
+                            types: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "me.notification-preferences.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    email?: boolean;
+                    muted?: ("notice" | "attendance.absent")[];
+                    push?: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            email: boolean;
+                            muted: unknown[];
+                            push: boolean;
+                            types: string;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "me.notifications.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            body: string | null;
+                            created_at: string | null;
+                            data: {
+                                [key: string]: unknown;
+                            };
+                            id: string;
+                            link: string | null;
+                            read: boolean;
+                            title: string;
+                            type: string;
+                        }[];
+                        unread: number;
+                    };
+                };
+            };
+        };
+    };
+    "me.notifications.read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            body: string | null;
+                            created_at: string | null;
+                            data: {
+                                [key: string]: unknown;
+                            };
+                            id: string;
+                            link: string | null;
+                            read: boolean;
+                            title: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "me.notifications.read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            marked: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
     "me.password": {
         parameters: {
             query?: never;
@@ -3536,6 +5538,100 @@ export interface operations {
                             language: string;
                             theme: string;
                         };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "me.push-devices.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    platform: "android" | "ios" | "web" | "desktop";
+                    token: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            registered: boolean;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "me.push-devices.destroy": {
+        parameters: {
+            query: {
+                token: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            removed: boolean;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "me.search": {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: ({
+                            detail: string;
+                            label: string;
+                            link: string;
+                            /** @constant */
+                            type: "student";
+                        } | {
+                            detail: string;
+                            label: string;
+                            link: string;
+                            /** @constant */
+                            type: "staff";
+                        })[];
                     };
                 };
             };
@@ -3619,6 +5715,186 @@ export interface operations {
                     };
                 };
             };
+        };
+    };
+    "notices.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            attachments: unknown[];
+                            audience: {
+                                refs: string[];
+                                type: string;
+                            };
+                            body: string;
+                            id: string;
+                            published_at: string;
+                            read: boolean;
+                            recipient_count: number;
+                            sent_by: string;
+                            sent_by_id: string;
+                            title: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "notices.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    attachments?: string[];
+                    audience: {
+                        refs?: string[];
+                        /** @enum {string} */
+                        type: "school" | "class" | "section" | "role";
+                    };
+                    body: string;
+                    title: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            attachments: unknown[];
+                            audience: {
+                                refs: string[];
+                                type: string;
+                            };
+                            body: string;
+                            id: string;
+                            published_at: string;
+                            recipient_count: number;
+                            sent_by: string;
+                            sent_by_id: string;
+                            title: string;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "notices.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            attachments: unknown[];
+                            audience: {
+                                refs: string[];
+                                type: string;
+                            };
+                            body: string;
+                            id: string;
+                            published_at: string;
+                            read: boolean;
+                            recipient_count: number;
+                            sent_by: string;
+                            sent_by_id: string;
+                            title: string;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "notices.attachments.link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            expires_in: number;
+                            url: string;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "notices.receipts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            read_count: number;
+                            readers: {
+                                name: string;
+                                read_at: string;
+                            }[];
+                            recipient_count: number;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
         };
     };
     "permissions.index": {
@@ -5878,6 +8154,10 @@ export interface operations {
                             roll_no: number | null;
                             section_id: string | null;
                             section_label: unknown;
+                            /** @description Decrypted sensitive values, only for those who may fill them; the screen keeps them masked until "Show". */
+                            sensitive_values: {
+                                [key: string]: unknown;
+                            };
                             status: string;
                         };
                     };
@@ -5952,6 +8232,10 @@ export interface operations {
                             roll_no: number | null;
                             section_id: string | null;
                             section_label: unknown;
+                            /** @description Decrypted sensitive values, only for those who may fill them; the screen keeps them masked until "Show". */
+                            sensitive_values: {
+                                [key: string]: unknown;
+                            };
                             status: string;
                         };
                     };
@@ -6072,6 +8356,10 @@ export interface operations {
                             roll_no: number | null;
                             section_id: string | null;
                             section_label: unknown;
+                            /** @description Decrypted sensitive values, only for those who may fill them; the screen keeps them masked until "Show". */
+                            sensitive_values: {
+                                [key: string]: unknown;
+                            };
                             status: string;
                         };
                     };
@@ -6156,6 +8444,10 @@ export interface operations {
                             roll_no: number | null;
                             section_id: string | null;
                             section_label: unknown;
+                            /** @description Decrypted sensitive values, only for those who may fill them; the screen keeps them masked until "Show". */
+                            sensitive_values: {
+                                [key: string]: unknown;
+                            };
                             status: string;
                         };
                     };

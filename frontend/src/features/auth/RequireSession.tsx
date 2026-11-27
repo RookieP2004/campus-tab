@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, lazy, type ReactNode, Suspense, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
@@ -10,8 +10,10 @@ import { usePreferences } from '@/stores/preferences';
 import { useSchoolCode } from '@/stores/school';
 import { useSessionState } from '@/stores/session';
 import { isSignedOutError, type Me, signIn, useMe } from './api';
-import { ParentOtpForm } from './ParentOtpPage';
-import { SignInForm } from './SignInForm';
+
+// The sign-in forms (and their form libraries) load only when a session ends.
+const ParentOtpForm = lazy(() => import('./ParentOtpPage').then((m) => ({ default: m.ParentOtpForm })));
+const SignInForm = lazy(() => import('./SignInForm').then((m) => ({ default: m.SignInForm })));
 
 const MeContext = createContext<Me | null>(null);
 
@@ -174,22 +176,24 @@ function SessionEndedOverlay({ open, user }: { open: boolean; user: Me }) {
   return (
     <Dialog open={open} dismissible={false} title={t('session.ended.title')}>
       <p className="text-sm text-muted">{t(reason === 'session_revoked' ? 'session.ended.revoked' : 'session.ended.body')}</p>
-      {parentOnly ? (
-        <ParentOtpForm schoolCode={user.school.code} onDone={() => void done()} />
-      ) : (
-        <SignInForm
-          schoolCode={user.school.code}
-          initialLogin={user.email ?? user.phone ?? ''}
-          onSignedIn={(result) => {
-            if (result.mfa_enrolment_required) {
-              resume();
-              navigate('/mfa/enrol', { replace: true });
-              return;
-            }
-            void done(result.user.id);
-          }}
-        />
-      )}
+      <Suspense fallback={<Spinner label={t('common.loading')} />}>
+        {parentOnly ? (
+          <ParentOtpForm schoolCode={user.school.code} onDone={() => void done()} />
+        ) : (
+          <SignInForm
+            schoolCode={user.school.code}
+            initialLogin={user.email ?? user.phone ?? ''}
+            onSignedIn={(result) => {
+              if (result.mfa_enrolment_required) {
+                resume();
+                navigate('/mfa/enrol', { replace: true });
+                return;
+              }
+              void done(result.user.id);
+            }}
+          />
+        )}
+      </Suspense>
       <p className="text-xs text-muted">{t('session.ended.kept')}</p>
     </Dialog>
   );

@@ -27,6 +27,24 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | GET | `/api/v1/academic-years` | academic-years.index | `StructureController` | api, school, permission:academic.view |
 | POST | `/api/v1/academic-years` | academic-years.store | `StructureController` | api, school, permission:academic.manage |
 | POST | `/api/v1/academic-years/{id}/make-current` | academic-years.make-current | `StructureController` | api, school, permission:academic.manage |
+| GET | `/api/v1/attendance/below-threshold` | attendance.below-threshold | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| POST | `/api/v1/attendance/days/{id}/photo` | attendance.days.photo | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| POST | `/api/v1/attendance/days/{id}/photo/link` | attendance.days.photo-link | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| GET | `/api/v1/attendance/register` | attendance.register | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| GET | `/api/v1/attendance/sections/{id}/days/{date}` | attendance.days.show | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| PUT | `/api/v1/attendance/sections/{id}/days/{date}` | attendance.days.update | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| POST | `/api/v1/attendance/sections/{id}/days/{date}/import` | attendance.days.import | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| GET | `/api/v1/attendance/sections/{id}/template` | attendance.template | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| GET | `/api/v1/attendance/settings` | attendance.settings | `AttendanceController` | api, school, permission:attendance.view,attendance.mark,staff_attendance.mark,staff_attendance.manage |
+| GET | `/api/v1/attendance/staff` | staff-attendance.index | `StaffAttendanceController` | api, school, permission:staff_attendance.mark,staff_attendance.view,staff_attendance.manage,staff_attendance.enter |
+| POST | `/api/v1/attendance/staff/check-in` | staff-attendance.check-in | `StaffAttendanceController` | api, school, permission:staff_attendance.mark,staff_attendance.view,staff_attendance.manage,staff_attendance.enter, permission:staff_attendance.mark |
+| POST | `/api/v1/attendance/staff/check-out` | staff-attendance.check-out | `StaffAttendanceController` | api, school, permission:staff_attendance.mark,staff_attendance.view,staff_attendance.manage,staff_attendance.enter, permission:staff_attendance.mark |
+| POST | `/api/v1/attendance/staff/import` | staff-attendance.import | `StaffAttendanceController` | api, school, permission:staff_attendance.mark,staff_attendance.view,staff_attendance.manage,staff_attendance.enter, permission:staff_attendance.manage |
+| GET | `/api/v1/attendance/staff/me` | staff-attendance.mine | `StaffAttendanceController` | api, school, permission:staff_attendance.mark,staff_attendance.view,staff_attendance.manage,staff_attendance.enter |
+| GET | `/api/v1/attendance/staff/qr` | staff-attendance.qr | `StaffAttendanceController` | api, school, permission:staff_attendance.mark,staff_attendance.view,staff_attendance.manage,staff_attendance.enter, permission:staff_attendance.manage |
+| POST | `/api/v1/attendance/staff/{staffId}/manual` | staff-attendance.manual | `StaffAttendanceController` | api, school, permission:staff_attendance.mark,staff_attendance.view,staff_attendance.manage,staff_attendance.enter, permission:staff_attendance.enter |
+| GET | `/api/v1/attendance/students/{id}` | attendance.student | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
+| GET | `/api/v1/attendance/summary` | attendance.summary | `AttendanceController` | api, school, permission:attendance.view,attendance.mark |
 | GET | `/api/v1/audit-logs` | audit-logs.index | `AuditLogController` | api, school, permission:audit.view,audit.view_academic |
 | POST | `/api/v1/auth/login` | auth.login | `AuthController` | api |
 | POST | `/api/v1/auth/logout` | auth.logout | `AuthController` | api, enrol |
@@ -36,6 +54,13 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | POST | `/api/v1/auth/password/forgot` | auth.password.forgot | `AuthController` | api |
 | POST | `/api/v1/auth/password/set` | auth.password.set | `AuthController` | api |
 | POST | `/api/v1/auth/step-up` | auth.step-up | `AuthController` | api, account |
+| GET, POST | `/api/v1/broadcasting/auth` | — | `BroadcastController` | api, account |
+| GET | `/api/v1/calendar` | calendar.index | `CalendarController` | api, school, permission:calendar.view |
+| POST | `/api/v1/calendar` | calendar.store | `CalendarController` | api, school, permission:calendar.view, permission:calendar.manage |
+| DELETE | `/api/v1/calendar/{id}` | calendar.destroy | `CalendarController` | api, school, permission:calendar.view, permission:calendar.manage |
+| PATCH | `/api/v1/calendar/{id}` | calendar.update | `CalendarController` | api, school, permission:calendar.view, permission:calendar.manage |
+| POST | `/api/v1/calendar/{id}/approve` | calendar.approve | `CalendarController` | api, school, permission:calendar.view, permission:calendar.approve |
+| POST | `/api/v1/calendar/{id}/reject` | calendar.reject | `CalendarController` | api, school, permission:calendar.view, permission:calendar.approve |
 | GET | `/api/v1/classes` | classes.index | `StructureController` | api, school, permission:academic.view |
 | POST | `/api/v1/classes` | classes.store | `StructureController` | api, school, permission:academic.manage |
 | DELETE | `/api/v1/classes/{id}` | classes.destroy | `StructureController` | api, school, permission:academic.manage |
@@ -52,6 +77,8 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | POST | `/api/v1/custom-fields/{id}/archive` | custom-fields.archive | `CustomFieldController` | api, school, permission:custom_fields.manage,custom_fields.clerical |
 | POST | `/api/v1/custom-fields/{id}/promote` | custom-fields.promote | `CustomFieldController` | api, school, permission:custom_fields.manage |
 | POST | `/api/v1/custom-fields/{id}/restore` | custom-fields.restore | `CustomFieldController` | api, school, permission:custom_fields.manage,custom_fields.clerical |
+| GET | `/api/v1/files/attendance/{tenant}/{day}` | files.attendance-photo | `AttendanceController` | api, signed:relative, throttle:public |
+| GET | `/api/v1/files/notices/{tenant}/{notice}/{attachment}` | files.notice-attachment | `NoticeController` | api, signed:relative, throttle:public |
 | PATCH | `/api/v1/guardians/{id}` | guardians.update | `StudentController` | api, school, permission:guardians.manage |
 | DELETE | `/api/v1/guardians/{id}/parent-login` | guardians.parent-login.destroy | `StudentController` | api, school, permission:guardians.manage |
 | POST | `/api/v1/guardians/{id}/parent-login` | guardians.parent-login.store | `StudentController` | api, school, permission:guardians.manage |
@@ -64,15 +91,29 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | POST | `/api/v1/licences/activate` | licences.activate | `ActivationController` | api, throttle:activation |
 | POST | `/api/v1/licences/activate/otp` | licences.activate.otp | `ActivationController` | api, throttle:activation |
 | GET | `/api/v1/me` | me.show | `MeController` | api, account |
+| GET | `/api/v1/me/dashboard` | me.dashboard | `DashboardController` | api, account |
 | DELETE | `/api/v1/me/mfa` | me.mfa.disable | `MfaController` | api, account |
 | POST | `/api/v1/me/mfa/enrol` | me.mfa.enrol | `MfaController` | api, enrol |
 | POST | `/api/v1/me/mfa/enrol/confirm` | me.mfa.enrol.confirm | `MfaController` | api, enrol |
 | POST | `/api/v1/me/mfa/recovery-codes` | me.mfa.recovery-codes | `MfaController` | api, account |
+| GET | `/api/v1/me/notification-preferences` | me.notification-preferences.show | `NotificationController` | api, account |
+| PUT | `/api/v1/me/notification-preferences` | me.notification-preferences.update | `NotificationController` | api, account |
+| GET | `/api/v1/me/notifications` | me.notifications.index | `NotificationController` | api, account |
+| POST | `/api/v1/me/notifications/read-all` | me.notifications.read-all | `NotificationController` | api, account |
+| POST | `/api/v1/me/notifications/{id}/read` | me.notifications.read | `NotificationController` | api, account |
 | PUT | `/api/v1/me/password` | me.password | `MeController` | api, account |
 | PATCH | `/api/v1/me/preferences` | me.preferences | `MeController` | api, account |
+| DELETE | `/api/v1/me/push-devices` | me.push-devices.destroy | `NotificationController` | api, account |
+| POST | `/api/v1/me/push-devices` | me.push-devices.store | `NotificationController` | api, account |
+| GET | `/api/v1/me/search` | me.search | `DashboardController` | api, account |
 | GET | `/api/v1/me/sessions` | me.sessions.index | `MeController` | api, account |
 | POST | `/api/v1/me/sessions/revoke-others` | me.sessions.revoke-others | `MeController` | api, account |
 | DELETE | `/api/v1/me/sessions/{id}` | me.sessions.destroy | `MeController` | api, account |
+| GET | `/api/v1/notices` | notices.index | `NoticeController` | api, school, permission:notices.view |
+| POST | `/api/v1/notices` | notices.store | `NoticeController` | api, school, permission:notices.send |
+| GET | `/api/v1/notices/{id}` | notices.show | `NoticeController` | api, school, permission:notices.view |
+| POST | `/api/v1/notices/{id}/attachments/{attachment}/link` | notices.attachments.link | `NoticeController` | api, school, permission:notices.view |
+| GET | `/api/v1/notices/{id}/receipts` | notices.receipts | `NoticeController` | api, school, permission:notices.view |
 | GET | `/api/v1/permissions` | permissions.index | `RoleController` | api, school, permission:roles.view |
 | GET | `/api/v1/platform/alerts` | platform.alerts.index | `ConsoleAlertController` | api, console |
 | POST | `/api/v1/platform/alerts/{id}/acknowledge` | platform.alerts.acknowledge | `ConsoleAlertController` | api, console |

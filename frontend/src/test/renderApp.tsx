@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { Providers } from '@/app/Providers';
 import { routes } from '@/app/routes';
@@ -25,7 +25,11 @@ export async function renderApp(path = '/') {
     </Providers>,
   );
 
-  if (fakeApi.me && !PUBLIC.some((p) => path.startsWith(p))) await screen.findByTestId('signed-in-name');
+  // Routes load lazily: wait until the first screen's code has arrived.
+  // The first test in a file also waits for the page's code to compile.
+  await waitFor(() => expect(router.state.initialized).toBe(true), { timeout: 10_000 });
+
+  if (fakeApi.me && !PUBLIC.some((p) => path.startsWith(p))) await screen.findByTestId('signed-in-name', {}, { timeout: 10_000 });
 
   return Object.assign(result, { router, queryClient });
 }

@@ -2,6 +2,143 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-27 · Session 2 · Phase 4 screens (attendance) and follow-ups
+
+**What changed:**
+
+- **Attendance screens** (`frontend/src/features/attendance/`):
+  - taking attendance, phone-first, following `TeacherAttendance.dc.html`: all present by default, tap to toggle, one save; late entry with reason, photo and Excel upload; online-only message pointing to the paper register
+  - daily summary, printable monthly register, my check-in, the office staff view with manual entry and biometric import, the office QR display, the holiday calendar, and an Attendance tab on the student profile (also the parent's view)
+- **Dashboard and navigation:** renderers for the attendance cards; new nav items gated on permissions; "Take attendance" in quick create; Attendance is the class teacher's main phone tab.
+- **Parents are told once a day**, also in period mode, however many periods a child misses.
+- **The report generator** links the Identity module to `identity-and-access.md`, the same alias the CI check uses.
+- **Main bundle:** 564.83 kB (gzip 178.15 kB), up from 551.35 kB after the Phase 3 shell; see [frontend.md](frontend.md#bundle-split-session-2-fix).
+
+**Why:** Phase 4 of `docs/BUILD-PROMPTS.md` (owner's version) and items found while writing the report.
+
+**Files:**
+
+- **Front end:**
+  - `frontend/src/features/attendance/**` (new)
+  - shell, dashboard cards, student profile, `app/routes.tsx`
+  - `locales/{en,hi}/common.json`, `styles/index.css`
+- **Back end:**
+  - `backend/app/Modules/Attendance/Domain/AttendanceRegister.php`
+  - `backend/app/Modules/System/Console/ReportGenerateCommand.php`
+  - `backend/tests/Feature/Attendance/AttendanceRegisterTest.php`
+
+**Report pages updated:** `frontend.md`, `modules/attendance.md`, `languages.md`, the generated README block.
+
+**How to test:**
+
+1. `docker compose run --rm web npm test -w frontend`
+2. `docker compose exec api php artisan test tests/Feature/Attendance`
+3. Then follow the browser steps in the session summary.
+
+## 2026-11-27 · Session 2 · Phase 4 back end (attendance)
+
+**What changed:**
+
+- **The student register** (`AttendanceRegister`):
+  - everyone present by default; codes P, A, L, HD typed by teachers; H from approved holidays (LV from leave in Phase 5)
+  - daily mode (class teacher, or class, wing or school scope) or period mode (subject teachers too, periods 1 to `periods_per_day`)
+  - online only; one save for the whole class
+- **The edit window:** the teacher changes a day freely until `school_starts_at` + `edit_window_hours`; after that only the Clerk or the Principal (`attendance.edit_after_window`), with a reason.
+- **The paper-register late entry:** fills only a day never marked, with a reason and an optional photo (stored privately, served by a short-lived signed link), shown as a late entry and audited; the teacher within `late_entry_days` (7), after that only the Clerk or the Principal.
+- **Upload:** an Excel template of the class, then an Excel or CSV upload with a dry run and a commit through the same rules.
+- **Absence notifications** to parents once per student for each day's register, naming the date for a late entry; push and email with the generic text only.
+- **Staff attendance** (`StaffAttendanceService`):
+  - the app button, with an optional geofence that stores only `inside_area` (true or false), never the location; screens are told only that the geofence is on
+  - the office QR code: an HMAC per few-minute window (`ATTENDANCE_QR_MINUTES`, 5), the previous one accepted
+  - a biometric device CSV import with a dry run
+  - manual entry, with the time and a reason, only by someone at a higher level (`Authority::outranks`, the user-management check) and never for yourself
+  - late after `staff.late_after` (08:15)
+- **The holiday calendar:** the Clerk keeps it, the Principal approves or rejects; only approved holidays close the register.
+- **Reports:** daily summary, the printable monthly register, each student's % for the year, students below the threshold, and a per-student endpoint for parents and students.
+- **Dashboard cards** (`AttendanceCards`): the class teacher's register today at the top, staff check-in, attendance today, holidays to approve, below threshold.
+- **Permissions:** `calendar.view`, `calendar.manage`, `calendar.approve`; `staff_attendance.enter` for the Chief, Principal and Vice Principal (and the Attendance Officer duty); `staff_attendance.view` and `staff_attendance.mark:own` for more roles.
+- **School config:** `policies.attendance.late_entry_days`, `school_starts_at`, `periods_per_day`, `staff.late_after`, `staff.geofence`.
+- **Demo school:** the Clerk is also the Attendance Officer; one approved and one pending holiday.
+- **Docs:** `docs/BUILD-PROMPTS.md` Phase 4 and the attendance sections of `docs/BLUEPRINT.md` now follow the owner's version, with the Attendance Officer duty listed next to Fee Collector.
+- **Screens:** built in the entry above.
+
+**Why:** Phase 4 of `docs/BUILD-PROMPTS.md`, owner's version.
+
+**Files:**
+
+- **Back end:**
+  - `backend/app/Modules/Attendance/**` (new)
+  - `backend/app/Modules/Dashboard/Domain/Cards/AttendanceCards.php`, `backend/config/dashboard.php`
+  - `backend/app/Modules/Tenancy/{Domain/DefaultConfig.php,Schemas/school-config.schema.json}`
+  - `backend/config/{permissions,attendance}.php`, `backend/bootstrap/providers.php`
+  - `backend/database/migrations/2026_11_29_000002_create_attendance_collections.php`
+  - `backend/database/seeders/DemoSchoolSeeder.php`
+- **Tests:** `backend/tests/Feature/Attendance/{AttendanceRegisterTest,StaffAttendanceTest}.php`, `backend/tests/Feature/Identity/RoutePermissionTest.php`
+- **Docs:** `docs/BUILD-PROMPTS.md`, `docs/BLUEPRINT.md`
+
+**Report pages updated:**
+
+- `modules/attendance.md` (in full), `modules/dashboard.md`, `modules/tenancy.md`, `modules/people.md`, `modules/identity-and-access.md`
+- `permissions.md`, `configuration.md`, `how-to/demo-school.md`
+- the generated blocks
+
+**How to test:**
+
+1. `cd infra && docker compose exec api php artisan migrate`, then `php artisan identity:sync-roles --with-new-permissions` for schools made earlier, and `php artisan db:seed --class=DemoSchoolSeeder` for the demo school.
+2. `docker compose exec api composer test` (or `php artisan test tests/Feature/Attendance`), `composer lint`, `php artisan report:generate --check`.
+3. With a signed-in class teacher token: `GET /api/v1/attendance/sections/{id}/days/{today}`, then `PUT` the same path with `{"statuses": {"<student_id>": "A"}}`; the parent's inbox (`GET /api/v1/me/notifications`) shows the absence.
+
+## 2026-11-27 · Session 2 · Fixes and Phase 3
+
+**What changed:**
+
+- **Sensitive custom fields are encrypted at rest** (`Support/Privacy/SensitiveValue`: `seal`, `open`, `MASK`, with `Crypt::encryptString`). They stay masked in lists and profiles; `GET /students/{id}` returns `sensitive_values`, decrypted, only for people who may fill the field, and the profile shows them after **Show**. `php artisan customisation:seal-sensitive` seals values stored before (safe to run again).
+- **Notices (Phase 3):**
+  - audiences school, role, class and section, checked on the server for sending and reading
+  - read receipts for the sender and the office
+  - attachments limited by type, size (5 MB) and count (5), stored under `tenants/<tenant>/notices/<id>/`, served only through 5-minute relative signed links after a permission check
+- **Notifications:**
+  - in the app (with the bell live over Reverb on the private channel `school.{tenant}.user.{user}`, carrying only id, type and unread count), by email, and by push
+  - push and email carry generic text only, because lock screens and inboxes are not private
+  - per-person preferences: push on, email off, types can be muted
+  - `PUSH_DRIVER`: `log` or `array` only in local and testing, `none` by default elsewhere
+- **My Dashboard, by role:** cards built on the server from permissions and scopes (`CardProvider`, `DashboardContext` with `?as=` for the role switcher); providers `SchoolAdminCards`, `PeopleCards`, `NoticeCards`; the "New module available" banner for the Chief (the console never writes school settings); `GET /me/dashboard` and `GET /me/search`.
+- **Fixes:**
+  - `GET /me` returns `tenant_id` (for the socket channel)
+  - set-password and licence activation accept an optional `language`
+  - a Policy's `denyAsNotFound` now answers `404 not_found` instead of 403
+- **Bundle size:** the main bundle went from **851.22 kB (gzip 250.64 kB)** to **511.64 kB (gzip 163.56 kB)** by splitting every route into its own chunk and lazy-loading the sign-in forms. [frontend.md](frontend.md) carries the detail.
+
+**Why:** Phase 3 of `docs/BUILD-PROMPTS.md`, the blueprint's "fields marked sensitive are encrypted and masked", and fixes found while building it.
+
+**Files:**
+
+- **Back end:**
+  - `backend/app/Modules/{Communication,Dashboard}/**` (new), `backend/app/Modules/Customisation/Console/SealSensitiveValuesCommand.php` (new)
+  - `backend/app/Support/{Privacy/SensitiveValue.php,Push/*}` (new), `backend/app/Support/Http/ApiExceptionRenderer.php`
+  - `backend/app/Modules/People/{Domain/StudentRecords.php,Http/Controllers/StudentController.php}`
+  - `backend/app/Modules/Identity/{Http/Controllers/AuthController.php,Http/Controllers/MeController.php,Models/User.php}`
+  - `backend/app/Modules/Licensing/Http/Controllers/ActivationController.php`
+  - `backend/config/{communication,dashboard}.php`, `backend/bootstrap/providers.php`, `backend/phpunit.xml` (`PUSH_DRIVER=array`)
+  - `backend/database/migrations/2026_11_29_000001_create_communication_collections.php`
+- **Tests:** `backend/tests/Feature/{Communication/NoticesTest,Dashboard/DashboardTest,Customisation/SensitiveFieldsTest}.php`, `backend/tests/Feature/Identity/RoutePermissionTest.php`
+- **Front end and packages:**
+  - `frontend/src/features/{dashboard,notices,notifications}/**` (new), `frontend/src/features/{shell,auth,people}/*`, `frontend/src/app/routes.tsx`, `frontend/src/locales/*`
+  - `packages/api/{openapi.json,src/schema.ts}`, `packages/ui/*`
+
+**Report pages updated:**
+
+- `modules/communication.md` (in full), `modules/dashboard.md` (new), `modules/customisation.md`, `modules/identity-and-access.md`, `modules/licensing.md`, `modules/people.md`
+- `configuration.md`, `permissions.md`, `decisions/0012-notices-and-notifications-privacy.md` (new)
+- `frontend.md` (the screens and the bundle split)
+- the generated blocks
+
+**How to test:**
+
+1. `cd infra && docker compose exec api php artisan migrate`, then `docker compose exec api php artisan customisation:seal-sensitive` once for data made earlier.
+2. `docker compose exec api composer test`, `composer lint`, `php artisan report:generate --check`; `docker compose exec web npm test -w @campus-tab/frontend`, plus `lint`, `typecheck` and `build` (check the main chunk size in the build output).
+3. In the browser, sign in as the demo class teacher, send a notice with a PDF to 7-B, then sign in as a 7-B parent: the bell shows it live, the attachment opens, and the teacher sees the read receipt. Check `storage/logs/laravel.log`: the push line carries only the generic text.
+
 ## 2026-11-27 · Phase 2 · School setup, people and customisation (items 1–7)
 
 **What changed:**

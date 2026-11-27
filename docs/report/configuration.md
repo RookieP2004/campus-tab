@@ -39,6 +39,8 @@ Defined in [`backend/.env.example`](../../backend/.env.example). In Docker, [`in
 | `PARENT_OTP_IP_MAX_SENDS` | `60` | Parent OTP sends per IP per 10 minutes |
 | `PARENT_OTP_IP_MAX_FAILURES` | `100` | Wrong parent OTPs per IP per 15 minutes |
 | `PASSWORD_RESET_IP_MAX` | `100` | Forgot-password requests per IP per 15 minutes |
+| `PUSH_DRIVER` | not set: `log` in local and testing, `none` elsewhere | Push notifications: `log` writes them to the log (device count, title and the generic text; never the device tokens); `array` keeps them in memory (tests, forced in `phpunit.xml`); `none` sends nothing. `log` and `array` are allowed **only** when `APP_ENV` is `local` or `testing`; anywhere else the app refuses to start with them. A real driver comes with the apps (Phase 9) |
+| `ATTENDANCE_QR_MINUTES` | `5` | How often the office QR code for staff check-in changes (`config/attendance.php` `qr_minutes`); the code just before is still accepted |
 | `SESSION_LIFETIME` | `30` | Outer bound for the browser cookie, in minutes; the real idle and total limits are in `config/identity.php`. The cookie always ends when the browser closes |
 
 ## Environment variables (front end)
@@ -104,6 +106,29 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
   - `factor` (5) and `repeat_after_hours` (6)
   - `min_per_hour`: failed_sign_ins 20, lockouts 5, password_resets 10, mfa_resets 3, chief_changes 2
 
+### Phase 3 settings: notices, notifications, dashboard
+
+- **`config/communication.php`:**
+
+  | Key | Default | What it changes |
+  | --- | --- | --- |
+  | `notices.attachment_types` | pdf, png, jpg, jpeg, webp, docx, xlsx | File types a notice may carry |
+  | `notices.attachment_max_kb` | 5120 | Largest attachment (5 MB) |
+  | `notices.attachments_per_notice` | 5 | Most attachments on one notice |
+  | `notices.link_minutes` | 5 | How long a signed download link works (also used for the attendance register photo) |
+  | `notices.list_days` | 120 | Notices older than this drop out of the list |
+  | `push_driver` | env `PUSH_DRIVER` | See the environment table |
+  | `default_preferences` | push on, email off | Each person can change both |
+  | `generic_texts` | `notice`, `attendance.absent`, `default` | What push and email say; `:school` is the school's name. Never a name, mark or other private detail |
+  | `types` | notice, attendance.absent | Types a person can mute |
+
+- **`config/dashboard.php` `providers`:** the dashboard card providers, in order: `SchoolAdminCards`, `PeopleCards`, `NoticeCards`, `AttendanceCards` ([modules/dashboard.md](modules/dashboard.md)).
+
+### Phase 4 settings: attendance
+
+- **`config/attendance.php` `qr_minutes`** (env `ATTENDANCE_QR_MINUTES`, 5).
+- **School config `policies.attendance`:** the new keys are in the table below (`late_entry_days`, `school_starts_at`, `periods_per_day`, `staff.late_after`, `staff.geofence`). See [modules/attendance.md](modules/attendance.md).
+
 ## School config keys
 
 Each school's versioned config, validated by [`school-config.schema.json`](../../backend/app/Modules/Tenancy/Schemas/school-config.schema.json). Every object forbids unknown keys. "Edits" says who may change the key (Tenancy page, section 9).
@@ -128,6 +153,19 @@ The language settings never limit anyone: every user may always pick any languag
 | `policies.attendance.student_mode` | daily, period (daily) | Chief, Principal |
 | `policies.attendance.edit_window_hours` | 0–168 (4) | Chief, Principal |
 | `policies.attendance.min_percent_alert` | 0–100 (75) | Chief, Principal |
+| `policies.attendance.late_entry_days` | 0–60 (7) | Chief, Principal |
+| `policies.attendance.school_starts_at` | `HH:MM` (08:00) | Chief, Principal |
+| `policies.attendance.periods_per_day` | 1–12 (8) | Chief, Principal |
+| `policies.attendance.staff.late_after` | `HH:MM` (08:15) | Chief, Principal |
+| `policies.attendance.staff.geofence` | `{enabled}` required; `lat` −90–90, `lng` −180–180, `radius_m` 50–5000 (`{enabled: false}`) | Chief, Principal |
+
+What the attendance keys do:
+
+- **`edit_window_hours`** counts from **`school_starts_at`** on the day: until then the teacher changes the register freely; after it only the Clerk or the Principal, with a reason.
+- **`late_entry_days`:** how many days after the date a teacher may still enter a missed register from paper (with a reason). After that only the Clerk or the Principal.
+- **`periods_per_day`:** the periods a register can be taken for in period mode.
+- **`staff.late_after`:** a staff check-in after this time is late (L).
+- **`staff.geofence`:** with `enabled` and a point and radius (200 m when `radius_m` is missing), app check-ins need the phone's location and must be inside. Only inside or outside is stored; screens are told only whether the geofence is on.
 | `policies.leave.chain` | clerk, principal (both) | Chief, Principal |
 | `policies.leave.clerk_can_reject` | true/false (false) | Chief, Principal |
 | `policies.leave.remind_after_hours` | 1–168 (24) | Chief, Principal |

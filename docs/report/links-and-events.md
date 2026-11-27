@@ -30,6 +30,16 @@ flowchart LR
   Fees --> Communication
 ```
 
+## Built so far (Phases 3 and 4)
+
+| What | From | To | How |
+| --- | --- | --- | --- |
+| Student marked absent | Attendance (`AttendanceRegister`) | Communication | a direct call to `Notifier::notify()`, type `attendance.absent`, once per student per register |
+| Notice published | Communication (`Notices::send`) | Communication | queued job `PublishNotice`, then `Notifier::notify()` |
+| Notification created | Communication (`Notifier`) | the person's open screens | broadcast event `NotificationCreated` (`notification.created`) on `school.{tenant}.user.{user}` |
+| Push and email | Communication (`Notifier`) | outside services | queued job `SendOutsideNotifications`, generic text only |
+| Dashboard cards | Dashboard | Licensing, People, Communication, Attendance, Audit | direct reads through each card provider |
+
 | Event (planned) | Sent by | Listened to by | Phase |
 | --- | --- | --- | --- |
 | Leave approved | Leave | Attendance (mark "On leave"), Communication (notify) | 5 |
