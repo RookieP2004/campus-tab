@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@import "@campus-tab/ui/tokens.css";
+@import "@campus-tab/ui/theme.css";
+
+/* Let Tailwind see class names used inside packages/ui. */
+@source "../../../packages/ui/src";
+
+@layer base {
+  html {
+    font-family: var(--ct-font-sans);
+    background: var(--ct-bg);
+    color: var(--ct-text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  @media (min-width: 1024px) {
+    body {
+      font-size: 14px;
+    }
+  }
+
+  :focus-visible {
+    outline-color: var(--ct-focus-ring);
+  }
+
+  ::selection {
+    background: var(--ct-primary-soft);
+  }
+}

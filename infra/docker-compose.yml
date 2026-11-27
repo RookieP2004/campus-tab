@@ -19,7 +19,8 @@ x-api-base: &api-base
     REPORT_PATH: /docs/report
     APP_ENV: local
     APP_URL: http://127.0.0.1:${API_PORT:-8000}
-    FRONTEND_URL: http://localhost:${WEB_PORT:-5173}
+    FRONTEND_URL: http://127.0.0.1:${WEB_PORT:-5173}
+    SANCTUM_STATEFUL_DOMAINS: 127.0.0.1:${WEB_PORT:-5173}
     DB_CONNECTION: mongodb
     MONGODB_URI: mongodb://mongo:27017/?replicaSet=rs0
     MONGODB_DATABASE: campus_tab
@@ -91,7 +92,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:8000/up"]
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/up"]
       interval: 5s
       timeout: 5s
       retries: 60
@@ -115,9 +116,6 @@ services:
 
   web:
     image: node:22-bookworm-slim
-    # Enabled in Phase 0 section 4, when frontend/ exists. Until then it only
-    # starts with: docker compose --profile web up
-    profiles: ["web"]
     working_dir: /workspace
     entrypoint: ["sh", "/workspace/infra/docker/web/entrypoint.sh"]
     command: ["npm", "run", "dev", "--workspace", "frontend", "--", "--host", "0.0.0.0", "--port", "5173"]

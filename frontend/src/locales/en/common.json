@@ -1,0 +1,40 @@
+{
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "mainNavigation": "Main navigation"
+  },
+  "brand": {
+    "logoAlt": "Campus TAB logo"
+  },
+  "school": {
+    "placeholderName": "Your school",
+    "placeholderDetail": "School logo and name appear after sign-in",
+    "yearPlaceholder": "Academic year"
+  },
+  "nav": {
+    "home": "Home"
+  },
+  "home": {
+    "title": "Welcome to Campus TAB",
+    "body": "This is the app shell. Screens are added phase by phase: sign-in next, then school setup, dashboards, attendance, leave, marks, report cards and fees."
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Match device"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "server": {
+    "label": "Server",
+    "checking": "Checking…",
+    "ok": "Connected",
+    "fail": "Not reachable"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Go to home"
+  }
+}
