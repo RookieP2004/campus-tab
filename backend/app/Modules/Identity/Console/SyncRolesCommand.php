@@ -58,6 +58,20 @@ class SyncRolesCommand extends Command
                 foreach ($added as $role => $permissions) {
                     $this->line("  {$role}: +".count($permissions).' permission(s)');
                 }
+
+                // Abilities the code retired (e.g. marks.unlock in Phase 6) leave every role.
+                $removed = $context->run($tenant->id, function () use ($audit): array {
+                    $removed = AuditRecorder::muted(fn () => SystemRoles::dropRetiredPermissions());
+                    if ($removed !== []) {
+                        $audit->record('roles.permissions_retired', 'admin', 'roles', null, meta: ['removed' => $removed]);
+                    }
+
+                    return $removed;
+                });
+
+                foreach ($removed as $role => $permissions) {
+                    $this->line("  {$role}: -".implode(', ', $permissions));
+                }
             }
         }
 

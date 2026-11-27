@@ -9,3 +9,6 @@ use Illuminate\Support\Facades\Schedule;
 
 // The platform console's per-school numbers (usage, security counts, alerts).
 Schedule::job(new CollectSchoolStats)->everyFifteenMinutes()->name('platform:collect-stats')->withoutOverlapping();
+
+// Leave: reminders after 24 h and escalation after 48 h (both from each school's config).
+Schedule::command('leave:remind')->hourly()->name('leave:remind')->withoutOverlapping();

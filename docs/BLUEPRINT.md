@@ -235,7 +235,7 @@ Fee permissions have their own table in the Fees section.
 
 - No escalation: nobody can create a role or user above their level, or grant a permission they lack.
 - The last Chief can't be removed or demoted.
-- Sensitive actions ask for MFA again: export, permanent delete, role edits, unlocking marks, support grants.
+- Sensitive actions ask for MFA again: export, permanent delete, role edits, approving a change to a locked mark, support grants. There is no "unlock marks" action: a locked mark changes only through a correction the Principal approves.
 - Every check runs on the server. The UI hides what you can't do, but hiding is never the protection.
 
 ## Core workflows
@@ -303,7 +303,7 @@ Structure: Academic year → Term → Assessment type (weekly, monthly, periodic
 
 A change after lock is a **correction request**: who asked, old and new value, reason. Only the Principal can approve it, from their own account; the Clerk and the Chief can only request. The change applies after approval, and the record keeps the old mark, the new mark, the reason, who asked, who approved and when. This is a fixed rule, not a setting.
 
-The markbook works like a spreadsheet: keyboard movement, paste from Excel, codes AB (absent) and ML (medical), a block on values above max marks, autosave and offline entry. On a phone it becomes one card per student with a numeric keypad.
+The markbook works like a spreadsheet: keyboard movement, paste from Excel, codes AB (absent) and ML (medical), a block on values above max marks, and autosave with a conflict check (two people editing the same paper get a conflict, never an overwrite). Marks entry is **online only**: there is no offline entry, and a save that fails stays on screen until it goes through. On a phone it becomes one card per student with a numeric keypad.
 
 ### Yearly report card
 
@@ -608,7 +608,7 @@ The school is the data fiduciary and we are its data processor. The main DPDP du
 
 - **The PowerSchool lesson.** Its 2024 breach came through a support portal, using a subcontractor's account that had no MFA ([source](https://techcrunch.com/2025/01/17/malware-stole-internal-powerschool-passwords-from-engineers-hacked-computer/)). Our answer: no standing support access. The Chief grants access for a fixed time and scope, read-only by default, behind MFA, with every action logged and visible to the school.
 - **MFA** is mandatory for Platform, Chief, Principal, Vice Principal and Clerk accounts, optional for teachers. Parents sign in by OTP.
-- **Step-up checks:** export, permanent delete, role edits, unlocking marks and support grants ask for MFA again.
+- **Step-up checks:** export, permanent delete, role edits, approving a correction to a locked mark (with the Principal's typed reason) and support grants ask for MFA again.
 - **Encryption:** TLS in transit, Atlas encryption at rest, app-level encryption for sensitive fields such as medical notes.
 - **Exports:** MFA, rate limits, watermarking, an audit entry, and an alert to the Chief on any large export.
 - **Hygiene:** OWASP ASVS level 2 as the checklist, dependency scanning in CI, virus scan on uploads, an external penetration test before launch.

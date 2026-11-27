@@ -48,8 +48,8 @@ class DefaultConfig
                     'late_entry_days' => 7, 'school_starts_at' => '08:00', 'periods_per_day' => 8,
                     'staff' => ['late_after' => '08:15', 'geofence' => ['enabled' => false]],
                 ],
-                'leave' => ['chain' => ['clerk', 'principal'], 'clerk_can_reject' => false, 'remind_after_hours' => 24, 'escalate_after_hours' => 48],
-                'marks' => ['auto_publish_class_tests' => true],
+                'leave' => ['chain' => ['clerk', 'principal'], 'clerk_can_reject' => false, 'remind_after_hours' => 24, 'escalate_after_hours' => 48, 'student_principal_after_days' => 3],
+                'marks' => ['auto_publish_class_tests' => true, 'class_teacher_can_enter' => false],
                 'fees' => ['gateway' => 'none', 'waiver_by' => 'principal', 'receipt_prefix' => null],
             ],
         ];

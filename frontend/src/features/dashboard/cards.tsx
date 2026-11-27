@@ -387,7 +387,8 @@ function ListBody({ data }: { data: Data }) {
             const audit = item.audit === true;
             const rawLabel = asString(item.label) ?? '';
             const rawDetail = asString(item.detail);
-            const shownLabel = audit ? t(`auditLog.actions.${rawLabel.replace(/\./g, '__')}`, { defaultValue: humanise(rawLabel) }) : rawLabel;
+            const labelKey = asString(item.label_key);
+            const shownLabel = labelKey ? t(labelKey, { defaultValue: rawLabel }) : audit ? t(`auditLog.actions.${rawLabel.replace(/\./g, '__')}`, { defaultValue: humanise(rawLabel) }) : rawLabel;
             const shownDetail = audit && rawDetail ? t(`auditLog.entities.${rawDetail}`, { defaultValue: humanise(rawDetail) }) : isoDay(rawDetail, i18n.language);
             const detail = [shownDetail, by ? t('dashboard.by', { name: by }) : null, at ? formatDateTime(at, i18n.language) : null].filter(Boolean).join(' · ');
             const label = (

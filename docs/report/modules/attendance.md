@@ -7,7 +7,7 @@
 **The student register.**
 
 - **Everyone is present by default.** The teacher marks only the exceptions and saves the whole class in one go.
-- **Codes:** P present, A absent, L late, HD half-day. LV (on leave) and H (holiday) are not typed: H comes from the approved holiday calendar, and LV will come from approved leave in Phase 5.
+- **Codes:** P present, A absent, L late, HD half-day. LV (on leave) and H (holiday) are not typed: H comes from the approved holiday calendar, and LV from approved student leave ([leave.md](leave.md)): a child on approved leave starts as LV, and approving leave changes a register already saved from P to LV (a teacher's own A, L or HD stays).
 - **Daily or per period**, as the school chooses. In daily mode the class teacher marks (or anyone with class, wing or school scope over the section). In period mode subject teachers mark their periods too.
 - **Online only.** There is no offline marking; a missed day is entered later from the paper register (below).
 
@@ -273,3 +273,5 @@ Plus `locale.timezone` (the school clock) and `ATTENDANCE_QR_MINUTES` (5). See [
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 4 | Back end built: register with edit window and paper late entries, upload, absence notices, staff check-in (app, geofence, QR, biometric, manual by a higher level), holiday calendar, reports, dashboard cards. Screens not built yet | Phase 4 of `docs/BUILD-PROMPTS.md`, owner's version |
 | 2026-11-27 | 4 | Screens built (taking attendance, late entry and upload, summary, monthly register, check-in, office staff view and QR, calendar, student Attendance tab); parents told once a day in period mode too | Phase 4, owner's version |
+| 2026-11-27 | 5 | LV from approved student leave (`StudentLeaveDays`); staff attendance takes source `leave` with `leave_request_id` and `replaced`, written by approved leave as a system entry | Phase 5 leave, owner's rule 5 |
+| 2026-11-27 | 6 | `AttendanceRegister::roll` also gives the markbook its roll | Phase 6 |

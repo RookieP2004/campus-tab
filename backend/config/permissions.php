@@ -8,8 +8,9 @@
 | 'abilities' lists every module.action the code knows and the scopes it may
 | take, widest first. A role can hold only strings built from this list, so no
 | setting can create a permission the code does not define (for example,
-| there is no "edit locked marks" ability: a locked mark changes only through
-| a correction the Principal approves).
+| there is no "edit locked marks" or "unlock marks" ability: a locked mark
+| changes only through a correction the Principal approves, owner's decision
+| in Phase 6).
 |
 | 'roles' is what each school starts with. The Chief can edit it, within the
 | guard rules (no escalation, the Chief role is fixed). Abilities for modules
@@ -89,6 +90,12 @@ return [
 
         // Leave (Phase 5)
         'leave.apply' => ['own'],
+        // The leave calendar: who is away (never the type or the reason).
+        'leave.view' => ['school'],
+        // Leave types, quotas, the sandwich rule and documents (the Principal).
+        'leave.manage_types' => ['school'],
+        // Hand the final leave decision to a Vice Principal for set dates.
+        'leave.delegate' => ['school'],
         'leave.verify' => ['school'],
         'leave.fast_track' => ['school', 'wing'],
         'leave.decide' => ['school', 'wing'],
@@ -104,7 +111,6 @@ return [
         'marks.enter' => ['school', 'wing', 'class', 'subject'],
         'marks.verify' => ['school', 'wing', 'class'],
         'marks.lock' => ['school', 'wing'],
-        'marks.unlock' => ['school'],
         'marks.correction_request' => ['school', 'class', 'subject'],
         'marks.correction_approve' => ['school'],
         'results.publish' => ['school', 'wing'],
@@ -157,9 +163,9 @@ return [
                 'imports.students:school', 'imports.staff:school',
                 'attendance.view:school', 'attendance.mark:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
                 'staff_attendance.enter:school', 'staff_attendance.view:school', 'staff_attendance.mark:own', 'calendar.view:school', 'calendar.manage:school', 'calendar.approve:school',
-                'leave.apply:own', 'leave.decide_principal:school', 'student_leave.approve:school',
+                'leave.apply:own', 'leave.view:school', 'leave.decide_principal:school', 'student_leave.approve:school',
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
-                'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.unlock:school', 'marks.correction_request:school',
+                'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.correction_request:school',
                 'results.publish:school', 'results.view:school', 'remarks.edit:school',
                 'custom_fields.manage:school', 'notices.send:school', 'notices.view:school',
                 'fees.gateway_view:school', 'fees.gateway_edit:school', 'fees.setup:school', 'fees.collect:school',
@@ -180,9 +186,9 @@ return [
                 'imports.students:school', 'imports.staff:school',
                 'attendance.view:school', 'attendance.mark:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
                 'staff_attendance.enter:school', 'staff_attendance.view:school', 'staff_attendance.mark:own', 'calendar.view:school', 'calendar.approve:school',
-                'leave.apply:own', 'leave.fast_track:school', 'leave.decide:school', 'student_leave.approve:school',
+                'leave.apply:own', 'leave.view:school', 'leave.manage_types:school', 'leave.delegate:school', 'leave.fast_track:school', 'leave.decide:school', 'student_leave.approve:school',
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
-                'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.unlock:school', 'marks.correction_approve:school',
+                'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.correction_request:school', 'marks.correction_approve:school',
                 'results.publish:school', 'results.view:school', 'remarks.edit:school',
                 'custom_fields.manage:school', 'notices.send:school', 'notices.view:school',
                 'fees.gateway_view:school', 'fees.setup:school', 'fees.collect:school', 'fees.adjust_approve:school',
@@ -197,7 +203,7 @@ return [
                 'students.view:wing', 'students.edit:wing', 'students.login_codes:wing', 'academic.view:school', 'staff.view:school',
                 'attendance.view:wing', 'attendance.mark:wing', 'attendance.edit_after_window:wing',
                 'staff_attendance.enter:school', 'staff_attendance.mark:own', 'calendar.view:school',
-                'leave.apply:own', 'leave.fast_track:wing', 'leave.decide:wing', 'student_leave.approve:wing',
+                'leave.apply:own', 'leave.view:school', 'leave.fast_track:wing', 'leave.decide:wing', 'student_leave.approve:wing',
                 'tests.create:wing', 'marks.enter:wing', 'marks.verify:wing', 'marks.lock:wing',
                 'results.publish:wing', 'remarks.edit:wing', 'custom_fields.manage:wing',
                 'notices.send:wing', 'notices.view:school',
@@ -212,7 +218,7 @@ return [
                 'academic.view:school', 'staff.view:school', 'staff.draft:school', 'imports.students:school',
                 'attendance.view:school', 'attendance.correct:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
                 'staff_attendance.view:school', 'staff_attendance.mark:own', 'calendar.view:school', 'calendar.manage:school',
-                'leave.apply:own', 'leave.verify:school',
+                'leave.apply:own', 'leave.view:school', 'leave.verify:school',
                 'assessment.setup:school', 'exams.schedule:school', 'tests.create:school',
                 'marks.enter:school', 'marks.lock:school', 'marks.correction_request:school',
                 'custom_fields.clerical:school', 'notices.send:school', 'notices.view:school',
@@ -226,7 +232,7 @@ return [
             'permissions' => [
                 'students.view:class', 'students.edit:class', 'students.login_codes:class', 'academic.view:school',
                 'attendance.view:class', 'attendance.mark:class', 'attendance.request_edit:class', 'staff_attendance.mark:own', 'calendar.view:school',
-                'leave.apply:own', 'student_leave.approve:class',
+                'leave.apply:own', 'leave.view:school', 'student_leave.approve:class',
                 'tests.create:class', 'marks.enter:class', 'marks.verify:class', 'marks.correction_request:class',
                 'remarks.edit:class', 'custom_fields.manage:class', 'notices.send:class', 'notices.view:own',
                 'export.class_list:class', 'fees.dues_view:class',
@@ -238,14 +244,14 @@ return [
             'permissions' => [
                 'students.view:subject', 'academic.view:school',
                 'attendance.view:subject', 'attendance.mark:subject', 'attendance.request_edit:subject', 'staff_attendance.mark:own', 'calendar.view:school',
-                'leave.apply:own', 'tests.create:subject', 'marks.enter:subject', 'marks.correction_request:subject',
+                'leave.apply:own', 'leave.view:school', 'tests.create:subject', 'marks.enter:subject', 'marks.correction_request:subject',
                 'remarks.edit:subject', 'custom_fields.manage:subject', 'notices.send:subject', 'notices.view:own',
             ],
         ],
         'staff' => [
             'label' => 'Staff',
             'level' => 30,
-            'permissions' => ['staff_attendance.mark:own', 'leave.apply:own', 'notices.view:own', 'calendar.view:school'],
+            'permissions' => ['staff_attendance.mark:own', 'leave.apply:own', 'leave.view:school', 'notices.view:own', 'calendar.view:school'],
         ],
         'parent' => [
             'label' => 'Parent / Guardian',

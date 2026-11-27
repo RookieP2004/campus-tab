@@ -65,12 +65,15 @@ The thirteen business modules from the blueprint each have a page in [modules/](
 | Module | Code | API routes | Report page |
 | --- | --- | --- | --- |
 | AcademicStructure | [`backend/app/Modules/AcademicStructure/`](../../backend/app/Modules/AcademicStructure/) | 17 | [modules/academic-structure.md](modules/academic-structure.md) |
+| Approvals | [`backend/app/Modules/Approvals/`](../../backend/app/Modules/Approvals/) | 1 | [modules/approvals.md](modules/approvals.md) |
+| Assessment | [`backend/app/Modules/Assessment/`](../../backend/app/Modules/Assessment/) | 26 | [modules/assessment.md](modules/assessment.md) |
 | Attendance | [`backend/app/Modules/Attendance/`](../../backend/app/Modules/Attendance/) | 25 | [modules/attendance.md](modules/attendance.md) |
 | Audit | [`backend/app/Modules/Audit/`](../../backend/app/Modules/Audit/) | 4 | [modules/audit.md](modules/audit.md) |
 | Communication | [`backend/app/Modules/Communication/`](../../backend/app/Modules/Communication/) | 13 | [modules/communication.md](modules/communication.md) |
 | Customisation | [`backend/app/Modules/Customisation/`](../../backend/app/Modules/Customisation/) | 6 | [modules/customisation.md](modules/customisation.md) |
 | Dashboard | [`backend/app/Modules/Dashboard/`](../../backend/app/Modules/Dashboard/) | 2 | [modules/dashboard.md](modules/dashboard.md) |
 | Identity | [`backend/app/Modules/Identity/`](../../backend/app/Modules/Identity/) | 33 | [modules/identity-and-access.md](modules/identity-and-access.md) |
+| Leave | [`backend/app/Modules/Leave/`](../../backend/app/Modules/Leave/) | 27 | [modules/leave.md](modules/leave.md) |
 | Licensing | [`backend/app/Modules/Licensing/`](../../backend/app/Modules/Licensing/) | 2 | [modules/licensing.md](modules/licensing.md) |
 | People | [`backend/app/Modules/People/`](../../backend/app/Modules/People/) | 23 | [modules/people.md](modules/people.md) |
 | Platform | [`backend/app/Modules/Platform/`](../../backend/app/Modules/Platform/) | 26 | [modules/platform.md](modules/platform.md) |

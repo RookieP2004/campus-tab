@@ -194,3 +194,5 @@ Decision: [0012](../decisions/0012-notices-and-notifications-privacy.md).
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 3 | Module built: notices with server-side audiences, receipts and signed attachment links; notifications in the app, by email and push with generic text; preferences; the live bell over Reverb | Phase 3 of `docs/BUILD-PROMPTS.md` |
 | 2026-11-27 | 4 | Type `attendance.absent` for parents of absent students | Phase 4 attendance |
+| 2026-11-27 | 5 | Types `leave.updated` and `leave.waiting` (mutable); generic texts that never name the person, type or reason; the socket refetches leave screens on a `leave.*` notification | Phase 5, owner's rule 2 |
+| 2026-11-27 | 6 | Types `results.published` ("Results are out", never the marks) and `marks.correction` | Phase 6, owner's rule 4 |

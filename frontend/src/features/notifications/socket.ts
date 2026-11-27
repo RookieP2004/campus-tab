@@ -96,6 +96,16 @@ export function useNotificationSocket(me: Pick<Me, 'id' | 'tenant_id'>): void {
         queryClient.setQueryData<NotificationList>(notificationsKey, (old) => (old ? { ...old, unread: event.unread } : old));
         void queryClient.invalidateQueries({ queryKey: notificationsKey });
         if (event.type === 'notice') void queryClient.invalidateQueries({ queryKey: ['notices'] });
+        // A leave request moved on: the open timeline, the lists and the inbox refetch (live steps).
+        if (event.type === 'results.published' || event.type === 'marks.correction') {
+          void queryClient.invalidateQueries({ queryKey: ['marks'] });
+          void queryClient.invalidateQueries({ queryKey: ['approvals'] });
+        }
+        if (event.type.startsWith('leave.')) {
+          void queryClient.invalidateQueries({ queryKey: ['leave'] });
+          void queryClient.invalidateQueries({ queryKey: ['approvals'] });
+          void queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
       });
 
       stop = () => {

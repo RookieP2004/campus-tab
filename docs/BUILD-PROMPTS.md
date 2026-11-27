@@ -159,7 +159,7 @@ Read "Core workflows > Tests and marks" and the assessment rows of the permissio
 2. assessments and papers (section x subject x assessment) with marks embedded; Subject Teachers create class tests within their own scope.
 3. Lifecycle draft -> open -> submitted -> verified -> locked -> published, each action permission-checked; optional auto-publish for class tests.
 4. Correction requests after lock: Clerk, teachers and the Chief can only request. The change applies only when the Principal approves from their own account, re-confirmed with MFA. Store old mark, new mark, reason, requester, approver and times on the request and in the audit log. Not configurable.
-5. Markbook grid: keyboard navigation, paste from Excel, AB/ML codes, max-marks validation, autosave with ETag conflicts, offline; card view on phones.
+5. Markbook grid: keyboard navigation, paste from Excel, AB/ML codes, max-marks validation, autosave with ETag conflicts; card view on phones. Online only: there is no offline marks entry.
 6. Completion grid for Class Teacher and Principal.
 Done when two teachers editing the same paper get a conflict instead of an overwrite, a locked paper refuses edits, a post-lock change without the Principal's approval is refused, and every changed mark shows old and new values in the audit log.
 ```

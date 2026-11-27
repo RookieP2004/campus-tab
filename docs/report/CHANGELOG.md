@@ -2,6 +2,153 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-27 · Phase 6 · Tests and marks (items 1–6)
+
+**What changed:**
+
+- **Schemes (item 1):**
+  - the school's own scheme per group of classes: terms, components with weightage (must total 100%), grade scale, rules
+  - optional presets (CBSE-style VI–VIII, IX–X, a simple one) as **starting points only**, labelled "Check against your board's latest circular…" when chosen and on the scheme (owner's rule 5)
+  - the Principal changes everything
+- **Assessments and papers (item 2):**
+  - school exams by the Principal or the Clerk
+  - class tests by teachers, only for their own subject-sections (class teachers also for their class)
+  - one paper per section × subject, marks embedded
+- **Lifecycle (item 3):** draft → open → submitted → verified → locked → published, each move permission-checked.
+  - **Locking and publishing run in MongoDB transactions** (owner's rule 6), for one paper or all eligible papers of an assessment.
+  - Auto-published class tests stay **editable until locked** (owner's decision this session).
+- **Corrections (item 4):**
+  - Clerk, teachers, the Chief and the Principal may request
+  - only the Principal approves, with **step-up MFA (`marks_correction_approve`, new) and a typed reason** (owner's rule 2)
+  - a correction the Principal raised needs a code entered **after** raising it, is flagged **self-approved** and is shown to the Chief (owner's rule 3)
+  - applied in a transaction, and only if the mark is unchanged
+  - old and new mark, both reasons, who and when are kept on the request and in the audit log
+- **No unlock** (owner's decision this session): `marks.unlock` and `marks_unlock` are removed, and `identity:sync-roles --with-new-permissions` now drops retired abilities from stored roles.
+- **Markbook (item 5):**
+  - keyboard navigation, paste from Excel, AB and ML, max-marks checks, autosave
+  - **`If-Match`** with **412 `paper_conflict`** instead of an overwrite
+  - a `marks.changed` audit entry with old and new for every mark
+  - card view on phones
+  - **online only** (owner's rule 1); `docs/BLUEPRINT.md` and Phase 6 item 5 of `docs/BUILD-PROMPTS.md` now say so
+- **Completion grid (item 6):** for the class teacher (their class) and the Principal (every section).
+- **Families (owner's rule 4):** see published marks only (`/results`, the profile's Results tab); the notification says "Results are out" and nothing else.
+- **Also:**
+  - corrections in the approvals inbox
+  - dashboard cards: marks to enter, papers to verify, marks this year, self-approved corrections for the Chief
+  - `policies.marks.class_teacher_can_enter` (false) for the matrix's "Class (if enabled)"
+  - the blueprint's step-up lines now name approving a locked-mark correction instead of unlocking
+  - `DemoMarksSeeder`
+- **Found in the browser and fixed:**
+  - a published paper was counted twice in the tests list
+  - the Principal got the teachers' "Marks to enter" card
+  - an empty inbox tab hid the remaining leave
+  - a parent's second child showed as "Child 2"
+
+**Why:** Phase 6 of `docs/BUILD-PROMPTS.md` with the owner's six rules.
+
+**Files:**
+
+- **Back end:**
+  - `backend/app/Modules/Assessment/**` (new)
+  - `backend/app/Modules/Dashboard/Domain/Cards/AssessmentCards.php`
+  - `backend/app/Modules/Identity/{Domain/SystemRoles.php,Console/SyncRolesCommand.php}`
+  - `backend/app/Modules/Tenancy/{Domain/DefaultConfig.php,Schemas/school-config.schema.json}`
+  - `backend/config/{assessment,identity,permissions,approvals,communication,dashboard}.php`, `backend/bootstrap/providers.php`
+  - `backend/database/migrations/2026_11_30_000002_create_assessment_collections.php`
+  - `backend/database/seeders/{DemoMarksSeeder,DemoSchoolSeeder}.php`
+- **Tests:** `backend/tests/Feature/Assessment/MarksTest.php`, `backend/tests/Feature/Identity/StepUpTest.php`, `backend/tests/Feature/Tenancy/SchoolConfigTest.php` (the marks settings allowed are now exactly `auto_publish_class_tests` and `class_teacher_can_enter`)
+- **Front end and packages:**
+  - `frontend/src/features/assessment/**` (new)
+  - `frontend/src/features/{approvals/ApprovalsPage.tsx,people/StudentProfilePage.tsx,dashboard/cards.tsx,notifications/socket.ts,shell/navItems.ts}`
+  - `frontend/src/app/routes.tsx`, `frontend/src/locales/{en,hi}/common.json`
+  - `packages/api/{openapi.json,src/schema.ts}`
+- **Docs:** `docs/BLUEPRINT.md`, `docs/BUILD-PROMPTS.md`
+
+**Report pages updated:**
+
+- `modules/assessment.md` (in full), `decisions/0014-marks-lifecycle-and-corrections.md` (new)
+- `modules/{approvals,dashboard,identity-and-access,tenancy,communication,attendance}.md`
+- `permissions.md`, `configuration.md`, `frontend.md`, `api.md`, `links-and-events.md`, `how-to/demo-school.md`
+- the generated blocks
+
+**How to test:**
+
+1. `cd infra && docker compose exec api php artisan migrate`, then `php artisan identity:sync-roles --with-new-permissions` (adds the Principal's correction request, removes `marks.unlock`), then `php artisan db:seed --class=DemoMarksSeeder` for a demo school made earlier.
+2. `docker compose exec api php artisan test tests/Feature/Assessment`, then the full checks.
+3. In the browser: follow the Phase 6 steps in the session summary.
+
+## 2026-11-27 · Phase 5 · Leave (items 1–7)
+
+**What changed:**
+
+- **Branch:** built on `session-3-leave-marks`, reset (at the owner's request) to the Phase 3–4 work on `session-2-shell-attendance`, because leave needs staff attendance, the holiday calendar and notifications.
+- **Leave types and the ledger (item 1):**
+  - the Principal keeps types: quota (or none), the **sandwich rule per type**, half days, the document rule, offered or not
+  - starter types on request
+  - `leave_ledger` is append-only (reserve, release, deduct, restore); balances are worked out from the quota and the ledger
+- **The state machine (item 2):**
+  - all eight states, with every legal move in `LeaveWorkflow::MOVES` and everything else refused (409)
+  - the chain comes from `policies.leave.chain` (clerk, optional vice_principal for the applicant's wing, principal)
+  - fast-track; `clerk_can_reject`, now the Chief's switch only
+  - dated delegation to a Vice Principal
+  - approve with other dates
+  - withdraw, ask to cancel, cancel, keep
+- **Owner's rule 1, nobody decides their own leave:**
+  - a Clerk or a Vice Principal → the Principal; the Principal → the Chief Admin
+  - **the Chief Admin → the Principal** (owner's decision this session: the Principal is the school's leave authority)
+  - a delegate never decides for anyone at or above their level
+- **Owner's rule 2, privacy:**
+  - reasons and remarks are sealed at rest; documents are encrypted on disk with sealed names and served only by 5-minute signed links
+  - a request outside your chain is 404; the audit log stores `[private]`
+  - the calendar shows only who is away; notifications say only that a request changed
+- **Owner's rule 3:** the sandwich rule counts days off **inside** the leave only; days off at the ends never count.
+- **Transactions (item 3, owner's rule 4):**
+  - each move re-reads the request in a MongoDB transaction (5 attempts) and bumps a per-balance lock document first, so concurrent approvals collide and retry instead of spending the same days twice
+  - approval writes the request, the ledger and attendance together
+  - cancelling restores the untaken days and their attendance together
+- **Reminders (item 4):** `leave:remind` runs hourly. It reminds after `remind_after_hours` (24) and tells the level above after `escalate_after_hours` (48), once per stage.
+- **Screens (item 5):** apply with a live balance, the request timeline (live over the notification socket), the Clerk's and the Principal's queues in the shared **approvals inbox** (`GET /approvals/inbox`, new Approvals module) with "Away this week", the leave calendar, leave settings. See [frontend.md](frontend.md#phase-5-leave-screens).
+- **On approval (item 6, owner's rule 5):** staff attendance gets **LV with source `leave`**, a system entry rather than a manual one. The needs-cover list comes from teaching assignments and class registers.
+- **Student leave (item 7):** the parent applies and the class teacher decides; the register shows LV (registers already saved too); long leave is shown to the Principal.
+- **Also:**
+  - **`Idempotency-Key`** middleware (`idempotent`) on creates and workflow moves
+  - dashboard cards: leave waiting, staff away today, my leave balance
+  - the empty staff-drafts card drops to the bottom
+  - new abilities `leave.view`, `leave.manage_types`, `leave.delegate`
+  - `leave:seed-types`; demo leave in `DemoSchoolSeeder`
+- **Found in the browser and fixed:** a raw `{{stage}}` in the inbox line; a balance that read "10 of 12" instead of "12 of 12 → 10 after"; date fields cut off at 360 px; the scrollable cover table not reachable by keyboard.
+
+**Why:** Phase 5 of `docs/BUILD-PROMPTS.md` with the owner's five rules.
+
+**Files:**
+
+- **Back end:**
+  - `backend/app/Modules/{Leave,Approvals}/**` (new), `backend/app/Support/Http/Idempotency.php` (new)
+  - `backend/app/Modules/Dashboard/Domain/Cards/{LeaveCards,SchoolAdminCards}.php`
+  - `backend/app/Modules/Attendance/{Domain/AttendanceRegister.php,Models/StaffAttendance.php}`
+  - `backend/app/Modules/Tenancy/{Domain/DefaultConfig.php,Domain/ConfigSections.php,Schemas/school-config.schema.json}`
+  - `backend/config/{leave,approvals,permissions,communication,dashboard}.php`
+  - `backend/bootstrap/{app,providers}.php`, `backend/routes/console.php`
+  - `backend/database/migrations/2026_11_30_000001_create_leave_collections.php`, `backend/database/seeders/DemoSchoolSeeder.php`
+- **Tests:** `backend/tests/Feature/Leave/{LeaveWorkflowTest,StudentLeaveTest}.php`, `backend/tests/Feature/Identity/RoutePermissionTest.php`
+- **Front end and packages:**
+  - `frontend/src/features/{leave,approvals}/**` (new)
+  - `frontend/src/features/{notifications/socket.ts,shell/navItems.ts}`, `frontend/src/app/routes.tsx`, `frontend/src/locales/{en,hi}/common.json`
+  - `packages/api/{openapi.json,src/schema.ts}`
+
+**Report pages updated:**
+
+- `modules/leave.md` (in full), `modules/approvals.md` (new), `decisions/0013-leave-routing-privacy-and-ledger.md` (new)
+- `modules/{attendance,dashboard,tenancy,identity-and-access,communication}.md`
+- `permissions.md`, `configuration.md`, `frontend.md`, `api.md`, `links-and-events.md`, `how-to/demo-school.md`
+- the generated blocks
+
+**How to test:**
+
+1. `cd infra && docker compose exec api php artisan migrate`, then `php artisan identity:sync-roles --with-new-permissions`, then `php artisan leave:seed-types --school=SUNRISE-BPL` (or a fresh `db:seed --class=DemoSchoolSeeder`).
+2. `docker compose exec api php artisan test tests/Feature/Leave`, then `composer test`, `composer lint` and `php artisan report:generate --check`. Front end: `npm test -w @campus-tab/frontend`, `lint`, `typecheck`.
+3. In the browser: follow the Phase 5 steps in the session summary.
+
 ## 2026-11-27 · Session 2 · Browser review fixes
 
 **What changed** (found by walking every Phase 2–4 screen at 360 px and 1280 px in light and dark, and by doing each "done when" step in Chrome):

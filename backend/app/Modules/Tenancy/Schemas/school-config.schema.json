@@ -112,10 +112,11 @@
           "additionalProperties": false,
           "required": ["chain", "clerk_can_reject", "remind_after_hours", "escalate_after_hours"],
           "properties": {
-            "chain": { "type": "array", "items": { "enum": ["clerk", "principal"] }, "minItems": 1, "uniqueItems": true },
+            "chain": { "type": "array", "items": { "enum": ["clerk", "vice_principal", "principal"] }, "minItems": 1, "uniqueItems": true, "contains": { "const": "principal" } },
             "clerk_can_reject": { "type": "boolean" },
             "remind_after_hours": { "type": "integer", "minimum": 1, "maximum": 168 },
-            "escalate_after_hours": { "type": "integer", "minimum": 1, "maximum": 336 }
+            "escalate_after_hours": { "type": "integer", "minimum": 1, "maximum": 336 },
+            "student_principal_after_days": { "type": "integer", "minimum": 1, "maximum": 60 }
           }
         },
         "marks": {
@@ -123,7 +124,8 @@
           "additionalProperties": false,
           "required": ["auto_publish_class_tests"],
           "properties": {
-            "auto_publish_class_tests": { "type": "boolean" }
+            "auto_publish_class_tests": { "type": "boolean" },
+            "class_teacher_can_enter": { "type": "boolean" }
           }
         },
         "fees": {

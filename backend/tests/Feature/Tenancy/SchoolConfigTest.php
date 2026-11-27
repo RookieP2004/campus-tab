@@ -115,7 +115,8 @@ it('has no setting that lets a clerk change locked marks: that rule is fixed in 
         ->assertJsonPath('error.code', 'config_invalid');
 
     $schema = json_decode(file_get_contents(ConfigSchema::path()), true);
-    expect(array_keys($schema['properties']['policies']['properties']['marks']['properties']))->toBe(['auto_publish_class_tests']);
+    // Only these two; neither touches a locked mark (class_teacher_can_enter is for open papers, Phase 6).
+    expect(array_keys($schema['properties']['policies']['properties']['marks']['properties']))->toBe(['auto_publish_class_tests', 'class_teacher_can_enter']);
 
     $propertyNames = [];
     $collect = function (array $node) use (&$collect, &$propertyNames) {

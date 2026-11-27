@@ -13,6 +13,7 @@ use App\Modules\Identity\Domain\Scopes\AccessSubject;
 use App\Modules\Identity\Domain\Scopes\ClassScope;
 use App\Modules\Identity\Domain\Scopes\WingScope;
 use App\Modules\Identity\Models\User;
+use App\Modules\Leave\Domain\StudentLeaveDays;
 use App\Modules\People\Models\Enrolment;
 use App\Modules\People\Models\Guardian;
 use App\Modules\People\Models\Student;
@@ -24,7 +25,8 @@ use Carbon\CarbonImmutable;
  * A section's register for a date: who may mark it, when, and what happens.
  *
  *  - Everyone starts present; approved holidays close the day (H) and
- *    approved leave will fill LV (Phase 5).
+ *    approved student leave fills LV (Leave\Domain\StudentLeaveDays)
+ *    unless the teacher marks something else.
  *  - Daily mode: the class teacher (or anyone with class, wing or school
  *    scope) marks period 0. Period mode: subject teachers too, periods 1..N.
  *  - Today, until the edit window closes (school start + edit_window_hours),
@@ -45,6 +47,7 @@ class AttendanceRegister
         private readonly AttendanceSettings $settings,
         private readonly AccessControl $access,
         private readonly Notifier $notifier,
+        private readonly StudentLeaveDays $leave,
     ) {}
 
     /**
@@ -60,6 +63,7 @@ class AttendanceRegister
         $holiday = CalendarEvent::holidayOn($date);
         $students = $this->roll($section);
         $marks = $existing?->statusByStudent() ?? [];
+        $onLeave = $holiday === null ? $this->leave->onLeave(array_column($students, 'id'), $date) : [];
 
         return [
             'section' => ['id' => (string) $section->getKey(), 'label' => $section->label],
@@ -81,7 +85,7 @@ class AttendanceRegister
             'day_id' => $existing === null ? null : (string) $existing->getKey(),
             'rules' => $this->rules($user, $section, $date, $existing, $holiday !== null),
             'students' => array_map(fn (array $s) => array_merge($s, [
-                'status' => $holiday !== null ? 'H' : ($marks[$s['id']] ?? 'P'),
+                'status' => $holiday !== null ? 'H' : ($marks[$s['id']] ?? (in_array($s['id'], $onLeave, true) ? 'LV' : 'P')),
             ]), $students),
         ];
     }
@@ -116,7 +120,9 @@ class AttendanceRegister
             }
         }
 
-        $entries = array_map(fn (string $id) => ['student_id' => $id, 'status' => $statuses[$id] ?? 'P'], $roll);
+        // A child on approved leave is LV unless the teacher marked something else.
+        $onLeave = $this->leave->onLeave($roll, $date);
+        $entries = array_map(fn (string $id) => ['student_id' => $id, 'status' => $statuses[$id] ?? (in_array($id, $onLeave, true) ? 'LV' : 'P')], $roll);
         $by = ['id' => (string) $user->getKey(), 'name' => $user->name];
         $year = AcademicYear::current();
 

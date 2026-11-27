@@ -36,6 +36,166 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/approvals/inbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["approvals.inbox"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessment-schemes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["assessment-schemes.index"];
+        put?: never;
+        post: operations["assessment-schemes.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessment-schemes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["assessment-schemes.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessment-schemes/presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["assessment-schemes.presets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["assessments.index"];
+        put?: never;
+        post: operations["assessments.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["assessments.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessments/{id}/completion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["assessments.completion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessments/{id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["assessments.lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessments/{id}/open": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["assessments.open"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assessments/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["assessments.publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/attendance/below-threshold": {
         parameters: {
             query?: never;
@@ -646,6 +806,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/corrections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["corrections.index"];
+        put?: never;
+        post: operations["corrections.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/corrections/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["corrections.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/corrections/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["corrections.approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/corrections/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["corrections.reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/custom-fields": {
         parameters: {
             query?: never;
@@ -735,6 +959,23 @@ export interface paths {
         };
         /** Only through the signed link above */
         get: operations["files.attendance-photo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/files/leave/{tenant}/{request}/{doc}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Only through the signed, short-lived link above */
+        get: operations["files.leave-document"];
         put?: never;
         post?: never;
         delete?: never;
@@ -882,6 +1123,359 @@ export interface paths {
         get: operations["imports.report"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave-requests.index"];
+        put?: never;
+        post: operations["leave-requests.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave-requests.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["leave-requests.update"];
+        trace?: never;
+    };
+    "/leave-requests/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.cancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/cancel-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.cancel-request"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.documents.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/documents/{doc}/link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.documents.link"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/keep": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.keep"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/return": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.return"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.verify"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/{id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave-requests.withdraw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-requests/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave-requests.preview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave-types.index"];
+        put?: never;
+        post: operations["leave-types.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave-types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["leave-types.update"];
+        trace?: never;
+    };
+    "/leave-types/starter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Adds the starter types the school does not have yet (codes already used are left alone) */
+        post: operations["leave-types.starter"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave/balances/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave.balances.me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave.calendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave/cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave.cover"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave/delegations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["leave.delegations.index"];
+        put?: never;
+        post: operations["leave.delegations.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leave/delegations/{id}/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["leave.delegations.end"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1254,6 +1848,134 @@ export interface paths {
         get: operations["notices.receipts"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["papers.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["papers.lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}/marks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["papers.marks"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}/open": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["papers.open"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["papers.publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}/send-back": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["papers.send-back"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["papers.submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{id}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["papers.verify"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1766,6 +2488,39 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["recycle-bin.restore"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/results/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A signed-in student's own published marks */
+        get: operations["results.mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/results/students/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["results.student"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2370,6 +3125,529 @@ export interface operations {
                 };
             };
             403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "approvals.inbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        counts: string;
+                        data: unknown[];
+                        total: number;
+                    };
+                };
+            };
+        };
+    };
+    "assessment-schemes.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            components: {
+                                key: string;
+                                max: number;
+                                name: string;
+                                weight: number;
+                            }[];
+                            grade_scale: {
+                                grade: string;
+                                min: number;
+                            }[];
+                            grades: string[];
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            preset_label: string | null;
+                            preset_note: string | null;
+                            rules: {
+                                best_of: number | null;
+                                grace_marks: number;
+                                pass_percent: number;
+                                rounding: string;
+                            };
+                            status: string;
+                            terms: string[];
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "assessment-schemes.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    grades: string[];
+                    name: string;
+                    /** @enum {string|null} */
+                    preset?: "cbse_6_8" | "cbse_9_10" | "generic" | null;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            components: {
+                                key: string;
+                                max: number;
+                                name: string;
+                                weight: number;
+                            }[];
+                            grade_scale: {
+                                grade: string;
+                                min: number;
+                            }[];
+                            grades: string[];
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            preset_label: string | null;
+                            preset_note: string | null;
+                            rules: {
+                                best_of: number | null;
+                                grace_marks: number;
+                                pass_percent: number;
+                                rounding: string;
+                            };
+                            status: string;
+                            terms: string[];
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "assessment-schemes.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    components?: {
+                        key: string;
+                        max: number;
+                        name: string;
+                        weight: number;
+                    }[];
+                    grade_scale?: {
+                        grade: string;
+                        min: number;
+                    }[];
+                    grades?: string[];
+                    name?: string;
+                    rules?: {
+                        best_of?: number | null;
+                        grace_marks?: number;
+                        pass_percent?: number;
+                        /** @enum {string} */
+                        rounding?: "half_up" | "up" | "down" | "none";
+                    };
+                    /** @enum {string} */
+                    status?: "draft" | "active";
+                    terms?: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            components: {
+                                key: string;
+                                max: number;
+                                name: string;
+                                weight: number;
+                            }[];
+                            grade_scale: {
+                                grade: string;
+                                min: number;
+                            }[];
+                            grades: string[];
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            preset_label: string | null;
+                            preset_note: string | null;
+                            rules: {
+                                best_of: number | null;
+                                grace_marks: number;
+                                pass_percent: number;
+                                rounding: string;
+                            };
+                            status: string;
+                            terms: string[];
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "assessment-schemes.presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[][];
+                    };
+                };
+            };
+        };
+    };
+    "assessments.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** @description A published paper is counted once, as published. */
+                            by_status: string;
+                            component: string | null;
+                            created_by: string;
+                            entry_closes_at: string | null;
+                            from: string;
+                            id: string;
+                            kind: string;
+                            name: string;
+                            papers: string | number;
+                            published: string | number;
+                            term: string | null;
+                            to: string;
+                            type: string;
+                        }[];
+                    } | {
+                        data: string[];
+                    };
+                };
+            };
+        };
+    };
+    "assessments.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    component?: string | null;
+                    /** Format: date-time */
+                    entry_closes_at?: string | null;
+                    /** Format: date */
+                    from: string;
+                    /** @enum {string} */
+                    kind: "exam" | "class_test";
+                    name: string;
+                    papers: {
+                        /** Format: date */
+                        date?: string | null;
+                        max_marks: number;
+                        section_id: string;
+                        subject_id: string;
+                    }[];
+                    term?: string | null;
+                    /** Format: date */
+                    to: string;
+                    /** @enum {string} */
+                    type: "weekly" | "monthly" | "periodic" | "half_yearly" | "annual" | "practical" | "project" | "internal";
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            component: string | null;
+                            created_by: string;
+                            entry_closes_at: string | null;
+                            from: string;
+                            id: string;
+                            kind: string;
+                            name: string;
+                            papers: unknown[];
+                            term: string | null;
+                            to: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "assessments.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            component: string | null;
+                            created_by: string;
+                            entry_closes_at: string | null;
+                            from: string;
+                            id: string;
+                            kind: string;
+                            name: string;
+                            papers: unknown[];
+                            term: string | null;
+                            to: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "assessments.completion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            };
+                            sections: unknown[];
+                            subjects: unknown[];
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "assessments.lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    section_id?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            component: string | null;
+                            created_by: string;
+                            entry_closes_at: string | null;
+                            from: string;
+                            id: string;
+                            kind: string;
+                            name: string;
+                            papers: unknown[];
+                            term: string | null;
+                            to: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "assessments.open": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    section_id?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            component: string | null;
+                            created_by: string;
+                            entry_closes_at: string | null;
+                            from: string;
+                            id: string;
+                            kind: string;
+                            name: string;
+                            papers: unknown[];
+                            term: string | null;
+                            to: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "assessments.publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    section_id?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            component: string | null;
+                            created_by: string;
+                            entry_closes_at: string | null;
+                            from: string;
+                            id: string;
+                            kind: string;
+                            name: string;
+                            papers: unknown[];
+                            term: string | null;
+                            to: string;
+                            type: string;
+                        };
+                    };
+                };
+            };
             404: components["responses"]["ModelNotFoundException"];
         };
     };
@@ -4276,6 +5554,290 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "corrections.index": {
+        parameters: {
+            query?: {
+                self_approved?: boolean | null;
+                status?: "pending" | "approved" | "rejected" | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        can: {
+                            approve: boolean;
+                        };
+                        data: {
+                            assessment_id: string;
+                            can: {
+                                decide: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: string | null;
+                            decision_reason: string | null;
+                            id: string;
+                            label: string;
+                            new: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            old: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            own: boolean;
+                            paper_id: string;
+                            reason: string;
+                            requested_at: string | null;
+                            requested_by: string;
+                            requested_by_role: string | null;
+                            self_approved: boolean;
+                            status: string;
+                            student: string;
+                            student_id: string;
+                        }[];
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "corrections.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    code?: string | null;
+                    paper_id: string;
+                    reason: string;
+                    student_id: string;
+                    value?: string | null;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment_id: string;
+                            can: {
+                                decide: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: string | null;
+                            decision_reason: string | null;
+                            id: string;
+                            label: string;
+                            new: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            old: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            own: boolean;
+                            paper_id: string;
+                            reason: string;
+                            requested_at: string | null;
+                            requested_by: string;
+                            requested_by_role: string | null;
+                            self_approved: boolean;
+                            status: string;
+                            student: string;
+                            student_id: string;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "corrections.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment_id: string;
+                            can: {
+                                decide: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: string | null;
+                            decision_reason: string | null;
+                            id: string;
+                            label: string;
+                            new: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            old: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            own: boolean;
+                            paper_id: string;
+                            reason: string;
+                            requested_at: string | null;
+                            requested_by: string;
+                            requested_by_role: string | null;
+                            self_approved: boolean;
+                            status: string;
+                            student: string;
+                            student_id: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "corrections.approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment_id: string;
+                            can: {
+                                decide: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: string | null;
+                            decision_reason: string | null;
+                            id: string;
+                            label: string;
+                            new: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            old: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            own: boolean;
+                            paper_id: string;
+                            reason: string;
+                            requested_at: string | null;
+                            requested_by: string;
+                            requested_by_role: string | null;
+                            self_approved: boolean;
+                            status: string;
+                            student: string;
+                            student_id: string;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "corrections.reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment_id: string;
+                            can: {
+                                decide: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: string | null;
+                            decision_reason: string | null;
+                            id: string;
+                            label: string;
+                            new: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            old: {
+                                code: string | null;
+                                value: number | null;
+                            };
+                            own: boolean;
+                            paper_id: string;
+                            reason: string;
+                            requested_at: string | null;
+                            requested_by: string;
+                            requested_by_role: string | null;
+                            self_approved: boolean;
+                            status: string;
+                            student: string;
+                            student_id: string;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
     "custom-fields.index": {
         parameters: {
             query?: {
@@ -4613,6 +6175,41 @@ export interface operations {
             header?: never;
             path: {
                 day: string;
+                tenant: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Error overview. */
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    "files.leave-document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                doc: string;
+                request: string;
                 tenant: string;
             };
             cookie?: never;
@@ -5025,6 +6622,1739 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "leave-requests.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            created_at: string | null;
+                            days: number;
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            stage: string | null;
+                            status: string;
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "leave-requests.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date */
+                    from: string;
+                    reason: string;
+                    student_id: string;
+                    /** Format: date */
+                    to: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "leave-requests.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: date */
+                    from?: string;
+                    /** @enum {string|null} */
+                    half_day?: "first" | "second" | null;
+                    reason?: string;
+                    /** Format: date */
+                    to?: string;
+                    type_code?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: date */
+                    from?: string | null;
+                    remark?: string | null;
+                    /** Format: date */
+                    to?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    remark?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.cancel-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.documents.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Maximum file size: 5120 kilobytes.
+                     */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.documents.link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                doc: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            url: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "leave-requests.keep": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    remark: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    remark: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.return": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    remark: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "leave-requests.verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    remark?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-requests.withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            applicant: {
+                                designation: string | null;
+                                name: string;
+                                section: string | null;
+                                student_id: string | null;
+                            };
+                            applied_by: string;
+                            approved: unknown[] | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            };
+                            can: {
+                                approve: boolean;
+                                attach: boolean;
+                                cancel: boolean;
+                                edit: boolean;
+                                fast_track: boolean;
+                                keep: boolean;
+                                reject: boolean;
+                                request_cancel: boolean;
+                                return: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                                withdraw: boolean;
+                            };
+                            cancel_request: {
+                                at: unknown;
+                                by: string | null;
+                                reason: unknown;
+                            } | null;
+                            cancel_requested: boolean;
+                            chain: string[];
+                            cover_needed: {
+                                date: string;
+                                section: string;
+                                section_id: string;
+                                subject: string;
+                            }[];
+                            created_at: string | null;
+                            days: number;
+                            documents: unknown[];
+                            fast_tracked: boolean;
+                            from: string;
+                            half_day: string | null;
+                            has_documents: boolean;
+                            id: string;
+                            kind: string;
+                            last_step: {
+                                action: string;
+                                at: string;
+                                by: string | null;
+                                stage: string;
+                            } | null;
+                            principal_sees: boolean;
+                            reason: string | null;
+                            stage: string | null;
+                            status: string;
+                            timeline: unknown[];
+                            to: string;
+                            type_code: string | null;
+                            type_name: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "leave-requests.preview": {
+        parameters: {
+            query: {
+                from: string;
+                half_day?: "first" | "second" | null;
+                to: string;
+                type_code: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            available_after: number | null;
+                            balance: {
+                                available: number | null;
+                                quota: number | null;
+                                reserved: number;
+                                taken: number;
+                                type_code: string;
+                                type_name: string;
+                            } | null;
+                            chain: string[] | [
+                                string | "principal"
+                            ] | [
+                                "principal"
+                            ] | [
+                                "chief"
+                            ];
+                            counted: unknown[];
+                            days: number;
+                            document_required: boolean;
+                            off: ({
+                                date: string;
+                                why: string;
+                            } | {
+                                date: string;
+                                /** @constant */
+                                why: "weekly_off";
+                            })[];
+                            sandwich: boolean;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave-types.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        can: {
+                            manage: boolean;
+                        };
+                        data: {
+                            code: string;
+                            document_after_days: number | null;
+                            half_day: boolean;
+                            id: string;
+                            name: string;
+                            quota: number | null;
+                            sandwich: boolean;
+                            status: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "leave-types.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            document_after_days: number | null;
+                            half_day: boolean;
+                            id: string;
+                            name: string;
+                            quota: number | null;
+                            sandwich: boolean;
+                            status: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "leave-types.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            document_after_days: number | null;
+                            half_day: boolean;
+                            id: string;
+                            name: string;
+                            quota: number | null;
+                            sandwich: boolean;
+                            status: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "leave-types.starter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            document_after_days: number | null;
+                            half_day: boolean;
+                            id: string;
+                            name: string;
+                            quota: number | null;
+                            sandwich: boolean;
+                            status: string;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "leave.balances.me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            available: number | null;
+                            quota: number | null;
+                            reserved: number;
+                            taken: number;
+                            type_code: string;
+                            type_name: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "leave.calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            from: string;
+                            half_day: string | null;
+                            name: string;
+                            own: boolean;
+                            request_id: string | null;
+                            to: string;
+                        }[];
+                        from: string;
+                        to: string;
+                    };
+                };
+            };
+        };
+    };
+    "leave.cover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[][];
+                        from: string;
+                        to: string;
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "leave.delegations.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            active: boolean;
+                            by: string;
+                            delegate: string;
+                            delegate_user_id: string;
+                            ended_at: string | null;
+                            from: string;
+                            id: string;
+                            /** @enum {string} */
+                            state: "ended" | "over" | "upcoming" | "active";
+                            to: string;
+                        }[];
+                        deputies: {
+                            id: string;
+                            name: string;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "leave.delegations.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    delegate_user_id: string;
+                    /** Format: date */
+                    from: string;
+                    /** Format: date */
+                    to: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            active: boolean;
+                            by: string;
+                            delegate: string;
+                            delegate_user_id: string;
+                            ended_at: string | null;
+                            from: string;
+                            id: string;
+                            /** @enum {string} */
+                            state: "ended" | "over" | "upcoming" | "active";
+                            to: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "leave.delegations.end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            active: boolean;
+                            by: string;
+                            delegate: string;
+                            delegate_user_id: string;
+                            ended_at: string | null;
+                            from: string;
+                            id: string;
+                            /** @enum {string} */
+                            state: "ended" | "over" | "upcoming" | "active";
+                            to: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
     "licences.activate": {
         parameters: {
             query?: never;
@@ -5364,7 +8694,7 @@ export interface operations {
             content: {
                 "application/json": {
                     email?: boolean;
-                    muted?: ("notice" | "attendance.absent")[];
+                    muted?: ("notice" | "attendance.absent" | "leave.updated" | "leave.waiting" | "results.published" | "marks.correction")[];
                     push?: boolean;
                 };
             };
@@ -5896,6 +9226,594 @@ export interface operations {
                 };
             };
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "papers.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "papers.lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "papers.marks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    marks: {
+                        code?: string | null;
+                        remark?: string | null;
+                        value?: string | null;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "papers.open": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "papers.publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "papers.send-back": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    note: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "papers.submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "papers.verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            assessment: {
+                                component: string | null;
+                                created_by: string;
+                                entry_closes_at: string | null;
+                                from: string;
+                                id: string;
+                                kind: string;
+                                name: string;
+                                term: string | null;
+                                to: string;
+                                type: string;
+                            } | null;
+                            assessment_id: string;
+                            can: {
+                                correct: boolean;
+                                enter: boolean;
+                                lock: boolean;
+                                open: boolean;
+                                publish: boolean;
+                                send_back: boolean;
+                                submit: boolean;
+                                verify: boolean;
+                            };
+                            class_test: boolean;
+                            date: string | null;
+                            entered: unknown;
+                            history: unknown[];
+                            id: string;
+                            locked: {
+                                at: unknown;
+                                by: string | null;
+                            } | null;
+                            max_marks: number;
+                            pending_corrections: {
+                                [key: string]: string;
+                            };
+                            published: boolean;
+                            published_at: string | null;
+                            returned_note: string | null;
+                            rows: unknown[];
+                            section: string;
+                            section_id: string;
+                            status: string;
+                            students: number;
+                            subject: string;
+                            subject_id: string;
+                            version: number;
+                        };
+                    };
+                };
+            };
         };
     };
     "permissions.index": {
@@ -7374,6 +11292,85 @@ export interface operations {
                     };
                 };
             };
+        };
+    };
+    "results.mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            results: {
+                                assessment: string | null;
+                                code: string | null;
+                                date: string | null;
+                                max_marks: number;
+                                paper_id: string;
+                                published_at: string | null;
+                                subject: string;
+                                term: string | null;
+                                type: string | null;
+                                value: number | null;
+                            }[];
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "results.student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            results: {
+                                assessment: string | null;
+                                code: string | null;
+                                date: string | null;
+                                max_marks: number;
+                                paper_id: string;
+                                published_at: string | null;
+                                subject: string;
+                                term: string | null;
+                                type: string | null;
+                                value: number | null;
+                            }[];
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
         };
     };
     "roles.index": {

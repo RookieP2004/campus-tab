@@ -58,9 +58,10 @@ class SchoolAdminCards implements CardProvider
 
         if ($context->can('staff.approve')) {
             $drafts = Staff::query()->where('status', Staff::STATUS_DRAFT)->orderBy('created_at')->limit(5)->get();
+            // With nothing waiting, the card moves down so real work (leave, holidays) comes first.
             $cards[] = [
                 'id' => 'approvals', 'kind' => 'todo', 'title' => 'dashboard.cards.approvals',
-                'priority' => $context->can('config.edit', 'school') ? 5 : 0, 'link' => '/staff?status=draft',
+                'priority' => $drafts->isEmpty() ? 30 : ($context->can('config.edit', 'school') ? 5 : 0), 'link' => '/staff?status=draft',
                 'data' => [
                     'count' => Staff::query()->where('status', Staff::STATUS_DRAFT)->count(),
                     'items' => $drafts->map(fn (Staff $s) => [

@@ -32,10 +32,16 @@ return [
     'generic_texts' => [
         'notice' => 'New notice from :school. Open Campus TAB to read it.',
         'attendance.absent' => 'Attendance update from :school. Open Campus TAB to see it.',
+        // Leave (owner's rule): only that a request changed, never who, what or why.
+        'leave.updated' => 'A leave request has an update. Open Campus TAB to see it.',
+        'leave.waiting' => 'A leave request is waiting for you. Open Campus TAB to see it.',
+        // Marks (owner's rule): only that results are out, never the marks.
+        'results.published' => 'Results are out at :school. Open Campus TAB to see them.',
+        'marks.correction' => 'A mark correction has an update. Open Campus TAB to see it.',
         'default' => 'There is something new for you from :school. Open Campus TAB to see it.',
     ],
 
     // Types a person can mute in their preferences.
-    'types' => ['notice', 'attendance.absent'],
+    'types' => ['notice', 'attendance.absent', 'leave.updated', 'leave.waiting', 'results.published', 'marks.correction'],
 
 ];

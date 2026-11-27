@@ -10,6 +10,9 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Megaphone,
+  Plane,
+  GraduationCap,
+  Trophy,
   MonitorSmartphone,
   Settings2,
   SlidersHorizontal,
@@ -41,6 +44,20 @@ export const navItems: NavItemDefinition[] = [
   { to: '/attendance/me', label: 'nav.myAttendance', icon: Clock, permission: ['staff_attendance.mark'] },
   { to: '/attendance/staff', label: 'nav.staffAttendance', icon: IdCard, permission: ['staff_attendance.manage', 'staff_attendance.enter', 'staff_attendance.view:school'] },
   { to: '/calendar', label: 'nav.calendar', icon: CalendarDays, permission: ['calendar.view'] },
+  {
+    to: '/tests',
+    label: 'nav.tests',
+    icon: GraduationCap,
+    permission: ['marks.enter', 'marks.verify', 'marks.lock', 'results.publish', 'exams.schedule', 'tests.create', 'assessment.scheme', 'marks.correction_request', 'marks.correction_approve'],
+  },
+  { to: '/results', label: 'nav.results', icon: Trophy, permission: ['results.view:child', 'results.view:own'] },
+  { to: '/leave', label: 'nav.leave', icon: Plane, permission: ['leave.apply', 'student_leave.apply', 'leave.manage_types'] },
+  {
+    to: '/approvals',
+    label: 'nav.approvals',
+    icon: ClipboardCheck,
+    permission: ['leave.verify', 'leave.decide', 'leave.decide_principal', 'leave.fast_track', 'student_leave.approve', 'marks.correction_approve'],
+  },
   { to: '/notices', label: 'nav.notices', icon: Megaphone, permission: ['notices.view'] },
   { to: '/setup', label: 'nav.setup', icon: Settings2, permission: ['academic.manage'] },
   { to: '/students', label: 'nav.students', icon: Users, permission: ['students.view'] },
@@ -83,6 +100,7 @@ export function mainJob(role: string | null | undefined, me: Pick<Me, 'permissio
     case 'chief':
     case 'principal':
     case 'vice_principal':
+      if (holds(me, 'leave.decide') || holds(me, 'leave.decide_principal')) return { to: '/approvals', label: 'nav.approvals', icon: ClipboardCheck };
       if (holds(me, 'staff.approve')) return { to: '/staff?status=draft', label: 'nav.approvals', icon: ClipboardCheck };
       break;
     case 'clerk':

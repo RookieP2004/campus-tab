@@ -36,7 +36,7 @@ return [
     | Step-up MFA: these actions ask for a fresh TOTP code. Routes name an
     | action with the middleware step-up:<action>; a name not in this list is
     | a programming error and fails loudly. Later phases add fee rebates,
-    | waivers and locked-mark approvals here.
+    | waivers here.
     */
     'step_up' => [
         'valid_minutes' => 10,
@@ -44,7 +44,7 @@ return [
             'export',
             'permanent_delete',
             'role_edit',          // editing a role and changing a user's roles
-            'marks_unlock',
+            'marks_correction_approve', // the Principal approving a change to a locked mark (Phase 6)
             'support_grant',
             'mfa_reset',          // switching off someone else's MFA (lost authenticator)
         ],
@@ -163,7 +163,7 @@ return [
             'communication' => ['notices'],
         ],
         // Never available to support, whatever the grant says.
-        'never' => ['support.*', 'records.purge', 'roles.edit', 'users.edit_roles', 'export.*', 'marks.unlock', 'marks.correction_approve'],
+        'never' => ['support.*', 'records.purge', 'roles.edit', 'users.edit_roles', 'export.*', 'marks.correction_approve'],
     ],
 
 ];

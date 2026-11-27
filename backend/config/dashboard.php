@@ -1,6 +1,8 @@
 <?php
 
+use App\Modules\Dashboard\Domain\Cards\AssessmentCards;
 use App\Modules\Dashboard\Domain\Cards\AttendanceCards;
+use App\Modules\Dashboard\Domain\Cards\LeaveCards;
 use App\Modules\Dashboard\Domain\Cards\NoticeCards;
 use App\Modules\Dashboard\Domain\Cards\PeopleCards;
 use App\Modules\Dashboard\Domain\Cards\SchoolAdminCards;
@@ -18,6 +20,8 @@ return [
         PeopleCards::class,
         NoticeCards::class,
         AttendanceCards::class,
+        LeaveCards::class,
+        AssessmentCards::class,
     ],
 
 ];

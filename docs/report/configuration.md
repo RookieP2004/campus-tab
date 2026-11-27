@@ -69,7 +69,7 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
 | `tenancy.php` | `platform_collections` | Collections that are not school data (decision 0005) |
 | `identity.php` | `languages`, `default_language`, `themes`, `default_theme` | Every language the app ships (any user may pick any of them), English and Match device by default |
 | `identity.php` | `mfa.*` | Required from level 60; challenge 5 minutes and 5 tries; 10 recovery codes; TOTP window ±1 step; enrol-only session 30 minutes |
-| `identity.php` | `step_up.*` | Valid 10 minutes; actions `export`, `permanent_delete`, `role_edit` (roles and users' roles), `marks_unlock`, `support_grant`, `mfa_reset`. Later phases add fee rebates, waivers and locked-mark approvals |
+| `identity.php` | `step_up.*` | Valid 10 minutes; actions `export`, `permanent_delete`, `role_edit` (roles and users' roles), `marks_correction_approve` (Phase 6; `marks_unlock` removed), `support_grant`, `mfa_reset`. Later phases add fee rebates, waivers and locked-mark approvals |
 | `identity.php` | `sign_in.*` | 5 failures in a row lock an account for 15 minutes; per-IP limit from `SIGN_IN_IP_MAX_FAILURES` |
 | `identity.php` | `parent_otp.*` | Code lasts 5 minutes, 5 tries; 3 sends per phone per 10 minutes; 10 failures per phone per hour; per-IP limits from env |
 | `identity.php` | `sessions.*` | Sign in every time: idle limit 15 minutes at level 60 and up (`idle_minutes_mfa_roles`), 30 minutes otherwise (`idle_minutes`), 8 hours in total (`max_hours`) |
@@ -129,6 +129,41 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
 - **`config/attendance.php` `qr_minutes`** (env `ATTENDANCE_QR_MINUTES`, 5).
 - **School config `policies.attendance`:** the new keys are in the table below (`late_entry_days`, `school_starts_at`, `periods_per_day`, `staff.late_after`, `staff.geofence`). See [modules/attendance.md](modules/attendance.md).
 
+### Phase 5 settings: leave
+
+- **`config/leave.php`:**
+
+  | Key | Default | What it changes |
+  | --- | --- | --- |
+  | `documents.types` | pdf, png, jpg, jpeg, webp | Files a leave request may carry |
+  | `documents.max_kb` | 5120 | Largest document (5 MB) |
+  | `documents.per_request` | 3 | Most documents on one request |
+  | `documents.link_minutes` | 5 | How long a signed document link works |
+  | `max_span_days` | 180 | Longest leave one request may cover |
+  | `weekly_off` | [7] (Sunday) | ISO weekdays that are always off |
+  | `starter_types` | CL, SL, EL, DL, LWP | What "Add the starter types" and `leave:seed-types` add |
+
+- **`config/approvals.php` `sources`:** the approvals inbox sources (`LeaveApprovals`).
+- **`config/communication.php`:** `generic_texts` and `types` gain `leave.updated` and `leave.waiting`.
+- **`config/dashboard.php`:** `LeaveCards` added.
+- **Scheduler:** `leave:remind` runs hourly (`routes/console.php`).
+
+### Phase 6 settings: tests and marks
+
+- **`config/assessment.php`:**
+
+  | Key | Default | What it changes |
+  | --- | --- | --- |
+  | `codes` | AB absent, ML medical | Codes typed instead of a mark |
+  | `mark_step` | 0.5 | Marks are whole or end in .5 |
+  | `remark_max` | 200 | Longest remark beside a mark |
+  | `reason_min` | 10 | Shortest correction reason, and the Principal's typed reason |
+  | `types` · `class_test_types` | eight types · weekly, monthly | What can be scheduled; what a teacher's class test can be |
+  | `presets` | cbse_6_8, cbse_9_10, generic | Starter schemes, each with "check against your board's latest circular" |
+
+- **`config/identity.php`:** step-up action `marks_correction_approve` replaces `marks_unlock`.
+- **`config/approvals.php`:** `CorrectionApprovals` added. **`config/communication.php`:** `results.published`, `marks.correction`. **`config/dashboard.php`:** `AssessmentCards`.
+
 ## School config keys
 
 Each school's versioned config, validated by [`school-config.schema.json`](../../backend/app/Modules/Tenancy/Schemas/school-config.schema.json). Every object forbids unknown keys. "Edits" says who may change the key (Tenancy page, section 9).
@@ -166,11 +201,13 @@ What the attendance keys do:
 - **`periods_per_day`:** the periods a register can be taken for in period mode.
 - **`staff.late_after`:** a staff check-in after this time is late (L).
 - **`staff.geofence`:** with `enabled` and a point and radius (200 m when `radius_m` is missing), app check-ins need the phone's location and must be inside. Only inside or outside is stored; screens are told only whether the geofence is on.
-| `policies.leave.chain` | clerk, principal (both) | Chief, Principal |
-| `policies.leave.clerk_can_reject` | true/false (false) | Chief, Principal |
+| `policies.leave.chain` | clerk, vice_principal, principal; must include principal (clerk, principal) | Chief, Principal |
+| `policies.leave.clerk_can_reject` | true/false (false) | **Chief only** (`ConfigSections::CHIEF_ONLY`) |
 | `policies.leave.remind_after_hours` | 1–168 (24) | Chief, Principal |
 | `policies.leave.escalate_after_hours` | 1–336 (48) | Chief, Principal |
-| `policies.marks.auto_publish_class_tests` | true/false (true) | Chief, Principal |
+| `policies.leave.student_principal_after_days` | 1–60 (3): longer student leave is also shown to the Principal | Chief, Principal |
+| `policies.marks.auto_publish_class_tests` | true/false (true): a class test is published at submit and stays editable until locked | Chief, Principal |
+| `policies.marks.class_teacher_can_enter` | true/false (false): class teachers may type marks for their class | Chief, Principal |
 | `policies.fees.gateway` | none, razorpay (none) | Chief, Principal |
 | `policies.fees.waiver_by` | principal, chief (principal) | Chief, Principal |
 | `policies.fees.receipt_prefix` | text or null (null) | Chief, Principal |

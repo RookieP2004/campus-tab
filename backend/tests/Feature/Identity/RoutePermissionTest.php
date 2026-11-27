@@ -53,6 +53,8 @@ const OPEN_ROUTES = [
     'GET api/v1/files/notices/{tenant}/{notice}/{attachment}',
     // A late entry's paper-register photo, only through a short-lived signed link
     'GET api/v1/files/attendance/{tenant}/{day}',
+    // A leave document, decrypted, only through a short-lived signed link
+    'GET api/v1/files/leave/{tenant}/{request}/{doc}',
     // Platform accounts only (auth:platform); the school side is checked per grant
     'POST api/v1/platform/support/sessions',
 ];

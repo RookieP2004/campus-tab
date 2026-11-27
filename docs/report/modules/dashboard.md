@@ -125,3 +125,5 @@ No new abilities. Every card names the ability it needs (section 5). **Fixed rul
 | --- | --- | --- | --- |
 | 2026-11-27 | 3 | Page and module created: server-built cards by role, role switcher, new-module banner for the Chief, search | Phase 3 "My Dashboard, by role" |
 | 2026-11-27 | 4 | `AttendanceCards`: today's register, check-in, attendance today, holidays to approve, below threshold | Phase 4 attendance |
+| 2026-11-27 | 5 | `LeaveCards`: leave waiting for you, staff away today, my leave balance. The staff-drafts approvals card drops to the bottom when nothing is waiting | Phase 5 leave |
+| 2026-11-27 | 6 | `AssessmentCards`: marks to enter (teachers), papers to verify (class teachers), marks this year (Principal, Clerk), self-approved corrections (Chief); list items may carry a `label_key` the screen translates | Phase 6 and the owner's rule 3 |

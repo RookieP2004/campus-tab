@@ -10,6 +10,7 @@ use App\Modules\Platform\Http\Middleware\ConsoleAuthenticate;
 use App\Modules\Platform\Http\Middleware\ConsoleStepUp;
 use App\Modules\Tenancy\Http\Middleware\SetTenantFromUser;
 use App\Support\Http\ApiExceptionRenderer;
+use App\Support\Http\Idempotency;
 use App\Support\Privacy\RefuseFullAadhaar;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -40,6 +41,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'console.step-up' => ConsoleStepUp::class,
             // Full Aadhaar numbers are refused in any field (decision 0011).
             'no-aadhaar' => RefuseFullAadhaar::class,
+            // Idempotency-Key on creates and workflow actions (Phase 5).
+            'idempotent' => Idempotency::class,
         ]);
 
         // enrol:   an enrol-only session may use these (MFA set-up, sign-out).

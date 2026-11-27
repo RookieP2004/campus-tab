@@ -71,6 +71,34 @@ Phase 4 adds the calendar abilities and gives the staff-attendance abilities to 
 - **Existing schools** get these with `php artisan identity:sync-roles --with-new-permissions`.
 - **Fixed rules in code:** see [modules/attendance.md](modules/attendance.md), section 9.
 
+## Phase 5 abilities (leave)
+
+| Ability | Chief | Principal | Vice Principal | Clerk | Class T. | Subject T. | Staff | Parent |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `leave.apply` | Own | Own | Own | Own | Own | Own | Own | — |
+| `leave.view` (who is away; never type or reason) | School | School | School | School | School | School | School | — |
+| `leave.manage_types` (new) | — | School | — | — | — | — | — | — |
+| `leave.delegate` (new) | — | School | — | — | — | — | — | — |
+| `leave.verify` (stage 1) | — | — | — | School | — | — | — | — |
+| `leave.fast_track` | — | School | Wing | — | — | — | — | — |
+| `leave.decide` (final; also the Chief's own leave) | — | School | Wing (their stage) | — | — | — | — | — |
+| `leave.decide_principal` (the Principal's own leave) | School | — | — | — | — | — | — | — |
+| `student_leave.apply` | — | — | — | — | — | — | — | Child |
+| `student_leave.approve` | School | School | Wing | — | Class | — | — | — |
+
+- **Fixed rules in code:** nobody decides their own leave; own-leave routing (Clerk or Vice Principal → Principal, Principal → Chief, Chief → Principal); a delegate never decides for anyone at or above their level; `clerk_can_reject` is the Chief's switch. See [modules/leave.md](modules/leave.md).
+- **Existing schools** get the new abilities with `php artisan identity:sync-roles --with-new-permissions`.
+
+## Phase 6 abilities (tests and marks)
+
+The abilities were in the catalogue from Phase 1; Phase 6 uses them, with two changes:
+
+- **`marks.unlock` is retired** (no unlock; a locked mark changes only through a correction). `identity:sync-roles --with-new-permissions` removes it from stored roles.
+- **The Principal gets `marks.correction_request:school`**, so they can raise a correction too; approving their own is a separate MFA step and is flagged to the Chief.
+- `marks.enter:class` counts only when the school sets `policies.marks.class_teacher_can_enter`.
+
+The full table is in [modules/assessment.md](modules/assessment.md), section 9.
+
 ## Step-up actions (`config/identity.php`)
 
 | Action | Routes now | Valid for |
@@ -80,9 +108,9 @@ Phase 4 adds the calendar abilities and gives the staff-attendance abilities to 
 | `support_grant` | `POST /support-grants` | 10 minutes |
 | `mfa_reset` | `POST /users/{id}/mfa-reset` | 10 minutes |
 | `export` | (Phase 2 and later exports) | 10 minutes |
-| `marks_unlock` | (Phase 6) | 10 minutes |
+| `marks_correction_approve` | `POST /corrections/{id}/approve` (the Principal; a self-raised correction needs a code newer than the request) | 10 minutes |
 
-Later phases add fee rebates, waivers and locked-mark approvals to this list.
+`marks_unlock` was removed in Phase 6 (owner's decision: there is no unlock). Phase 8 adds fee rebates and waivers to this list.
 
 ## Default roles as coded
 

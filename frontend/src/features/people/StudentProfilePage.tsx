@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Alert, Card, Dialog, Field, Input, Select, Spinner } from '@/components/ui/form';
+import { StudentResultsTab } from '@/features/assessment/StudentResultsTab';
 import { StudentAttendance } from '@/features/attendance/StudentAttendance';
 import { errorText, fieldError } from '@/features/auth/errors';
 import { holds } from '@/features/auth/permissions';
@@ -24,7 +25,7 @@ import {
 } from './api';
 import { Checkbox, CustomValueInput, PageHeader, StatusChip } from './ui';
 
-type Tab = 'details' | 'guardians' | 'custom' | 'ids' | 'attendance';
+type Tab = 'details' | 'guardians' | 'custom' | 'ids' | 'attendance' | 'results';
 
 export function StudentProfilePage() {
   const { id = '' } = useParams();
@@ -33,7 +34,7 @@ export function StudentProfilePage() {
   const me = useCurrentUser();
   // ?tab=attendance opens straight on a tab (the below-threshold list, a parent's child card).
   const [params] = useSearchParams();
-  const [tab, setTab] = useState<Tab>(params.get('tab') === 'attendance' ? 'attendance' : 'details');
+  const [tab, setTab] = useState<Tab>(params.get('tab') === 'attendance' ? 'attendance' : params.get('tab') === 'results' ? 'results' : 'details');
 
   if (query.isPending) return <Spinner label={t('common.loading')} />;
   if (query.isError) return <Alert tone="danger">{errorText(t, query.error)}</Alert>;
@@ -45,6 +46,7 @@ export function StudentProfilePage() {
     { id: 'custom', label: t('students.profile.tabs.custom') },
     { id: 'ids', label: t('students.profile.tabs.ids') },
     ...(holds(me, 'attendance.view') ? [{ id: 'attendance' as const, label: t('students.profile.tabs.attendance') }] : []),
+    ...(holds(me, 'results.view') ? [{ id: 'results' as const, label: t('students.profile.tabs.results') }] : []),
   ];
 
   return (
@@ -85,6 +87,7 @@ export function StudentProfilePage() {
         {tab === 'custom' ? <CustomTab student={student} /> : null}
         {tab === 'ids' ? <IdsTab student={student} /> : null}
         {tab === 'attendance' ? <StudentAttendance studentId={student.id} /> : null}
+        {tab === 'results' ? <StudentResultsTab studentId={student.id} /> : null}
       </div>
     </div>
   );

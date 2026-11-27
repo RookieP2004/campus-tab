@@ -190,6 +190,45 @@ All attendance screens are in [`features/attendance/`](../../frontend/src/featur
 - **Calendar:** buttons from `can`.
 - **Dashboard and reports:** the dashboard action cards and phone tabs; the reports' links and Print.
 
+## Phase 5: leave screens
+
+Leave screens are in [`features/leave/`](../../frontend/src/features/leave/); the inbox is [`features/approvals/ApprovalsPage.tsx`](../../frontend/src/features/approvals/ApprovalsPage.tsx).
+
+| Path | Screen |
+| --- | --- |
+| `/leave` | My balance per type, my requests (a parent: their children's), requests I checked or decided, links to the calendar, approvals and settings |
+| `/leave/apply?type=` | Apply: type, dates, half day, reason, document. The server's preview shows the days, the days off and whether they count (sandwich rule), the balance after, the chain, and whether a document is required. Dates stack on phones |
+| `/leave/child?student=` | A parent applies for a child |
+| `/leave/requests/:id` | One request: facts, reason, documents (opened through a fresh signed link), the live timeline, cover list and the moves this person may make (from the server's `can`) |
+| `/leave/calendar?from=` | Who is away, 14 days at a time, names only; the Clerk and the Principal also see the cover list |
+| `/leave/settings` | Leave types (quota, sandwich rule, half days, document rule, offered or not) and delegation to a Vice Principal |
+| `/approvals?tab=&item=` | The shared approvals inbox following `Approvals.dc.html`: filter tabs, the list, the open item beside it (separate views on phones), "Away this week" |
+
+- **Live steps:** a `leave.*` notification on the socket refetches the open request, the lists, the inbox and the dashboard.
+- **Every move** sends a fresh `Idempotency-Key`; reject and return need a remark before the button enables; approve offers other dates.
+- **Navigation:** Leave and Approvals in the sidebar; the main phone tab for the Principal, Vice Principal and Chief is Approvals when they decide leave.
+- **Checked in Chrome:** 360 px and 1280 px, light and dark; axe-core (the engine behind Lighthouse's accessibility score) reports no violations on the dashboard, `/approvals`, `/leave`, `/leave/apply`, `/leave/calendar`, `/leave/settings` and a request page.
+- **Tests:** [`features/leave/leave.test.tsx`](../../frontend/src/features/leave/leave.test.tsx).
+
+## Phase 6: tests and marks screens
+
+Screens are in [`features/assessment/`](../../frontend/src/features/assessment/).
+
+| Path | Screen |
+| --- | --- |
+| `/tests` | This year's exams and class tests with papers I may see, counts by state; links to corrections and schemes |
+| `/tests/new` | Schedule an exam (office) or set a class test (a teacher: only their own classes and subjects are offered) |
+| `/tests/:id` | The assessment: my papers, open, lock and publish all, and the **completion grid** (sections × subjects) |
+| `/tests/papers/:id` | **The markbook** (`Markbook.dc.html`): spreadsheet with Tab, Enter and arrows, paste a column from Excel, AB and ML, above-max refused, autosave with `If-Match` and a conflict banner that keeps my cells; one card per student on phones; online only (disabled offline); submit, verify, send back, lock, publish; "Ask to correct" on a locked paper |
+| `/tests/corrections?self_approved=1` | Corrections I may see; the Chief's filter for self-approved ones |
+| `/tests/schemes` | Schemes: start from a preset (with the board-circular warning), then change terms, components and weights (total shown), grade scale, pass, grace and rounding |
+| `/results?student=` | Published results for a parent's children (by name) or a student's own |
+| `/students/:id?tab=results` | The Results tab on a student's profile (published marks only) |
+| `/approvals?item=marks:<id>` | The correction panel: locked and asked-for mark, reason, the Principal's typed reason, then a fresh authenticator code; a self-raised one explains why a new code is needed |
+
+- **Checked in Chrome:** 360 px and 1280 px, light and dark. axe-core finds no violations on `/tests`, `/tests/new`, an assessment page, the markbook, `/tests/corrections`, `/tests/schemes`, `/results` and the inbox with a correction open.
+- **Tests:** [`features/assessment/assessment.test.tsx`](../../frontend/src/features/assessment/assessment.test.tsx).
+
 ## Local development notes
 
 - Open the app at **http://127.0.0.1:5173**, never `localhost`: sign-in cookies (Phase 1) are tied to one host name.
