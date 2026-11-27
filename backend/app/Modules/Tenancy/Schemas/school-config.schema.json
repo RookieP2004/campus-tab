@@ -33,11 +33,10 @@
     "locale": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["default_language", "available_languages", "user_can_choose_language", "timezone", "date_format"],
+      "required": ["default_language", "featured_languages", "timezone", "date_format"],
       "properties": {
         "default_language": { "$ref": "#/$defs/language" },
-        "available_languages": { "type": "array", "items": { "$ref": "#/$defs/language" }, "minItems": 1, "uniqueItems": true },
-        "user_can_choose_language": { "type": "boolean" },
+        "featured_languages": { "type": "array", "items": { "$ref": "#/$defs/language" }, "minItems": 1, "uniqueItems": true },
         "timezone": { "type": "string", "minLength": 3, "maxLength": 64 },
         "date_format": { "enum": ["DD-MM-YYYY", "DD/MM/YYYY", "YYYY-MM-DD"] }
       }

@@ -32,8 +32,8 @@ return [
         'otp_ttl_minutes' => 10,
         'otp_max_attempts' => 5,
         'otp_sends_per_10_minutes' => 3,
-        // The first sign-in token only allows MFA enrolment, and expires soon.
-        'enrolment_token_minutes' => 30,
+        // The first session only allows MFA enrolment; its length is
+        // identity.mfa.enrolment_token_minutes.
     ],
 
 ];

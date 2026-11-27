@@ -34,8 +34,7 @@ class DefaultConfig
             'branding' => ['accent' => '#0F766E'],
             'locale' => [
                 'default_language' => 'en',
-                'available_languages' => ['en', 'hi'],
-                'user_can_choose_language' => true,
+                'featured_languages' => ['en', 'hi'],
                 'timezone' => 'Asia/Kolkata',
                 'date_format' => 'DD-MM-YYYY',
             ],

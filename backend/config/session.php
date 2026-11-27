@@ -32,9 +32,12 @@ return [
     |
     */
 
-    'lifetime' => (int) env('SESSION_LIFETIME', 120),
+    // Campus TAB: the server-side idle and total limits are enforced per
+    // device session (config/identity.php 'sessions'); this is only the
+    // outer bound. The cookie never outlives the browser: sign in every time.
+    'lifetime' => (int) env('SESSION_LIFETIME', 30),
 
-    'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
+    'expire_on_close' => true,
 
     /*
     |--------------------------------------------------------------------------

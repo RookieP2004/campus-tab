@@ -2,29 +2,30 @@
 
 namespace App\Modules\Tenancy\Policies;
 
-use App\Modules\Identity\Domain\Role;
+use App\Modules\Identity\Domain\AccessControl;
 use App\Modules\Identity\Models\User;
 use App\Modules\Tenancy\Domain\ConfigSections;
 use Illuminate\Auth\Access\Response;
 
 /**
- * Who may see and change the school config.
+ * Who may see and change the school config, on the permission strings:
  *
- *  - view:   the Chief and the Principal see all of it.
- *  - update: checked per changed path. The Chief may change anything; the
- *            Principal only the sections in ConfigSections::PRINCIPAL_EDITABLE.
- *            One forbidden path refuses the whole save.
- *
- * Phase 1 part B maps these checks onto the RBAC permission strings without
- * changing the section rules.
+ *  - view:   config.view:school (Chief and Principal by default).
+ *  - update: checked per changed path.
+ *      config.edit:school           any path (the Chief)
+ *      config.edit_policies:school  only the sections in
+ *                                   ConfigSections::PRINCIPAL_EDITABLE (the Principal)
+ *    One forbidden path refuses the whole save.
  */
 class SchoolConfigPolicy
 {
+    public function __construct(private readonly AccessControl $access) {}
+
     public function view(User $user): Response
     {
-        return $user->hasRole(Role::Chief) || $user->hasRole(Role::Principal)
+        return $this->access->allows($user, 'config.view')
             ? Response::allow()
-            : Response::deny('Only the Chief Admin and the Principal can see the school settings.');
+            : Response::deny('Only the Chief Admin and the Principal can see the school settings.', 'permission_denied');
     }
 
     /**
@@ -32,12 +33,12 @@ class SchoolConfigPolicy
      */
     public function update(User $user, array $paths): Response
     {
-        if ($user->hasRole(Role::Chief)) {
+        if ($this->access->allows($user, 'config.edit')) {
             return Response::allow();
         }
 
-        if (! $user->hasRole(Role::Principal)) {
-            return Response::deny('Only the Chief Admin and the Principal can change the school settings.');
+        if (! $this->access->allows($user, 'config.edit_policies')) {
+            return Response::deny('Only the Chief Admin and the Principal can change the school settings.', 'permission_denied');
         }
 
         $forbidden = ConfigSections::forbiddenForPrincipal($paths);

@@ -23,14 +23,20 @@ Every coding session reads this file first and follows it for the whole session.
 
 1. **Tenancy.** Every school model uses the `BelongsToTenant` trait. It adds the tenant filter to every query and sets `tenant_id` when a record is created. With no school set, a query throws instead of reading every school. Platform code names the school with `TenantContext::run($tenantId, fn)`. The only way around the scope is `TenantContext::bypass()`, used solely for the sign-in exception in decision 0005; a new bypass needs a new decision record. The tenant query guard fails any test that sends a school-data query without `tenant_id`.
 2. **`tenant_id` comes only from the signed-in user,** never from the request body, query string or headers. Password sign-in finds the school from its code first, then the user inside that school.
-3. **Every permission check goes through a Policy.** Controllers call `authorize()` (or `Gate`); no inline role checks. Hiding something in the UI is never the protection.
+3. **Every permission check goes through a Policy.** Controllers call `authorize()` (or `Gate`); no inline role checks. Hiding something in the UI is never the protection. Every school route names `permission:<ability>` from `config/permissions.php`, and sensitive ones add `step-up:<action>` (a route test enforces this).
 4. **Soft deletes on every school model.** Deleted records go to the recycle bin; only the Chief Admin can purge permanently.
-5. **Every write is audit-logged** with before and after values, actor, IP and device.
+5. **Every write is audit-logged** with before and after values, actor, IP and device: school models use the `Auditable` trait. The audit log is append-only; never add an update or delete path (decision 0008).
 6. **Fee records are append-only.** A wrong entry is cancelled by a reversal entry; never edit or delete a ledger entry.
 7. **A locked mark changes only through a correction request that the Principal approves** from their own account. This is a fixed rule in code, not a setting.
 8. **Never store full Aadhaar numbers.** Keep the last four digits at most. PEN and APAAR are optional and stored with a consent record.
 9. **Every user-facing string goes through i18next** on the front end (and translation files on the back end). No hard-coded text in components.
 10. **Every screen works in the light and dark themes.** Use the theme tokens from `packages/ui`; never hard-code colours.
+11. **Sign in every time.**
+    - No "remember me" and no "trust this device".
+    - The browser uses a session cookie only.
+    - The apps (Phase 9) keep their token **in memory only, never saved on the device**.
+    - Screens warn one minute before an idle sign-out (`GET /me` → `session.idle_minutes`, `session.ends_at`) and keep unsaved form input.
+12. **Nobody types or sees another person's password,** and passwords, OTPs, TOTP secrets, links and tokens are never logged or written to the audit log (decision 0006).
 
 ## 4. Code layout and style
 

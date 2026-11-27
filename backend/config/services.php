@@ -35,9 +35,10 @@ return [
         ],
     ],
 
-    // Text messages (OTP). Drivers: log (development), array (tests).
+    // Text messages (OTP, password links). log (development) and array (tests)
+    // are refused outside local and testing; there it must be a real gateway.
     'sms' => [
-        'driver' => env('SMS_DRIVER', 'log'),
+        'driver' => env('SMS_DRIVER'),
     ],
 
 ];

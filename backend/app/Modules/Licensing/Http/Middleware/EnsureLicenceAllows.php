@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
  *  grace     - passes, with X-Licence-State: grace so the app shows a banner
  *  read_only - reads pass; writes get 403 licence_read_only, except routes
  *              marked as exports with ->defaults('licence_export', true)
+ *              and account-safety routes (unlock, password link, support
+ *              access) marked ->defaults('licence_always', true)
  *  inactive  - 403 licence_inactive
  *
  * Every response carries X-Licence-State.
@@ -36,9 +38,10 @@ class EnsureLicenceAllows
             throw new ApiException('licence_inactive', 'This school has no active licence. Contact Campus TAB support.', 403);
         }
 
-        $isExport = (bool) ($request->route()?->defaults['licence_export'] ?? false);
+        $defaults = $request->route()->defaults ?? [];
+        $exempt = (bool) ($defaults['licence_export'] ?? false) || (bool) ($defaults['licence_always'] ?? false);
 
-        if ($state === LicenceState::ReadOnly && ! $request->isMethodSafe() && ! $isExport) {
+        if ($state === LicenceState::ReadOnly && ! $request->isMethodSafe() && ! $exempt) {
             throw new ApiException('licence_read_only', 'The licence has expired, so the school is read-only. You can still view and export everything.', 403, [
                 'valid_to' => $licence?->valid_to,
             ]);

@@ -16,7 +16,7 @@ class PublicConfig
     public function __construct(private readonly TenantContext $context) {}
 
     /**
-     * @return array{code: string, name: string, short_name: string, logo_url: string|null, accent: string, languages: array{default: string, available: list<string>, user_can_choose: bool}, login_methods: list<string>}
+     * @return array{code: string, name: string, short_name: string, logo_url: string|null, accent: string, languages: array{default: string, featured: list<string>, all: list<string>}, login_methods: list<string>}
      */
     public function for(Tenant $tenant): array
     {
@@ -35,8 +35,9 @@ class PublicConfig
             'accent' => (string) ($body['branding']['accent'] ?? '#0F766E'),
             'languages' => [
                 'default' => (string) ($body['locale']['default_language'] ?? 'en'),
-                'available' => array_values($body['locale']['available_languages'] ?? ['en']),
-                'user_can_choose' => (bool) ($body['locale']['user_can_choose_language'] ?? true),
+                'featured' => array_values($body['locale']['featured_languages'] ?? ['en']),
+                // Every user may pick any language the app ships.
+                'all' => array_values((array) config('identity.languages')),
             ],
             'login_methods' => array_values($body['sign_in']['methods'] ?? ['password']),
         ];

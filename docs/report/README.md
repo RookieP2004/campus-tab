@@ -57,7 +57,8 @@ The thirteen business modules from the blueprint each have a page in [modules/](
 
 | Module | Code | API routes | Report page |
 | --- | --- | --- | --- |
-| Identity | [`backend/app/Modules/Identity/`](../../backend/app/Modules/Identity/) | 0 | [modules/identity.md](modules/identity.md) |
+| Audit | [`backend/app/Modules/Audit/`](../../backend/app/Modules/Audit/) | 4 | [modules/audit.md](modules/audit.md) |
+| Identity | [`backend/app/Modules/Identity/`](../../backend/app/Modules/Identity/) | 33 | [modules/identity.md](modules/identity.md) |
 | Licensing | [`backend/app/Modules/Licensing/`](../../backend/app/Modules/Licensing/) | 2 | [modules/licensing.md](modules/licensing.md) |
 | System | [`backend/app/Modules/System/`](../../backend/app/Modules/System/) | 1 | [modules/system.md](modules/system.md) |
 | Tenancy | [`backend/app/Modules/Tenancy/`](../../backend/app/Modules/Tenancy/) | 6 | [modules/tenancy.md](modules/tenancy.md) |

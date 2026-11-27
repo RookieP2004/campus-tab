@@ -25,13 +25,17 @@ Every collection in MongoDB, what each field means, which module owns it and who
 
 | Collection | Model | Fillable fields | Flags |
 | --- | --- | --- | --- |
+| `audit_logs` | [`AuditLog`](../../backend/app/Modules/Audit/Models/AuditLog.php) | `tenant_id`, `actor`, `actor_id`, `support_grant_id`, `action`, `category`, `entity`, `entity_id`, `before`, `after`, `redacted`, `meta`, `ip`, `device` | tenant-scoped |
+| `device_sessions` | [`DeviceSession`](../../backend/app/Modules/Identity/Models/DeviceSession.php) | `tenant_id`, `user_id`, `kind`, `token_id`, `session_hash`, `name`, `user_agent`, `ip`, `method`, `limited`, `last_seen_at`, `step_up_at`, `revoked_at`, `revoked_reason` | tenant-scoped |
 | `licences` | [`Licence`](../../backend/app/Modules/Licensing/Models/Licence.php) | `tenant_id`, `key_hash`, `key_last4`, `plan`, `modules`, `seats`, `valid_from`, `valid_to`, `status`, `payload`, `signature`, `activated_at`, `revoked_at` | — |
+| `password_tokens` | [`PasswordToken`](../../backend/app/Modules/Identity/Models/PasswordToken.php) | `tenant_id`, `user_id`, `purpose`, `token_hash`, `expires_at`, `used_at`, `created_by` | tenant-scoped |
 | `personal_access_tokens` | [`PersonalAccessToken`](../../backend/app/Modules/Identity/Models/PersonalAccessToken.php) | `name`, `token`, `abilities`, `expires_at` | — |
 | `platform_admins` | [`PlatformAdmin`](../../backend/app/Modules/Identity/Models/PlatformAdmin.php) | `name`, `email`, `password`, `mfa`, `status` | — |
+| `roles` | [`SchoolRole`](../../backend/app/Modules/Identity/Models/SchoolRole.php) | `tenant_id`, `name`, `label`, `level`, `duty`, `permissions`, `is_system` | tenant-scoped, soft deletes |
 | `school_configs` | [`SchoolConfig`](../../backend/app/Modules/Tenancy/Models/SchoolConfig.php) | `tenant_id`, `version`, `body`, `diff`, `changed_by`, `reason`, `rolled_back_from` | tenant-scoped |
-| `support_grants` | [`SupportGrant`](../../backend/app/Modules/Identity/Models/SupportGrant.php) | `tenant_id`, `granted_by`, `agent`, `scope`, `read_only`, `reason`, `expires_at`, `revoked_at` | tenant-scoped |
+| `support_grants` | [`SupportGrant`](../../backend/app/Modules/Identity/Models/SupportGrant.php) | `tenant_id`, `granted_by`, `agent_id`, `agent_email`, `agent_name`, `scope`, `read_only`, `reason`, `starts_at`, `expires_at`, `revoked_at`, `revoked_by` | tenant-scoped, soft deletes |
 | `tenants` | [`Tenant`](../../backend/app/Modules/Tenancy/Models/Tenant.php) | `code`, `name`, `group_id`, `status`, `config_version`, `contact` | — |
-| `users` | [`User`](../../backend/app/Modules/Identity/Models/User.php) | `tenant_id`, `name`, `email`, `phone`, `password`, `roles`, `mfa`, `status`, `language`, `theme` | tenant-scoped, soft deletes |
+| `users` | [`User`](../../backend/app/Modules/Identity/Models/User.php) | `tenant_id`, `name`, `email`, `phone`, `username`, `password`, `roles`, `mfa`, `status`, `language`, `theme`, `access` | tenant-scoped, soft deletes |
 
 <!-- generated:collections:end -->
 

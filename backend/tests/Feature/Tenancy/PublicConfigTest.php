@@ -23,7 +23,7 @@ it('returns public branding and nothing else', function () {
         ->and($response->json('data.code'))->toBe('SUNRISE-BPL')
         ->and($response->json('data.name'))->toBe($school['tenant']->name)
         ->and($response->json('data.accent'))->toBe('#0F766E')
-        ->and($response->json('data.languages'))->toBe(['default' => 'en', 'available' => ['en', 'hi'], 'user_can_choose' => true])
+        ->and($response->json('data.languages'))->toBe(['default' => 'en', 'featured' => ['en', 'hi'], 'all' => config('identity.languages')])
         ->and($response->json('data.login_methods'))->toBe(['password', 'parent_otp']);
 
     $raw = $response->getContent();

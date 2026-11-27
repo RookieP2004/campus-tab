@@ -2,6 +2,7 @@
 
 namespace App\Modules\Licensing\Domain;
 
+use App\Modules\Audit\Domain\AuditRecorder;
 use App\Modules\Identity\Domain\Role;
 use App\Modules\Identity\Models\User;
 use App\Modules\Licensing\Mail\ActivationOtpMail;
@@ -15,7 +16,6 @@ use App\Support\Tenancy\TenantContext;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Laravel\Sanctum\NewAccessToken;
 
 /**
  * One-time activation of a school with its licence key.
@@ -25,7 +25,7 @@ use Laravel\Sanctum\NewAccessToken;
  *  2. activate(): with the right code, in one transaction, the Chief Admin is
  *     created (MFA required), config version 1 is written, and the licence
  *     and school become active. The key cannot be used again.
- *  3. The Chief gets a short-lived token that only allows MFA enrolment.
+ *  3. The controller starts a session that only allows MFA enrolment.
  */
 class ActivationService
 {
@@ -36,6 +36,7 @@ class ActivationService
         private readonly SmsSender $sms,
         private readonly SchoolConfigService $configs,
         private readonly TenantContext $context,
+        private readonly AuditRecorder $audit,
     ) {}
 
     /**
@@ -73,7 +74,7 @@ class ActivationService
 
     /**
      * @param  array{name: string, email: string, phone: string, password: string}  $chief
-     * @return array{user: User, tenant: Tenant, token: NewAccessToken}
+     * @return array{user: User, tenant: Tenant}
      */
     public function activate(string $keyInput, string $otp, array $chief): array
     {
@@ -97,7 +98,7 @@ class ActivationService
                 'phone' => $chief['phone'],
                 'password' => $chief['password'],
                 'roles' => [Role::Chief->value],
-                'mfa' => ['required' => true, 'enabled' => false, 'secret' => null, 'enrolled_at' => null],
+                'mfa' => ['required' => true, 'enabled' => false],
                 'status' => 'active',
             ]));
 
@@ -108,13 +109,12 @@ class ActivationService
             return $user;
         });
 
-        $token = $user->createToken(
-            'mfa-enrolment',
-            ['mfa:enrol'],
-            now()->addMinutes((int) config('licensing.activation.enrolment_token_minutes')),
-        );
+        $this->context->run($tenant->id, function () use ($user, $licence): void {
+            $this->audit->record('licence.activated', 'security', 'licences', (string) $licence->getKey(), actor: $user);
+            $this->audit->record('chief.added', 'security', 'users', (string) $user->getKey(), meta: ['how' => 'activation'], actor: $user);
+        });
 
-        return ['user' => $user, 'tenant' => $tenant->refresh(), 'token' => $token];
+        return ['user' => $user, 'tenant' => $tenant->refresh()];
     }
 
     /**

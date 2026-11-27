@@ -1,6 +1,6 @@
 # Tenancy
 
-> Status: **Phase 1 part A built** (tenants, tenant isolation, public branding, versioned school config). The platform console arrives in part C.
+> Status: **Phase 1 parts A and B built** (tenants, tenant isolation, public branding, versioned school config; part B moved config rights onto permission strings and seeds the system roles for every new school). The platform console arrives in part C.
 
 ## 1. What it does (plain words, no code)
 
@@ -26,14 +26,14 @@ All paths are under `/api/v1`. The full generated list is in [api.md](../api.md)
 
 | Method and path | Input | Output | Who | Errors |
 | --- | --- | --- | --- | --- |
-| `GET /public/tenants/{code}/config` | school code, any case | `{data: {code, name, short_name, logo_url, accent, languages {default, available, user_can_choose}, login_methods}}`, cached 5 minutes | Anyone (60 a minute per IP) | `404 tenant_not_found` for unknown, pending or suspended schools |
-| `GET /config` | — | `{data: {version, body, changed_by, reason, rolled_back_from, created_at}}` with `ETag: "v<version>"` | Chief, Principal | `403 forbidden` |
-| `PUT /config` | header `If-Match: "v<version>"`; `{body, reason?}` | the saved version, new ETag (same version if nothing changed) | Chief (all), Principal (some sections) | `428 precondition_required`, `412 config_conflict`, `422 config_invalid`, `422 module_not_licensed`, `403 config_section_forbidden` |
+| `GET /public/tenants/{code}/config` | school code, any case | `{data: {code, name, short_name, logo_url, accent, languages {default, featured, all}, login_methods}}`, cached 5 minutes | Anyone (60 a minute per IP) | `404 tenant_not_found` for unknown, pending or suspended schools |
+| `GET /config` | — | `{data: {version, body, changed_by, reason, rolled_back_from, created_at}}` with `ETag: "v<version>"` | `config.view` (Chief, Principal) | `403 permission_denied` |
+| `PUT /config` | header `If-Match: "v<version>"`; `{body, reason?}` | the saved version, new ETag (same version if nothing changed) | `config.edit` (Chief: all) or `config.edit_policies` (Principal: some sections) | `403 permission_denied`, `428 precondition_required`, `412 config_conflict`, `422 config_invalid`, `422 module_not_licensed`, `403 config_section_forbidden` |
 | `GET /config/versions` | — | the last 100 versions: version, diff, changed_by, reason, rolled_back_from, created_at | Chief, Principal | `403 forbidden` |
 | `GET /config/versions/{v}` | — | that version's body | Chief, Principal | `404 config_version_not_found` |
 | `POST /config/versions/{v}/rollback` | `If-Match`; `{reason?}` | a new version holding version v's body | Same rules as `PUT /config` | as `PUT /config`, plus `404 config_version_not_found` |
 
-The `/config` routes run behind `auth:sanctum`, `tenant`, `mfa.enrolled` and `licence` (so an expired licence makes them read-only).
+The `/config` routes run in the `school` middleware group (auth, `tenant`, `device`, `mfa.enrolled`, `licence`, so an expired licence makes them read-only), and each names its permission.
 
 ## 4. Code map
 
@@ -114,7 +114,7 @@ Generated list: [data-dictionary.md](../data-dictionary.md).
 ## 7. Links to other modules
 
 - **Licensing** calls `SchoolConfigService::initialise()` during activation, and its `module:<name>` middleware reads `body.modules`. The service asks Licensing which modules the licence includes.
-- **Identity** provides the user; `SchoolConfigPolicy` reads the user's roles.
+- **Identity** provides the user and the permission checks; `SchoolConfigPolicy` asks `AccessControl` for `config.view`, `config.edit` and `config.edit_policies`. `TenantProvisioner` seeds the system roles of every new school. **Audit** records each config version (the diff, not the body); a version is "academic" when every changed path is one the Principal may edit.
 - Every later school module uses `BelongsToTenant` and the `tenant` middleware.
 - Audit (Phase 1 part B) will record each config save; until then the version itself records who, when, why and what.
 
@@ -164,3 +164,4 @@ Part B maps these checks onto the RBAC permission strings without changing the s
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 1A | Tenants, tenant isolation and guard, public branding, versioned config with section rights | Phase 1 items 1, 3, 4 and 5 |
+| 2026-11-27 | 1B | Config rights on permission strings; system roles seeded per school; `user_can_choose_language` removed and `available_languages` renamed `featured_languages` (every user may pick any language); config versions audited | Phase 1 items 6 to 8 and the owner's language rule |

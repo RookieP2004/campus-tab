@@ -33,8 +33,13 @@ Defined in [`backend/.env.example`](../../backend/.env.example). In Docker, [`in
 | `LICENCE_KEY_PEPPER` | none; `php artisan licence:keygen --write` | Secret for hashing licence keys. Changing it invalidates every issued key |
 | `LICENCE_SIGNING_SECRET_KEY`, `LICENCE_SIGNING_PUBLIC_KEY` | none; `php artisan licence:keygen --write` | Ed25519 pair (base64) that signs and checks licence payloads; secret |
 | `LICENCE_GRACE_DAYS` | `15` | Days after the licence ends with a banner, before read-only |
-| `SMS_DRIVER` | `log` | Text messages (OTP): `log` writes them to `storage/logs/laravel.log`; `array` keeps them in memory (tests) |
+| `SMS_DRIVER` | `log` | Text messages (OTP, password links): `log` writes them to `storage/logs/laravel.log`; `array` keeps them in memory (tests). Both are allowed **only** when `APP_ENV` is `local` or `testing`; anywhere else a missing or local-only driver stops the app at start-up |
 | `TENANCY_QUERY_GUARD` | `log` | `log` warns about school-data queries without `tenant_id`; `record` (tests) fails the test; `off` |
+| `SIGN_IN_IP_MAX_FAILURES` | `100` | Failed sign-ins per IP per 15 minutes before `429` (bulk abuse only; many people share an IP) |
+| `PARENT_OTP_IP_MAX_SENDS` | `60` | Parent OTP sends per IP per 10 minutes |
+| `PARENT_OTP_IP_MAX_FAILURES` | `100` | Wrong parent OTPs per IP per 15 minutes |
+| `PASSWORD_RESET_IP_MAX` | `100` | Forgot-password requests per IP per 15 minutes |
+| `SESSION_LIFETIME` | `30` | Outer bound for the browser cookie, in minutes; the real idle and total limits are in `config/identity.php`. The cookie always ends when the browser closes |
 
 ## Environment variables (front end)
 
@@ -58,8 +63,19 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
 | --- | --- | --- |
 | `licensing.php` | `plans` | Plans a licence may name: `starter`, `standard`, `premium` |
 | `licensing.php` | `modules` | Modules a licence can switch on: attendance, leave, assessment, reports, fees, communication |
-| `licensing.php` | `activation.*` | OTP minutes (10), tries (5), sends per 10 minutes (3), enrolment-token minutes (30) |
+| `licensing.php` | `activation.*` | OTP minutes (10), tries (5), sends per 10 minutes (3) |
 | `tenancy.php` | `platform_collections` | Collections that are not school data (decision 0005) |
+| `identity.php` | `languages`, `default_language`, `themes`, `default_theme` | Every language the app ships (any user may pick any of them), English and Match device by default |
+| `identity.php` | `mfa.*` | Required from level 60; challenge 5 minutes and 5 tries; 10 recovery codes; TOTP window ±1 step; enrol-only session 30 minutes |
+| `identity.php` | `step_up.*` | Valid 10 minutes; actions `export`, `permanent_delete`, `role_edit` (roles and users' roles), `marks_unlock`, `support_grant`, `mfa_reset`. Later phases add fee rebates, waivers and locked-mark approvals |
+| `identity.php` | `sign_in.*` | 5 failures in a row lock an account for 15 minutes; per-IP limit from `SIGN_IN_IP_MAX_FAILURES` |
+| `identity.php` | `parent_otp.*` | Code lasts 5 minutes, 5 tries; 3 sends per phone per 10 minutes; 10 failures per phone per hour; per-IP limits from env |
+| `identity.php` | `sessions.*` | Sign in every time: idle limit 15 minutes at level 60 and up (`idle_minutes_mfa_roles`), 30 minutes otherwise (`idle_minutes`), 8 hours in total (`max_hours`) |
+| `identity.php` | `passwords.*` | At least 10 characters; set links 48 hours; reset links 30 minutes; 3 forgot-password requests per account per hour; the bundled common-password list |
+| `identity.php` | `support.*` | Grants last 15 minutes to 72 hours; the areas a Chief can open and the abilities never given to support |
+| `permissions.php` | `abilities`, `scopes`, `roles`, `duties` | The permission catalogue, the default matrix, the duty allow-lists ([permissions.md](permissions.md)) |
+| `audit.php` | `purge_after_days`, `recyclable` | 30 days in the recycle bin before purge; models listed in the bin |
+| `session.php` | `expire_on_close` | Always true: no "remember me" |
 
 ## School config keys
 
@@ -73,8 +89,9 @@ Each school's versioned config, validated by [`school-config.schema.json`](../..
 | `school.affiliation_no` | text or null (null) | Chief |
 | `branding.accent` | `#RRGGBB` (`#0F766E`) | Chief |
 | `locale.default_language` | en, hi, bn, mr, gu, pa, ta, te, kn, ml, or, ur (en) | Chief |
-| `locale.available_languages` | list of the above (en, hi) | Chief |
-| `locale.user_can_choose_language` | true/false (true) | Chief |
+| `locale.featured_languages` | list of the above (en, hi) | Chief |
+
+The language settings never limit anyone: every user may always pick any language the app ships in their own preferences. `featured_languages` only sets which ones the sign-in screen offers first. (Phase 1 part B removed `user_can_choose_language` and renamed `available_languages`.)
 | `locale.timezone` | IANA name (Asia/Kolkata) | Chief |
 | `locale.date_format` | DD-MM-YYYY, DD/MM/YYYY, YYYY-MM-DD (DD-MM-YYYY) | Chief |
 | `academic.year_start_month` | 1–12 (4) | Chief, Principal |

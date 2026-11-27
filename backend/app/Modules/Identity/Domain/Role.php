@@ -3,7 +3,7 @@
 namespace App\Modules\Identity\Domain;
 
 /**
- * The ten system roles and their levels ("Role hierarchy and authority").
+ * The ten levels ("Role hierarchy and authority").
  * A user can manage only people below their own level. Phase 1 part B adds
  * the roles collection and the permission matrix on top of these levels.
  */

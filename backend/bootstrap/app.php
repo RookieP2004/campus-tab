@@ -1,6 +1,9 @@
 <?php
 
 use App\Modules\Identity\Http\Middleware\EnsureMfaEnrolled;
+use App\Modules\Identity\Http\Middleware\RequirePermission;
+use App\Modules\Identity\Http\Middleware\RequireStepUp;
+use App\Modules\Identity\Http\Middleware\TrackDeviceSession;
 use App\Modules\Licensing\Http\Middleware\EnsureLicenceAllows;
 use App\Modules\Licensing\Http\Middleware\EnsureModuleEnabled;
 use App\Modules\Tenancy\Http\Middleware\SetTenantFromUser;
@@ -21,13 +24,24 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
 
-        // School routes: auth:sanctum, tenant, mfa.enrolled, licence, then module:<name>.
         $middleware->alias([
             'tenant' => SetTenantFromUser::class,
+            'device' => TrackDeviceSession::class,
             'mfa.enrolled' => EnsureMfaEnrolled::class,
             'licence' => EnsureLicenceAllows::class,
             'module' => EnsureModuleEnabled::class,
+            'permission' => RequirePermission::class,
+            'step-up' => RequireStepUp::class,
         ]);
+
+        // enrol:   an enrol-only session may use these (MFA set-up, sign-out).
+        // account: the user's own account; works on a read-only licence.
+        // school:  school data. A platform admin passes only with a support
+        //          token for an active grant (see SetTenantFromUser). Each
+        //          route adds permission:<ability> and, if sensitive, step-up:<action>.
+        $middleware->group('enrol', ['auth:sanctum', 'tenant', 'device']);
+        $middleware->group('account', ['auth:sanctum', 'tenant', 'device', 'mfa.enrolled']);
+        $middleware->group('school', ['auth:sanctum,platform', 'tenant', 'device', 'mfa.enrolled', 'licence']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         ApiExceptionRenderer::register($exceptions);

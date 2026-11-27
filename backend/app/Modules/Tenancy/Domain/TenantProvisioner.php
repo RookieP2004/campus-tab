@@ -2,12 +2,16 @@
 
 namespace App\Modules\Tenancy\Domain;
 
+use App\Modules\Audit\Domain\AuditRecorder;
+use App\Modules\Identity\Domain\SystemRoles;
 use App\Modules\Tenancy\Models\Tenant;
+use App\Support\Tenancy\TenantContext;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * Platform side: creates a school record in "pending" state. The school
- * becomes active when its contact activates the licence key.
+ * Platform side: creates a school record in "pending" state, with its
+ * system roles. The school becomes active when its contact activates the
+ * licence key.
  */
 class TenantProvisioner
 {
@@ -31,7 +35,7 @@ class TenantProvisioner
             }
         })->validate();
 
-        return Tenant::create([
+        $tenant = Tenant::create([
             'code' => $input['code'],
             'name' => $input['name'],
             'contact' => [
@@ -39,5 +43,13 @@ class TenantProvisioner
                 'phone' => $input['phone'] ?? null,
             ],
         ]);
+
+        // Every school starts with the system roles (nine levels, two duties) and the default matrix.
+        app(TenantContext::class)->run($tenant->id, function (): void {
+            $created = AuditRecorder::muted(fn () => SystemRoles::seed());
+            app(AuditRecorder::class)->record('roles.seeded', 'admin', 'roles', null, meta: ['created' => $created]);
+        });
+
+        return $tenant;
     }
 }

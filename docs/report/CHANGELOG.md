@@ -2,6 +2,74 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-27 · Phase 1 part B · Identity, roles, audit and support access (items 6–9)
+
+**What changed:**
+
+- **Sign-in (item 6).**
+  - **Password sign-in** finds the school by code, then the user by email, phone or login name.
+    - Every failure gets one answer, `401 sign_in_failed` ("Those details didn't work, or there were too many tries…").
+    - While an account is locked its password is not checked at all.
+    - 5 failures in a row, wrong MFA codes included, lock it for 15 minutes. `GET /users` shows the lock, and the Principal or Chief can unlock.
+    - Per-IP limits are roomy config values for bulk abuse only.
+  - **TOTP MFA** is mandatory from level 60 and asked at every sign-in. The secret is encrypted, the 10 recovery codes are stored as HMACs, and a code can't be replayed. An enrol-only session never becomes a full one.
+  - **Step-up MFA:** one middleware and a named list in `config/identity.php` (`export`, `permanent_delete`, `role_edit`, `marks_unlock`, `support_grant`, `mfa_reset`), valid 10 minutes on that device. `role_edit` also covers changing a user's roles.
+  - **Parent OTP** is for Parent-only accounts without MFA. Only a hash is stored, the code lasts 5 minutes, and sends and failures are limited per phone and per IP, with the same replies for known and unknown numbers. The `log` and `array` SMS drivers work only in local and testing; anywhere else a missing driver stops the app at start-up.
+  - **Sign in every time:** browser session cookie only; idle limit 15 minutes at level 60 and up, 30 below; 8 hours in total. Device sessions hold only the token id or a hash of the session id, and can be listed and signed out remotely.
+  - **Per-user language** (any language the app ships) and theme. The school setting `user_can_choose_language` is gone; `available_languages` is now `featured_languages`.
+- **Passwords.**
+  - **New accounts** start `invited` with no password. The person gets a one-time set link (48 h) by email or SMS, or the Principal gets a one-time setup code shown once. Resending cancels the old link.
+  - **Forgot password** gives the same reply for everyone. Its link lasts 30 minutes, with limits per account and per IP. The Principal or Chief can send a reset link to anyone below them.
+  - **Changing your own** needs the current password.
+  - **Any set, change or reset** ends every session and token, keeps MFA, and tells the user.
+  - **Rules:** 10+ characters, not the login or name, not on the bundled common list.
+  - **Lost authenticator:** recovery codes first; otherwise an MFA reset with step-up by someone above (another Chief for a Chief).
+- **Roles and permissions (item 7).**
+  - **The form:** `module.action:scope` from a catalogue in `config/permissions.php`.
+  - **Seeded roles:** nine levels plus two duties, Fee Collector and the new Attendance Officer (staff-attendance entry only; Phase 4 must stop anyone entering their own attendance through it). Command `identity:sync-roles` adds them to existing schools.
+  - **Checks:** six scope resolvers, no escalation, Chief over Chief, the last-Chief guard, and Chief changes recorded as security events.
+  - **Every route** names its permission; a route test enforces it. `SchoolConfigPolicy` now uses `config.view`, `config.edit` and `config.edit_policies`.
+- **Audit (item 8).**
+  - **The log** is append-only, with no update or delete path and no soft deletes, and never holds passwords, codes, links or tokens. Support actions record the agent and the grant id. The Chief sees all, the Principal academic entries and their own, a Clerk their own.
+  - **Recycle bin** with restore; the Chief's permanent purge needs step-up, 30 days and the record's typed name.
+- **Support grants (item 9).** Created by the Chief with step-up: read-only by default, ending 15 minutes to 72 hours ahead with no extension, revocable. Agents act only inside an active grant, checked on every request. The school sees each grant and its activity.
+- **Bugs the tenant query guard and the new tests caught on the way:**
+  - `Model::refresh()` skips the tenant scope.
+  - A right password used to reset the count of wrong MFA codes.
+  - The driver rewrites `actor.id` to `actor._id` in queries, so entries now also carry `actor_id`.
+
+**Why:** Phase 1 items 6–9 of `docs/BUILD-PROMPTS.md`, with the owner's changes for part B.
+
+**Files:**
+- **Back end:**
+  - `backend/app/Modules/Identity/**`, `backend/app/Modules/Audit/**` (new);
+  - `backend/app/Modules/Tenancy/{Http/Middleware/SetTenantFromUser.php,Policies/SchoolConfigPolicy.php,Models/SchoolConfig.php,Domain/{TenantProvisioner,PublicConfig,DefaultConfig}.php,Schemas/school-config.schema.json,routes.php}`;
+  - `backend/app/Modules/Licensing/{Domain/ActivationService.php,Http/Controllers/ActivationController.php,Http/Middleware/EnsureLicenceAllows.php}`;
+  - `backend/app/Support/Otp/OtpService.php`, `backend/app/Providers/AppServiceProvider.php`, `backend/bootstrap/{app,providers}.php`.
+- **Config and data:**
+  - `backend/config/{identity,permissions,audit,licensing,services,session}.php`;
+  - `backend/database/migrations/2026_11_27_000003_create_identity_and_audit_collections.php`;
+  - `backend/resources/security/common-passwords.txt`;
+  - `backend/.env.example`, `backend/composer.{json,lock}` (`pragmarx/google2fa` ^8.0).
+- **Tests:**
+  - `backend/tests/Concerns/{CreatesSchools,TestData}.php`;
+  - `backend/tests/Feature/Identity/*`, `backend/tests/Feature/Audit/*`, `backend/tests/Feature/Tenancy/PublicConfigTest.php`.
+- **Docs:** `docs/CONVENTIONS.md`.
+
+**Report pages updated:** `modules/identity-and-access.md` and `modules/audit.md` (in full), `modules/tenancy.md`, `modules/licensing.md`, `permissions.md` (the matrix as coded), `configuration.md`, decisions `0006`–`0009` (0008 holds the open question for the legal review), and the generated blocks.
+
+**How to test:**
+
+1. `cd infra && docker compose exec api php artisan migrate`, then `docker compose exec api php artisan identity:sync-roles` (adds the roles to schools made in part A).
+2. `docker compose exec api composer test`, `composer lint`, `composer analyse`, then `docker compose exec api php artisan report:generate --check`.
+3. Create and activate a school as in part A (step 3–5 below). The activation response now carries `device_session_id` and an enrol-only token.
+4. With that token: `POST /api/v1/me/mfa/enrol` → `secret`; add it to an authenticator app; `POST /api/v1/me/mfa/enrol/confirm {"code":"<6 digits>"}` → 10 recovery codes and a full token. `GET /api/v1/me` → roles, permissions, `session.idle_minutes: 15`.
+5. Sign out, then `POST /api/v1/auth/login {"school_code":"TEST-BPL","login":"<chief email>","password":"…"}` → `mfa_required` and a `challenge`; `POST /api/v1/auth/mfa/verify {"challenge":"…","code":"…"}` → token.
+6. Try a wrong password 5 times, then the right one → the same `sign_in_failed` body every time.
+7. As the Chief: `POST /api/v1/users {"name":"Made Up Teacher","email":"teacher@test-bpl.test","roles":["class_teacher"]}` → `status: invited`; the set link is in Mailpit (http://127.0.0.1:8025). `POST /api/v1/auth/password/set` with the link's `token` → then the teacher can sign in.
+8. `PUT /api/v1/roles/staff` with the Chief's token → `403 step_up_required`; `POST /api/v1/auth/step-up {"code":"…"}` → then it works.
+9. `GET /api/v1/audit-logs` as the Chief → every step above, without any password, code or token.
+
 ## 2026-11-27 · Phase 1 part A · Tenancy and licensing (items 1–5)
 
 **What changed:**

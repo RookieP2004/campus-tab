@@ -21,13 +21,13 @@ Behind the key is a server record with the plan, the modules the school paid for
 | Method and path | Input | Output | Who | Errors |
 | --- | --- | --- | --- | --- |
 | `POST /licences/activate/otp` | `{key}` (case, spaces and dashes ignored) | `{data: {school {code, name}, sent_to {email, phone} (masked), expires_in}}` | Anyone (10 a minute per IP; 3 codes per key per 10 minutes) | `422 licence_key_invalid`, `404 licence_not_found`, `409 licence_already_activated`, `403 licence_revoked`, `403 licence_invalid`, `403 licence_expired`, `409 tenant_not_activatable`, `429 otp_rate_limited` |
-| `POST /licences/activate` | `{key, otp, chief {name, email, phone, password, password_confirmation}}` | `201 {data: {school, user, mfa_enrolment_required: true, token, token_type, token_abilities: ["mfa:enrol"], token_expires_at}}` | Anyone holding the key and the code | as above, plus `422 validation_failed`, `422 otp_invalid` (with `attempts_left`), `422 otp_locked`, `422 otp_expired` |
+| `POST /licences/activate` | `{key, otp, chief {name, email, phone, password, password_confirmation}, device_name?}`. The password follows the account rules: 10+ characters, not the Chief's login or name, not common | `201 {data: {school, user, mode, mfa_enrolment_required: true, device_session_id, …}}`: from the web app a session cookie, otherwise `token`, `token_type`, `token_abilities: ["mfa:enrol"]`, `token_expires_at`. Either way the session may only enrol MFA | Anyone holding the key and the code | as above, plus `422 validation_failed`, `422 otp_invalid` (with `attempts_left`), `422 otp_locked`, `422 otp_expired` |
 
 Middleware used by every school route:
 
 | Alias | Effect |
 | --- | --- |
-| `licence` | Adds `X-Licence-State` (`active`, `grace`, `read_only`). Read-only: writes get `403 licence_read_only` except routes marked `->defaults('licence_export', true)`. No usable licence: `403 licence_inactive` |
+| `licence` | Adds `X-Licence-State` (`active`, `grace`, `read_only`). Read-only: writes get `403 licence_read_only` except exports (`->defaults('licence_export', true)`) and account-safety routes (`->defaults('licence_always', true)`: unlock, password link, MFA reset, support grants). Sign-in and the `/me` routes do not use this middleware, so people can always sign in and look after their own account. No usable licence: `403 licence_inactive` |
 | `module:<name>` | `403 module_disabled` (details `{module}`) unless the licence includes the module **and** the school config switches it on |
 
 ## 4. Code map
@@ -120,3 +120,4 @@ See [0004](../decisions/0004-licence-keys.md). Limits now: seat limits are store
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 1A | Keys, signing, activation with OTP, expiry and module middleware, `platform:issue-licence`, `licence:keygen` | Phase 1 item 2 |
+| 2026-11-27 | 1B | Activation starts a recorded enrol-only session (cookie or token) and audits `licence.activated` and `chief.added`; Chief password follows the account rules; `licence_always` exemption for account safety | Phase 1 part B |

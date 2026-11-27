@@ -12,14 +12,14 @@ Route::get('public/tenants/{code}/config', [PublicConfigController::class, 'show
     ->middleware('throttle:public')
     ->name('public.tenants.config');
 
-Route::middleware(['auth:sanctum', 'tenant', 'mfa.enrolled', 'licence'])
+Route::middleware('school')
     ->prefix('config')
     ->name('config.')
     ->controller(SchoolConfigController::class)
     ->group(function (): void {
-        Route::get('/', 'show')->name('show');
-        Route::put('/', 'update')->name('update');
-        Route::get('versions', 'versions')->name('versions.index');
-        Route::get('versions/{version}', 'version')->whereNumber('version')->name('versions.show');
-        Route::post('versions/{version}/rollback', 'rollback')->whereNumber('version')->name('versions.rollback');
+        Route::get('/', 'show')->middleware('permission:config.view')->name('show');
+        Route::put('/', 'update')->middleware('permission:config.edit,config.edit_policies')->name('update');
+        Route::get('versions', 'versions')->middleware('permission:config.view')->name('versions.index');
+        Route::get('versions/{version}', 'version')->whereNumber('version')->middleware('permission:config.view')->name('versions.show');
+        Route::post('versions/{version}/rollback', 'rollback')->whereNumber('version')->middleware('permission:config.edit,config.edit_policies')->name('versions.rollback');
     });

@@ -3,6 +3,8 @@
 namespace Tests\Concerns;
 
 use App\Modules\Identity\Domain\Role;
+use App\Modules\Identity\Domain\SessionIssuer;
+use App\Modules\Identity\Models\DeviceSession;
 use App\Modules\Identity\Models\User;
 use App\Modules\Licensing\Domain\LicenceIssuer;
 use App\Modules\Licensing\Models\Licence;
@@ -11,6 +13,7 @@ use App\Modules\Tenancy\Domain\TenantProvisioner;
 use App\Modules\Tenancy\Models\Tenant;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Support\Str;
+use PragmaRX\Google2FA\Google2FA;
 
 /**
  * Builds schools, licences and users for tests with made-up data only.
@@ -63,33 +66,66 @@ trait CreatesSchools
         return ['tenant' => $tenant->refresh(), 'licence' => $licence->refresh(), 'chief' => $chief];
     }
 
-    public function schoolUser(Tenant $tenant, Role $role, bool $mfaEnabled = true, ?string $email = null): User
+    /**
+     * A school user with a made-up name, email and phone. With MFA enabled a
+     * real TOTP secret is stored, so totp() can produce valid codes.
+     *
+     * @param  list<string>  $extraRoles  more roles (for example fee_collector)
+     */
+    public function schoolUser(Tenant $tenant, Role $role, bool $mfaEnabled = true, ?string $email = null, array $extraRoles = [], ?string $phone = null): User
     {
-        return app(TenantContext::class)->run($tenant->id, fn () => User::create([
+        return app(TenantContext::class)->run($tenant->id, fn () => tap(User::create([
             'name' => Str::headline($role->value).' '.Str::random(4),
             'email' => $email ?? Str::lower($role->value.'.'.Str::random(6).'@'.Str::lower($tenant->code).'.test'),
-            'phone' => '+9197'.str_pad((string) random_int(0, 99_999_999), 8, '0', STR_PAD_LEFT),
-            'password' => 'correct-horse-42-battery',
-            'roles' => [$role->value],
+            'phone' => $phone ?? '+9197'.str_pad((string) random_int(0, 99_999_999), 8, '0', STR_PAD_LEFT),
+            'password' => TestData::PASSWORD,
+            'roles' => array_values(array_unique(array_merge([$role->value], $extraRoles))),
             'mfa' => ['required' => $role->level() >= Role::MFA_REQUIRED_FROM, 'enabled' => $mfaEnabled],
-        ]));
+        ]), function (User $user) use ($mfaEnabled): void {
+            if ($mfaEnabled) {
+                $user->forceFill(['mfa_secret' => app(Google2FA::class)->generateSecretKey(32)])->save();
+            }
+        }));
     }
 
-    /** A bearer token with full abilities for the given user. */
-    public function tokenFor(User $user): string
+    /** A valid TOTP code for this user right now (one per 30-second step). */
+    public function totp(User $user): string
     {
-        return $user->createToken('test')->plainTextToken;
+        $fresh = app(TenantContext::class)->run($user->tenant_id, fn () => User::query()->findOrFail($user->getKey()));
+
+        return app(Google2FA::class)->getCurrentOtp((string) $fresh->mfa_secret);
+    }
+
+    /** A bearer token with full abilities for the given user, with its device session. */
+    public function tokenFor(User $user, bool $steppedUp = false): string
+    {
+        return app(TenantContext::class)->run($user->tenant_id, function () use ($user, $steppedUp): string {
+            $issued = app(SessionIssuer::class)->issueToken($user, 'test device', 'test');
+
+            if ($steppedUp) {
+                DeviceSession::query()->whereKey($issued['device_session_id'])->update(['step_up_at' => now()]);
+            }
+
+            return $issued['token'];
+        });
     }
 
     /**
      * Send the next request as this user, with a fresh bearer token. Guards
-     * are reset so one test can act as several users.
+     * are reset so one test can act as several users. $steppedUp marks the
+     * device as having just passed step-up MFA.
      */
-    public function actingWithToken(User $user): static
+    public function actingWithToken(User $user, bool $steppedUp = false): static
     {
         app('auth')->forgetGuards();
 
-        return $this->withToken($this->tokenFor($user));
+        return $this->withToken($this->tokenFor($user, $steppedUp));
+    }
+
+    /** Run something inside a school (reads and writes are tenant-scoped). */
+    public function inSchool(Tenant $tenant, \Closure $callback): mixed
+    {
+        return app(TenantContext::class)->run($tenant->id, $callback);
     }
 
     /**

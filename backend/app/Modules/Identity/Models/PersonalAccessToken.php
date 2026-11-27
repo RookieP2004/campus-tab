@@ -14,6 +14,8 @@ use MongoDB\Laravel\Eloquent\DocumentModel;
  * documented exception to the tenant scope: it runs inside
  * TenantContext::bypass(), and the `tenant` middleware then sets the school
  * from that user's tenant_id (docs/report/decisions/0005).
+ *
+ * @property list<string>|null $abilities
  */
 class PersonalAccessToken extends SanctumToken
 {

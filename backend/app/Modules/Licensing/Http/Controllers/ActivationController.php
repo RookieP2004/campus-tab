@@ -2,17 +2,21 @@
 
 namespace App\Modules\Licensing\Http\Controllers;
 
+use App\Modules\Identity\Domain\PasswordPolicy;
+use App\Modules\Identity\Domain\SessionIssuer;
 use App\Modules\Licensing\Domain\ActivationService;
-use DateTimeInterface;
+use App\Support\Tenancy\TenantContext;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
 
 /**
  * Activating a school with its licence key (no sign-in yet).
  *
  *   POST /licences/activate/otp  { key }                         -> code sent
  *   POST /licences/activate      { key, otp, chief: {...} }      -> Chief created
+ *
+ * The Chief's first session (a token, or the cookie from the web app) only
+ * allows MFA enrolment.
  */
 class ActivationController
 {
@@ -25,7 +29,7 @@ class ActivationController
         return response()->json(['data' => $this->activation->requestOtp($input['key'])]);
     }
 
-    public function activate(Request $request): JsonResponse
+    public function activate(Request $request, SessionIssuer $sessions, TenantContext $context): JsonResponse
     {
         $input = $request->validate([
             'key' => ['required', 'string', 'max:40'],
@@ -33,8 +37,15 @@ class ActivationController
             'chief.name' => ['required', 'string', 'min:2', 'max:120'],
             'chief.email' => ['required', 'email', 'max:150'],
             'chief.phone' => ['required', 'regex:/^\+?[0-9]{10,15}$/'],
-            'chief.password' => ['required', 'string', 'confirmed', Password::min(12)->letters()->numbers()],
+            'chief.password' => PasswordPolicy::rules(),
+            'device_name' => ['nullable', 'string', 'max:100'],
         ]);
+
+        $email = mb_strtolower($input['chief']['email']);
+        PasswordPolicy::assertNotPersonal($input['chief']['password'], array_values(array_filter([
+            $email, strstr($email, '@', true) ?: null, $input['chief']['phone'], $input['chief']['name'],
+            ...preg_split('/\s+/', trim($input['chief']['name'])) ?: [],
+        ])), 'chief.password');
 
         $result = $this->activation->activate($input['key'], $input['otp'], [
             'name' => $input['chief']['name'],
@@ -43,24 +54,17 @@ class ActivationController
             'password' => $input['chief']['password'],
         ]);
 
-        return response()->json(['data' => [
+        $user = $result['user'];
+        $session = $context->run($result['tenant']->id, fn () => $sessions->issue($request, $user, 'activation', limited: true));
+
+        return response()->json(['data' => array_merge([
             'school' => ['code' => $result['tenant']->code, 'name' => $result['tenant']->name],
             'user' => [
-                'id' => (string) $result['user']->getKey(),
-                'name' => $result['user']->name,
-                'email' => $result['user']->email,
-                'roles' => $result['user']->roles,
+                'id' => (string) $user->getKey(),
+                'name' => $user->name,
+                'email' => $user->email,
+                'roles' => $user->roles,
             ],
-            'mfa_enrolment_required' => true,
-            'token' => $result['token']->plainTextToken,
-            'token_type' => 'Bearer',
-            'token_abilities' => ['mfa:enrol'],
-            'token_expires_at' => $this->expiry($result['token']->accessToken->getAttribute('expires_at')),
-        ]], 201);
-    }
-
-    private function expiry(mixed $expiresAt): ?string
-    {
-        return $expiresAt instanceof DateTimeInterface ? $expiresAt->format(DATE_ATOM) : null;
+        ], $session)], 201);
     }
 }
