@@ -11,6 +11,29 @@ abstract class TestCase extends BaseTestCase
     /** @var array{secret_key: string, public_key: string}|null one test key pair per run */
     private static ?array $licenceKeys = null;
 
+    /**
+     * In a parallel run (pest --parallel) every process gets its own
+     * database: campus_tab_test becomes campus_tab_<n>_test. The name still
+     * ends in _test, so RefreshMongoDatabase's safety check holds.
+     *
+     * The name is set before the application boots, never by purging the
+     * connection afterwards: the tenant query guard subscribes to the
+     * connection made at boot, and a new connection would silently lack it.
+     */
+    public function createApplication()
+    {
+        $token = $_SERVER['TEST_TOKEN'] ?? getenv('TEST_TOKEN');
+        $base = (string) ($_SERVER['MONGODB_DATABASE'] ?? getenv('MONGODB_DATABASE') ?: 'campus_tab_test');
+
+        if (((is_string($token) && $token !== '') || is_int($token)) && preg_match('/^(.+)_test$/', $base, $m) === 1 && ! str_ends_with($m[1], '_'.$token)) {
+            $name = $m[1].'_'.$token.'_test';
+            $_SERVER['MONGODB_DATABASE'] = $_ENV['MONGODB_DATABASE'] = $name;
+            putenv('MONGODB_DATABASE='.$name);
+        }
+
+        return parent::createApplication();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

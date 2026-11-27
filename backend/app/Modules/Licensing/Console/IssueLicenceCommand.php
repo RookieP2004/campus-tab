@@ -2,9 +2,9 @@
 
 namespace App\Modules\Licensing\Console;
 
-use App\Modules\Licensing\Domain\LicenceIssuer;
+use App\Modules\Platform\Domain\SchoolConsole;
 use App\Modules\Tenancy\Models\Tenant;
-use DomainException;
+use App\Support\Http\ApiException;
 use Illuminate\Console\Command;
 use Illuminate\Validation\ValidationException;
 
@@ -27,7 +27,7 @@ class IssueLicenceCommand extends Command
 
     protected $description = 'Issue a signed licence key for a school';
 
-    public function handle(LicenceIssuer $issuer): int
+    public function handle(SchoolConsole $schools): int
     {
         $tenant = Tenant::findByCode((string) $this->argument('code'));
 
@@ -43,7 +43,7 @@ class IssueLicenceCommand extends Command
             : config('licensing.modules');
 
         try {
-            $result = $issuer->issue($tenant, [
+            $result = $schools->issueLicence(null, $tenant, [
                 'plan' => (string) $this->option('plan'),
                 'modules' => $modules,
                 'students' => (int) $this->option('students'),
@@ -59,7 +59,7 @@ class IssueLicenceCommand extends Command
             }
 
             return self::FAILURE;
-        } catch (DomainException $e) {
+        } catch (ApiException $e) {
             $this->error($e->getMessage());
 
             return self::FAILURE;

@@ -1,6 +1,8 @@
 <?php
 
 use App\Modules\Identity\Models\User;
+use App\Modules\People\Models\Staff;
+use App\Modules\People\Models\Student;
 
 return [
 
@@ -13,6 +15,8 @@ return [
     */
     'recyclable' => [
         'user' => User::class,
+        'student' => Student::class,
+        'staff' => Staff::class,
     ],
 
 ];

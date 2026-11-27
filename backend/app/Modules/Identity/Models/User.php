@@ -6,6 +6,7 @@ use App\Modules\Audit\Domain\Auditable;
 use App\Modules\Audit\Domain\Recyclable;
 use App\Modules\Identity\Domain\Role;
 use App\Modules\Identity\Domain\RoleRegistry;
+use App\Modules\Identity\Domain\Scopes\AccessScopeSource;
 use App\Support\Tenancy\BelongsToTenant;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -37,7 +38,6 @@ use MongoDB\Laravel\Eloquent\SoftDeletes;
  * @property int|null $failed_sign_ins
  * @property Carbon|null $locked_until
  * @property Carbon|null $last_sign_in_at
- * @property array{children?: list<string>, class_sections?: list<string>, subject_sections?: list<string>, wings?: list<string>}|null $access
  * @property string $status
  * @property string $language
  * @property string $theme
@@ -60,7 +60,7 @@ class User extends Authenticatable implements Recyclable
 
     /** @var list<string> */
     protected $fillable = [
-        'tenant_id', 'name', 'email', 'phone', 'username', 'password', 'roles', 'mfa', 'status', 'language', 'theme', 'access',
+        'tenant_id', 'name', 'email', 'phone', 'username', 'password', 'roles', 'mfa', 'status', 'language', 'theme',
     ];
 
     /** @var list<string> */
@@ -183,21 +183,17 @@ class User extends Authenticatable implements Recyclable
     }
 
     /**
-     * What the scope resolvers compare against. Later phases fill these from
-     * guardian links, teaching assignments and wings.
+     * What the scope resolvers compare against, worked out from the school's
+     * records (Phase 2): a parent's children from guardian links, a class
+     * teacher's sections, a subject teacher's subject-sections from teaching
+     * assignments, a Vice Principal's wings from the staff record. See
+     * Domain\Scopes\AccessScopeSource.
      *
      * @return array{children: list<string>, class_sections: list<string>, subject_sections: list<string>, wings: list<string>}
      */
     public function accessScope(): array
     {
-        $access = $this->access ?? [];
-
-        return [
-            'children' => array_values($access['children'] ?? []),
-            'class_sections' => array_values($access['class_sections'] ?? []),
-            'subject_sections' => array_values($access['subject_sections'] ?? []),
-            'wings' => array_values($access['wings'] ?? []),
-        ];
+        return app(AccessScopeSource::class)->for($this);
     }
 
     public function recycleType(): string

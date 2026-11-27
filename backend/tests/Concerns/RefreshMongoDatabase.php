@@ -13,14 +13,23 @@ use RuntimeException;
  * work with MongoDB, so this trait instead:
  *   1. refuses to run unless the database name ends in "_test" (so it can
  *      never wipe a development or production database),
- *   2. drops the whole test database before each test,
- *   3. runs the migrations again, which recreate collections and indexes.
+ *   2. the first time in each test process: drops the whole database and
+ *      runs the migrations, which create the collections and indexes,
+ *   3. before every later test: empties the collections the migrations
+ *      made (keeping their indexes) and drops any other collection a test
+ *      created. This is much faster than rebuilding every index each time.
+ *
+ * In a parallel run (`composer test` uses `pest --parallel`) each process
+ * has its own database, campus_tab_<n>_test; see Tests\TestCase.
  *
  * Use it in a test file with:  uses(RefreshMongoDatabase::class);
  * Laravel calls setUpRefreshMongoDatabase() automatically for any trait.
  */
 trait RefreshMongoDatabase
 {
+    /** @var array<string, list<string>> collections made by the migrations, per database */
+    private static array $migratedCollections = [];
+
     public function setUpRefreshMongoDatabase(): void
     {
         $connection = $this->app['db']->connection();
@@ -37,8 +46,33 @@ trait RefreshMongoDatabase
             );
         }
 
-        $connection->getDatabase()->drop();
+        $database = $connection->getDatabase();
 
-        $this->app[Kernel::class]->call('migrate', ['--force' => true]);
+        if (! isset(self::$migratedCollections[$name])) {
+            $database->drop();
+            $this->app[Kernel::class]->call('migrate', ['--force' => true]);
+
+            $collections = [];
+            foreach ($database->listCollectionNames() as $collection) {
+                $collections[] = $collection;
+            }
+            self::$migratedCollections[$name] = $collections;
+
+            return;
+        }
+
+        $known = self::$migratedCollections[$name];
+
+        foreach ($database->listCollectionNames() as $collection) {
+            if ($collection === 'migrations') {
+                continue;
+            }
+
+            if (in_array($collection, $known, true)) {
+                $database->selectCollection($collection)->deleteMany([]);
+            } else {
+                $database->dropCollection($collection);
+            }
+        }
     }
 }

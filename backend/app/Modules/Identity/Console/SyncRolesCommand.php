@@ -10,11 +10,14 @@ use Illuminate\Console\Command;
 
 /**
  * Adds any missing system roles to existing schools (new schools get them
- * when they are created). Roles a Chief has edited are left alone.
+ * when they are created). With --with-new-permissions it also adds the
+ * permissions a later phase introduced; ones a Chief removed stay removed.
  */
 class SyncRolesCommand extends Command
 {
-    protected $signature = 'identity:sync-roles {code? : one school code; all schools when left out}';
+    protected $signature = 'identity:sync-roles
+        {code? : one school code; all schools when left out}
+        {--with-new-permissions : also give system roles the permissions added since they were seeded}';
 
     protected $description = 'Add missing system roles (config/permissions.php) to existing schools';
 
@@ -41,6 +44,21 @@ class SyncRolesCommand extends Command
             });
 
             $this->line("{$tenant->code}: {$created} role(s) added.");
+
+            if ($this->option('with-new-permissions')) {
+                $added = $context->run($tenant->id, function () use ($audit): array {
+                    $added = AuditRecorder::muted(fn () => SystemRoles::addNewPermissions());
+                    if ($added !== []) {
+                        $audit->record('roles.permissions_added', 'admin', 'roles', null, meta: ['added' => $added]);
+                    }
+
+                    return $added;
+                });
+
+                foreach ($added as $role => $permissions) {
+                    $this->line("  {$role}: +".count($permissions).' permission(s)');
+                }
+            }
         }
 
         return self::SUCCESS;

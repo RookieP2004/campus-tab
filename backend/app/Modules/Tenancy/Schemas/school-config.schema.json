@@ -68,7 +68,7 @@
       "additionalProperties": false,
       "required": ["methods"],
       "properties": {
-        "methods": { "type": "array", "items": { "enum": ["password", "parent_otp"] }, "minItems": 1, "uniqueItems": true }
+        "methods": { "type": "array", "items": { "enum": ["password", "parent_otp", "student_login"] }, "minItems": 1, "uniqueItems": true }
       }
     },
     "policies": {

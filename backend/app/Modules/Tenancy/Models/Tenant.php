@@ -2,6 +2,7 @@
 
 namespace App\Modules\Tenancy\Models;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use MongoDB\Laravel\Eloquent\Model;
 
@@ -16,6 +17,7 @@ use MongoDB\Laravel\Eloquent\Model;
  * @property string $status pending | active | suspended
  * @property int $config_version
  * @property array{email?: string|null, phone?: string|null} $contact
+ * @property Carbon|null $created_at
  */
 class Tenant extends Model
 {

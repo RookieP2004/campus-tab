@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Support\Sms\ArraySmsSender;
 use App\Support\Sms\LogSmsSender;
 use App\Support\Sms\SmsSender;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\Server;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -44,6 +47,15 @@ class AppServiceProvider extends ServiceProvider
 
         // Licence activation: strict, since it is unauthenticated and sends OTPs.
         RateLimiter::for('activation', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+
+        // Platform console sign-in, step-up and recovery codes.
+        RateLimiter::for('console', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
+
+        // The OpenAPI spec (packages/api/openapi.json) must come out the same on
+        // every machine, so the CI drift check works: a fixed relative server.
+        Scramble::afterOpenApiGenerated(function (OpenApi $openApi): void {
+            $openApi->servers = [new Server('/api/v1')];
+        });
     }
 
     /**

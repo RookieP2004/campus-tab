@@ -34,6 +34,8 @@ class SessionIssuer
     public function issue(Request $request, User $user, string $method, bool $limited = false): array
     {
         if ($this->isBrowser($request)) {
+            // One identity per browser: a platform console session here ends first.
+            Auth::guard('console')->logout();
             Auth::guard('web')->login($user);
             $request->session()->regenerate();
 

@@ -20,6 +20,14 @@ return [
         'tenants',
         'licences',
         'platform_admins',
+        // The platform console (Phase 1 part C): our team's sessions and audit log.
+        'platform_sessions',
+        'platform_audit_logs',
+        // Our client records, payments, per-school numbers and alerts (no school data).
+        'school_clients',
+        'school_payments',
+        'school_stats',
+        'platform_alerts',
         // Looked up by token before the school is known (decision 0005).
         'personal_access_tokens',
         'failed_jobs',

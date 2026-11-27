@@ -96,6 +96,54 @@ return [
         'common_list' => resource_path('security/common-passwords.txt'),
     ],
 
+    /*
+    | Requests the screens send on their own (TanStack Query refetches, polling,
+    | later the notification socket) carry this header. They are still checked,
+    | but they never count as use, so they cannot keep an idle session alive.
+    */
+    'background_header' => 'X-Background-Request',
+
+    /*
+    | The platform console (our team). Platform admins are created only by
+    | php artisan platform:create-admin. Password and TOTP at every sign-in,
+    | the same sign-in-every-time rules as school users.
+    */
+    'platform' => [
+        'idle_minutes' => 15,
+        'max_hours' => 8,
+        'set_link_hours' => 48,
+        'step_up' => [
+            'valid_minutes' => 10,
+            'actions' => ['licence_revoke', 'chief_recovery'],
+        ],
+        // Per-school numbers, worked out every 15 minutes inside each school.
+        'stats_every_minutes' => 15,
+        /*
+        | Alerts: a metric "jumps" when its count in the last hour reaches
+        | min_per_hour AND is at least `factor` times its usual hourly rate
+        | over the 7 days before. One alert per school and metric per
+        | repeat_after_hours. Counts only; details stay in the school's log.
+        */
+        'alerts' => [
+            'factor' => 5,
+            'repeat_after_hours' => 6,
+            'min_per_hour' => [
+                'failed_sign_ins' => 20,
+                'lockouts' => 5,
+                'password_resets' => 10,
+                'mfa_resets' => 3,
+                'chief_changes' => 2,
+            ],
+        ],
+        // Sole-Chief recovery: the code sent to the school's registered contact.
+        'chief_recovery' => [
+            'code_ttl_minutes' => 30,
+            'max_attempts' => 5,
+            'sends_per_10_minutes' => 3,
+            'reason_min_length' => 20,
+        ],
+    ],
+
     'support' => [
         'min_minutes' => 15,
         'max_hours' => 72,

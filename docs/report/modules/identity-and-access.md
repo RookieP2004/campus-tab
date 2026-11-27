@@ -28,6 +28,22 @@
 
 _Screens arrive in Phase 1 part C: school-code entry, sign-in (password + MFA, OTP for parents), MFA enrolment, set and reset password, device sessions. Rules for those screens: warn one minute before an idle sign-out, and keep unsaved form input so nothing typed is lost. Apps (Phase 9) keep the token in memory only, never saved on the device._
 
+**Screens (Phase 1 part C):**
+
+- **School code** ([`SchoolCodePage.tsx`](../../../frontend/src/features/auth/SchoolCodePage.tsx)), showing the school's public branding.
+- **Sign-in** with password, then an MFA code or a recovery code ([`SignInPage.tsx`](../../../frontend/src/features/auth/SignInPage.tsx), [`SignInForm.tsx`](../../../frontend/src/features/auth/SignInForm.tsx)).
+- **Parent SMS-code sign-in** ([`ParentOtpPage.tsx`](../../../frontend/src/features/auth/ParentOtpPage.tsx)).
+- **MFA enrolment** ([`MfaEnrolPage.tsx`](../../../frontend/src/features/auth/MfaEnrolPage.tsx), [`MfaEnrolPanel.tsx`](../../../frontend/src/features/auth/MfaEnrolPanel.tsx)):
+  - the QR code is drawn in the browser, so the secret never goes to another service
+  - the key is shown for typing in
+  - the recovery codes are shown once, with download and print
+- **Licence activation** ([`ActivatePage.tsx`](../../../frontend/src/features/auth/ActivatePage.tsx)).
+- **Password pages:** set password and reset password (`/password/set` and `/password/reset`, from the emailed links), and forgot password ([`PasswordPages.tsx`](../../../frontend/src/features/auth/PasswordPages.tsx)).
+- **Signed-in devices** with remote sign-out ([`DeviceSessionsPage.tsx`](../../../frontend/src/features/auth/DeviceSessionsPage.tsx)).
+- **Session guard** [`RequireSession.tsx`](../../../frontend/src/features/auth/RequireSession.tsx):
+  - warns one minute before the idle sign-out, counting from the last real request
+  - when the session ends, shows sign-in again over the page; the page stays mounted, so unsaved input is kept
+
 ## 3. Requests it handles
 
 **Signing in (no account yet):**
@@ -77,6 +93,17 @@ _Screens arrive in Phase 1 part C: school-code entry, sign-in (password + MFA, O
 | `POST /support-grants/{id}/revoke` | `support.grant` | | Ends it now |
 
 **Platform:** `POST /platform/support/sessions` `{school_code}` (platform token with ability `platform`, admin with MFA) gives a support token for that school while a grant is active; otherwise `403 support_grant_required`.
+
+**Background requests (part C).** A request with `X-Background-Request: 1` is checked like any other, but `TrackDeviceSession` never counts it as use. That covers TanStack Query refetches, polling and, later, the notification socket. The web app sets the header on any refetch of data already on screen and on polling.
+
+**Phase 2.**
+
+- **Scope facts** come from the school's records through `Domain/Scopes/AccessScopeSource`, bound by the People module. The stored `users.access` field is gone.
+- **`GET /me`** now returns `scope` (children, class_sections, subject_sections, wings), so screens can offer only what applies.
+- **`SubjectScope`** also covers a student record when the teacher teaches any subject in the student's section.
+- **Student sign-in** is refused while the school setting `student_login` is off, with the same answer as a wrong password.
+- **`PasswordLinks::send()`** takes an optional validity, so student setup codes last 48 hours.
+- **`identity:sync-roles --with-new-permissions`** adds new phases' permissions to existing schools.
 
 ## 4. Code map
 
@@ -240,3 +267,6 @@ The matrix as coded and the fixed rules are in [permissions.md](../permissions.m
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 1A | User and platform-admin models, MongoDB tokens, sign-in lookup exception, MFA gate | Phase 1 items 1, 2 and 5, and the owner's request to make sign-in lookup a documented exception |
 | 2026-11-27 | 1B | Sign-in, MFA, step-up, parent OTP, passwords (invited accounts, links, setup codes, resets), device sessions with idle and total limits, roles and permissions with scopes and guard rules, two duties, support grants | Phase 1 items 6, 7 and 9, with the owner's changes for part B |
+| 2026-11-27 | 1C | Sign-in, OTP, MFA enrolment, activation, password and device screens; background requests do not extend the idle time; idle warning and sign-in over the page; MFA code shared with platform admins; test that a passwordless account never signs in | Phase 1 items 11 and 12 with the owner's rules for part C |
+| 2026-11-27 | 2 | Scope facts from records; `scope` in `GET /me`; student sign-in setting; setup-code validity; `--with-new-permissions` | Phase 2 rule 1 and rule 4 |
+| 2026-11-27 | 1C | A new staff account, or a parent becoming staff, is refused past the licence's staff seats | The owner's seat rule |

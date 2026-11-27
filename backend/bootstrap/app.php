@@ -6,8 +6,11 @@ use App\Modules\Identity\Http\Middleware\RequireStepUp;
 use App\Modules\Identity\Http\Middleware\TrackDeviceSession;
 use App\Modules\Licensing\Http\Middleware\EnsureLicenceAllows;
 use App\Modules\Licensing\Http\Middleware\EnsureModuleEnabled;
+use App\Modules\Platform\Http\Middleware\ConsoleAuthenticate;
+use App\Modules\Platform\Http\Middleware\ConsoleStepUp;
 use App\Modules\Tenancy\Http\Middleware\SetTenantFromUser;
 use App\Support\Http\ApiExceptionRenderer;
+use App\Support\Privacy\RefuseFullAadhaar;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -32,6 +35,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'module' => EnsureModuleEnabled::class,
             'permission' => RequirePermission::class,
             'step-up' => RequireStepUp::class,
+            // The platform console (session cookie, guard "console").
+            'console' => ConsoleAuthenticate::class,
+            'console.step-up' => ConsoleStepUp::class,
+            // Full Aadhaar numbers are refused in any field (decision 0011).
+            'no-aadhaar' => RefuseFullAadhaar::class,
         ]);
 
         // enrol:   an enrol-only session may use these (MFA set-up, sign-out).
@@ -41,7 +49,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //          route adds permission:<ability> and, if sensitive, step-up:<action>.
         $middleware->group('enrol', ['auth:sanctum', 'tenant', 'device']);
         $middleware->group('account', ['auth:sanctum', 'tenant', 'device', 'mfa.enrolled']);
-        $middleware->group('school', ['auth:sanctum,platform', 'tenant', 'device', 'mfa.enrolled', 'licence']);
+        $middleware->group('school', ['auth:sanctum,platform', 'tenant', 'device', 'mfa.enrolled', 'licence', 'no-aadhaar']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         ApiExceptionRenderer::register($exceptions);

@@ -131,31 +131,19 @@ describe('scope resolvers', function () {
             ->and(PermissionCatalogue::scopeCovers('child', 'own'))->toBeFalse();
     });
 
-    it('checks own, child, subject, class, wing and school against the record', function () {
+    // The own, child, subject, class and wing resolvers are tested from real
+    // records (guardians, sections, teaching assignments, wings) in
+    // tests/Feature/People/ScopeResolverTest.php.
+    it('gives a school-wide permission every record, and a scoped one no record without facts', function () {
         $access = app(AccessControl::class);
-
         $classTeacher = $this->schoolUser($this->tenant, Role::ClassTeacher, mfaEnabled: false);
-        $subjectTeacher = $this->schoolUser($this->tenant, Role::SubjectTeacher, mfaEnabled: false);
-        $vp = $this->schoolUser($this->tenant, Role::VicePrincipal);
-        $parent = $this->schoolUser($this->tenant, Role::Parent, mfaEnabled: false);
-        $student = $this->schoolUser($this->tenant, Role::Student, mfaEnabled: false);
 
-        $this->inSchool($this->tenant, function () use ($access, $classTeacher, $subjectTeacher, $vp, $parent, $student) {
-            $classTeacher->forceFill(['access' => ['class_sections' => ['sec-8a']]]);
-            $subjectTeacher->forceFill(['access' => ['subject_sections' => ['sec-8a:maths']]]);
-            $vp->forceFill(['access' => ['wings' => ['primary']]]);
-            $parent->forceFill(['access' => ['children' => ['stu-1']]]);
-
-            $inside = subject(['section_id' => 'sec-8a', 'subject_key' => 'sec-8a:maths', 'wing' => 'primary', 'student_ids' => ['stu-1'], 'owner_ids' => [(string) $student->getKey()]]);
+        $this->inSchool($this->tenant, function () use ($access, $classTeacher) {
             $outside = subject(['section_id' => 'sec-9b', 'subject_key' => 'sec-9b:maths', 'wing' => 'senior', 'student_ids' => ['stu-2'], 'owner_ids' => ['someone-else']]);
 
-            foreach ([$classTeacher, $subjectTeacher, $vp, $parent, $student] as $user) {
-                expect($access->allows($user, 'students.view', $inside))->toBeTrue()
-                    ->and($access->allows($user, 'students.view', $outside))->toBeFalse()
-                    ->and($access->allows($user, 'students.view'))->toBeFalse();
-            }
-
-            expect($access->allows($this->principal, 'students.view', $outside))->toBeTrue()
+            expect($access->allows($classTeacher, 'students.view', $outside))->toBeFalse()
+                ->and($access->allows($classTeacher, 'students.view'))->toBeFalse()
+                ->and($access->allows($this->principal, 'students.view', $outside))->toBeTrue()
                 ->and($access->allows($this->principal, 'students.view'))->toBeTrue();
         });
     });

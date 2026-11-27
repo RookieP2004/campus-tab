@@ -77,6 +77,33 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
 | `audit.php` | `purge_after_days`, `recyclable` | 30 days in the recycle bin before purge; models listed in the bin |
 | `session.php` | `expire_on_close` | Always true: no "remember me" |
 
+### Phase 1 part C settings
+
+- **`identity.background_header`** (`X-Background-Request`): requests carrying it with value `1` never extend an idle session.
+- **`identity.platform`**, the console:
+  - `idle_minutes` 15, `max_hours` 8, `set_link_hours` 48
+  - `step_up.actions` (`licence_revoke`, `chief_recovery`), `step_up.valid_minutes` 10
+  - `chief_recovery.code_ttl_minutes` 30, `max_attempts` 5, `sends_per_10_minutes` 3, `reason_min_length` 20
+- **`auth.guards.console`**: session guard for platform admins.
+- **`scramble.*`**: the OpenAPI export. `export_path` is `packages/api/openapi.json` (env `OPENAPI_EXPORT_PATH`).
+- **Rate limiter `console`**: 20 a minute per IP.
+
+### Phase 2 settings
+
+- **School config `sign_in.methods`:** add `student_login` to switch student sign-in on (off by default).
+- **The licence's `seats.students`:** the student seat limit. Admission and import are refused past it; there is a warning from 90%.
+- **Import limits:** a file is up to 10 MB with 5,000 rows (`Spreadsheet::MAX_ROWS`); progress is written every 25 rows.
+- **Custom fields:** at most 50 per entity and scope (`FieldRules::MAX_PER_SCOPE`).
+- **Consent notice version:** `config('people.consent_notice_version')`, default `2026-1` (no config file yet; set one when the legal text is final).
+- **Demo password** (local and testing only): `DemoSchoolSeeder::DEMO_PASSWORD`.
+
+### Console numbers and alerts
+
+- **`identity.platform.stats_every_minutes`** (15): the job runs every 15 minutes (`routes/console.php`).
+- **`identity.platform.alerts`:**
+  - `factor` (5) and `repeat_after_hours` (6)
+  - `min_per_hour`: failed_sign_ins 20, lockouts 5, password_resets 10, mfa_resets 3, chief_changes 2
+
 ## School config keys
 
 Each school's versioned config, validated by [`school-config.schema.json`](../../backend/app/Modules/Tenancy/Schemas/school-config.schema.json). Every object forbids unknown keys. "Edits" says who may change the key (Tenancy page, section 9).

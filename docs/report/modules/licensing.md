@@ -30,6 +30,28 @@ Middleware used by every school route:
 | `licence` | Adds `X-Licence-State` (`active`, `grace`, `read_only`). Read-only: writes get `403 licence_read_only` except exports (`->defaults('licence_export', true)`) and account-safety routes (`->defaults('licence_always', true)`: unlock, password link, MFA reset, support grants). Sign-in and the `/me` routes do not use this middleware, so people can always sign in and look after their own account. No usable licence: `403 licence_inactive` |
 | `module:<name>` | `403 module_disabled` (details `{module}`) unless the licence includes the module **and** the school config switches it on |
 
+**Part C.** `LicenceIssuer` now has three operations:
+
+- `amend()` changes the plan, seats, modules and end date. It signs the payload again under the same licence id; the key does not change.
+- `revoke()` makes every school request answer `403 licence_inactive`. The data stays.
+- `summary()` gives the licence fields that are safe to show and audit (never the key hash or the signature).
+
+A licence issued to a school that is already active (after a revoke) is active at once. The console and `platform:revoke-licence` use these operations through `Platform\SchoolConsole`, which audits them. See [platform.md](platform.md).
+
+**Two seat limits** ([`Domain/Seats.php`](../../../backend/app/Modules/Licensing/Domain/Seats.php)):
+
+- **Students:** active students (not left, not in the recycle bin).
+- **Staff:** every school account that is not inactive, except accounts whose roles are only Parent and/or Student. Parents never count; a teacher who is also a parent counts once, as staff; a Clerk's draft has no account, so it does not count.
+- **What is refused** past either limit, with one message naming the limit, the number in use and the number left (`422 seat_limit_reached`, `details.kind` students or staff):
+  - creating or importing students
+  - creating staff accounts (users, staff, approved drafts, staff imports)
+  - turning a parent or student account into staff
+  - restoring from the recycle bin
+  - re-activating an account
+- **Imports:** the dry-run report shows the seat check first.
+- **Warning:** shown from 90%.
+- **Renewal:** `POST /platform/schools/{code}/licence/renew` signs the payload again with the later end date and takes effect at once.
+
 ## 4. Code map
 
 `backend/app/Modules/Licensing/`:
@@ -121,3 +143,5 @@ See [0004](../decisions/0004-licence-keys.md). Limits now: seat limits are store
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 1A | Keys, signing, activation with OTP, expiry and module middleware, `platform:issue-licence`, `licence:keygen` | Phase 1 item 2 |
 | 2026-11-27 | 1B | Activation starts a recorded enrol-only session (cookie or token) and audits `licence.activated` and `chief.added`; Chief password follows the account rules; `licence_always` exemption for account safety | Phase 1 part B |
+| 2026-11-27 | 1C | Change and revoke licences; `platform:issue-licence` audited through the console service | Phase 1 item 10 |
+| 2026-11-27 | 1C/2 | Two seat limits (students, staff) checked everywhere an account or student is added; renewal from the console | The owner's seat rule |

@@ -12,11 +12,16 @@
     "yearPlaceholder": "Academic year"
   },
   "nav": {
-    "home": "Home"
+    "home": "Home",
+    "devices": "My devices",
+    "setup": "School setup",
+    "students": "Students",
+    "staff": "Staff",
+    "customFields": "Custom fields"
   },
   "home": {
     "title": "Welcome to Campus TAB",
-    "body": "This is the app shell. Screens are added phase by phase: sign-in next, then school setup, dashboards, attendance, leave, marks, report cards and fees."
+    "body": "This is the app shell. Screens are added phase by phase: school setup next, then dashboards, attendance, leave, marks, report cards and fees."
   },
   "theme": {
     "label": "Theme",
@@ -36,5 +41,849 @@
   "notFound": {
     "title": "Page not found",
     "back": "Go to home"
+  },
+  "common": {
+    "loading": "Loading…",
+    "working": "Please wait…",
+    "cancel": "Cancel",
+    "save": "Save",
+    "copy": "Copy",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "none": "None",
+    "previous": "Previous"
+  },
+  "auth": {
+    "school": {
+      "title": "Find your school",
+      "subtitle": "Enter the school code from your school's notice or ID card.",
+      "code": "School code",
+      "hint": "For example SUNRISE-BPL",
+      "continue": "Continue",
+      "invalid": "A school code uses letters, digits and dashes, for example SUNRISE-BPL.",
+      "notFound": "No school uses this code. Check it with your school office.",
+      "activate": "Activate a new school with a licence key"
+    },
+    "signIn": {
+      "title": "Sign in",
+      "subtitle": "Sign in to {{school}}.",
+      "login": "Email, phone or login name",
+      "loginHint": "The one your school gave you.",
+      "password": "Password",
+      "submit": "Sign in",
+      "parentLink": "Parent? Sign in with a code sent to your phone",
+      "forgot": "Forgot your password?",
+      "otherSchool": "Not your school? Change school"
+    },
+    "mfa": {
+      "intro": "Open your authenticator app and enter the 6-digit code for Campus TAB.",
+      "recoveryIntro": "Enter one of the recovery codes you saved when you set up two-step sign-in. Each works once.",
+      "code": "6-digit code",
+      "recoveryCode": "Recovery code",
+      "submit": "Verify",
+      "useRecovery": "Lost your phone? Use a recovery code",
+      "useApp": "Use the authenticator app instead",
+      "startAgain": "Start again"
+    },
+    "otp": {
+      "title": "Parent sign-in",
+      "subtitle": "We will send a 6-digit code to the phone number the school has for you.",
+      "phone": "Mobile number",
+      "phoneHint": "10 digits, or with +91 in front.",
+      "phoneInvalid": "Enter a valid mobile number.",
+      "send": "Send code",
+      "sent": "If this number is registered, a code is on its way. It works for 5 minutes.",
+      "code": "Code from the SMS",
+      "verify": "Sign in",
+      "again": "Use a different number or send a new code",
+      "passwordLink": "Staff? Sign in with your password"
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "subtitle": "We will send a link to the email or phone on your account.",
+      "submit": "Send reset link",
+      "sent": "If an account matches, a link to reset the password is on its way. It works once, for 30 minutes.",
+      "back": "Back to sign-in"
+    },
+    "password": {
+      "setTitle": "Choose your password",
+      "resetTitle": "Choose a new password",
+      "rules": "At least 10 characters. Not your name, email or phone, and not a common password.",
+      "new": "New password",
+      "confirm": "Type it again",
+      "save": "Save password",
+      "tooShort": "Use at least 10 characters.",
+      "mismatch": "The two passwords are not the same.",
+      "done": "Your password is saved. Sign in with it now."
+    },
+    "enrol": {
+      "title": "Set up two-step sign-in",
+      "subtitle": "Your account needs a code from an authenticator app every time you sign in.",
+      "step1": "Install an authenticator app on your phone (for example Google Authenticator or Microsoft Authenticator).",
+      "step2": "Scan the QR code, or type the key into the app.",
+      "step3": "Enter the 6-digit code the app shows.",
+      "qrAlt": "QR code for your authenticator app",
+      "keyLabel": "Key for typing in",
+      "keyHint": "Time-based, 6 digits. Keep it secret.",
+      "confirm": "Turn on two-step sign-in",
+      "codesIntro": "These recovery codes are shown only once. Each one lets you sign in once if you lose your phone. Download or print them and keep them somewhere safe.",
+      "download": "Download",
+      "print": "Print",
+      "savedConfirm": "I have saved my recovery codes somewhere safe.",
+      "finish": "Continue",
+      "fileHeading": "Campus TAB recovery codes for {{account}}",
+      "fileNote": "Each code works once. Keep this file private."
+    },
+    "activate": {
+      "title": "Activate your school",
+      "subtitle": "Enter the licence key Campus TAB gave your school. A code goes to the school's registered email and phone.",
+      "chiefSubtitle": "Create the Chief Admin account for {{school}}.",
+      "key": "Licence key",
+      "keyHint": "It looks like CTAB-XXXX-XXXX-XXXX-XXXX.",
+      "sendCode": "Send activation code",
+      "codeSent": "A 6-digit code was sent to {{to}}.",
+      "code": "Activation code",
+      "chiefName": "Your full name",
+      "chiefEmail": "Your email",
+      "chiefPhone": "Your mobile number",
+      "nameRequired": "Enter your name.",
+      "emailInvalid": "Enter a valid email.",
+      "submit": "Activate and continue",
+      "haveAccount": "Already activated? Sign in"
+    },
+    "errors": {
+      "loginRequired": "Enter your email, phone or login name.",
+      "passwordRequired": "Enter your password.",
+      "codeRequired": "Enter the 6-digit code.",
+      "recoveryRequired": "Enter a recovery code."
+    },
+    "apiErrors": {
+      "sign_in_failed": "Those details didn't work, or there were too many tries. Try again in 15 minutes or ask your Principal.",
+      "console_sign_in_failed": "Those details didn't work, or there were too many tries. Try again in 15 minutes.",
+      "mfa_code_invalid": "That code is not right. Check the time on your phone and try again.",
+      "mfa_challenge_expired": "The time for entering the code has run out. Sign in again.",
+      "too_many_attempts": "Too many tries. Wait a few minutes and try again.",
+      "otp_invalid": "That code is not right.",
+      "otp_expired": "The code has expired. Ask for a new one.",
+      "otp_locked": "Too many wrong codes. Ask for a new one.",
+      "otp_rate_limited": "Too many codes sent. Try again in a few minutes.",
+      "password_link_invalid": "This link has expired or has already been used. Ask for a new one.",
+      "licence_key_invalid": "A licence key looks like CTAB-XXXX-XXXX-XXXX-XXXX.",
+      "licence_not_found": "This licence key is not recognised. Check it and try again.",
+      "licence_already_activated": "This licence key has already been used. The Chief Admin signs in with their own password.",
+      "licence_revoked": "This licence key has been withdrawn. Contact Campus TAB support.",
+      "licence_expired": "This licence has expired. Contact Campus TAB support to renew it.",
+      "step_up_required": "Enter a code from your authenticator app to confirm this.",
+      "console_browser_only": "The platform console works only in the Campus TAB web app.",
+      "seat_limit_reached": "The licence has no student seats left. Ask the Chief Admin to contact Campus TAB to add seats.",
+      "network": "We couldn't reach Campus TAB. Check your connection and try again.",
+      "http_error": "Something went wrong. Try again.",
+      "renewal_not_later": "A renewal must end later than the current last valid day.",
+      "note_required": "A correction needs a note saying what it corrects."
+    }
+  },
+  "session": {
+    "signOut": "Sign out",
+    "idle": {
+      "title": "Still there?",
+      "body": "For safety you will be signed out in {{seconds}} seconds without use.",
+      "stay": "Stay signed in"
+    },
+    "ended": {
+      "title": "Sign in again",
+      "body": "You were signed out after a time without use. Sign in to carry on where you were.",
+      "revoked": "You were signed out on this device. Sign in to carry on.",
+      "kept": "What you typed on this page is kept."
+    }
+  },
+  "sessions": {
+    "title": "Signed-in devices",
+    "subtitle": "Every browser and app signed in to your account. Sign out any you don't recognise.",
+    "thisDevice": "This device",
+    "signedIn": "Signed in {{when}}",
+    "lastUsed": "last used {{when}}",
+    "signOutDevice": "Sign out",
+    "signOutOthers": "Sign out every other device"
+  },
+  "stepUp": {
+    "body": "This is a sensitive action. Enter a fresh code from your authenticator app to confirm it.",
+    "confirm": "Confirm"
+  },
+  "console": {
+    "badge": "Platform console",
+    "enrolSubtitle": "Platform accounts must use an authenticator app at every sign-in.",
+    "signIn": {
+      "title": "Platform console",
+      "subtitle": "For the Campus TAB team only. Sign in with your password and authenticator code.",
+      "email": "Work email"
+    },
+    "nav": {
+      "schools": "Schools",
+      "audit": "Audit log",
+      "sessions": "My devices",
+      "alerts": "Alerts"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "issued": "Issued",
+      "revoked": "Revoked",
+      "suspended": "Suspended",
+      "grace": "Grace period",
+      "read_only": "Read-only",
+      "inactive": "Inactive"
+    },
+    "schools": {
+      "title": "Schools",
+      "new": "New school",
+      "empty": "No schools yet.",
+      "code": "School code",
+      "codeHint": "Letters, digits and dashes, for example SUNRISE-BPL. People type it at sign-in.",
+      "name": "School name",
+      "email": "Registered email",
+      "phone": "Registered phone",
+      "contactHint": "The activation code, and any Chief recovery code, go to this email and phone.",
+      "create": "Create school",
+      "back": "← All schools",
+      "contact": "Registered contact"
+    },
+    "licence": {
+      "title": "Licence",
+      "issue": "Issue licence key",
+      "amend": "Change plan, seats or modules",
+      "revoke": "Revoke licence",
+      "none": "No licence yet.",
+      "key": "Key",
+      "status": "Status",
+      "plan": "Plan",
+      "seats": "Seats",
+      "seatsValue": "{{students}} students · {{staff}} staff",
+      "valid": "Valid",
+      "modules": "Modules",
+      "students": "Student seats",
+      "staff": "Staff seats",
+      "validTo": "Last valid day",
+      "validToHint": "Leave empty for one year from today.",
+      "keyTitle": "Licence key",
+      "keyOnce": "This key is shown only once and is not stored. Copy it now and give it to the school's contact.",
+      "keyNext": "The school opens Campus TAB, picks \"Activate a new school\" and enters this key. School code: {{school}}.",
+      "keySaved": "I have copied the key",
+      "revokeTitle": "Revoke the licence of {{school}}",
+      "revokeWarning": "The school loses access at once. Its data stays, and a new licence can be issued later.",
+      "reason": "Reason (written to the audit logs)",
+      "typeCode": "Type the school code {{code}} to confirm",
+      "renew": "Renew",
+      "renewIntro": "The licence now ends on {{date}}. Choose a later last valid day. It takes effect at once and is recorded in the school's audit log too."
+    },
+    "recovery": {
+      "title": "Sole Chief Admin recovery",
+      "intro": "Only when the school has exactly one Chief Admin who has lost both the authenticator and the recovery codes. A code goes to the school's registered contact; the school reads it to you. It only resets two-step sign-in: the Chief sets up a new authenticator at the next sign-in. It never sets or shows a password, and the school sees it in its audit log.",
+      "start": "Send recovery code to the school",
+      "sent": "A code was sent to {{to}} for {{chief}}. Ask the school to read it to you.",
+      "code": "Code from the school",
+      "reason": "Why, and how the school proved who they are",
+      "reasonHint": "At least 20 characters. The school sees this.",
+      "complete": "Reset the Chief's two-step sign-in",
+      "done": "Done. The Chief signs in with their own password and sets up a new authenticator."
+    },
+    "audit": {
+      "title": "Platform audit log"
+    },
+    "list": {
+      "until": "until {{date}}",
+      "students": "Students {{used}} / {{limit}}",
+      "staff": "Staff {{used}} / {{limit}}",
+      "active": "Active {{week}} in 7 days, {{month}} in 30",
+      "alerts_one": "{{count}} alert",
+      "alerts_other": "{{count}} alerts"
+    },
+    "usage": {
+      "title": "Usage",
+      "refresh": "Refresh numbers",
+      "computed": "Worked out inside the school {{when}}. Numbers only.",
+      "notYet": "Not worked out yet. It runs every 15 minutes, or use Refresh numbers.",
+      "students": "Students / seats",
+      "staff": "Staff / seats",
+      "active7": "Active users, 7 days",
+      "active30": "Active users, 30 days",
+      "lastActivity": "Last activity",
+      "storage": "Storage used"
+    },
+    "security": {
+      "title": "Security overview",
+      "intro": "Counts only, with no names or content. The details are in the school's own audit log, which needs a support grant from the Chief Admin.",
+      "metric": "Event",
+      "windows": {
+        "last_hour": "Last hour",
+        "24h": "24 hours",
+        "7d": "7 days",
+        "30d": "30 days"
+      },
+      "metrics": {
+        "failed_sign_ins": "Failed sign-ins",
+        "lockouts": "Lockouts",
+        "password_resets": "Password resets",
+        "mfa_resets": "Two-step sign-in resets",
+        "chief_changes": "Chief Admin added or removed"
+      }
+    },
+    "client": {
+      "title": "Client record",
+      "edit": "Edit",
+      "fields": {
+        "contact_person": "Contact person",
+        "phone": "Phone",
+        "email": "Email",
+        "address": "Address",
+        "package_name": "Package",
+        "price": "Price (₹)",
+        "billing_period": "Billing period",
+        "paid_until": "Paid until",
+        "notes": "Notes"
+      },
+      "periods": {
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "half_yearly": "Half-yearly",
+        "yearly": "Yearly"
+      }
+    },
+    "payments": {
+      "title": "Payments",
+      "add": "Record a payment",
+      "none": "No payments recorded yet.",
+      "appendOnly": "Payments cannot be changed. To put a mistake right, record a correction with a minus amount and a note.",
+      "amount": "Amount (₹)",
+      "amountHint": "Use a minus amount for a correction; a correction needs a note.",
+      "paidOn": "Paid on",
+      "method": "Method",
+      "reference": "Reference",
+      "periodFrom": "Period from",
+      "periodTo": "Period to",
+      "note": "Note",
+      "methods": {
+        "bank_transfer": "Bank transfer",
+        "upi": "UPI",
+        "cheque": "Cheque",
+        "cash": "Cash",
+        "other": "Other"
+      }
+    },
+    "history": {
+      "title": "Licence history",
+      "none": "No licence changes yet.",
+      "actions": {
+        "issued": "Issued",
+        "renewed": "Renewed",
+        "changed": "Changed",
+        "revoked": "Revoked"
+      }
+    },
+    "grants": {
+      "title": "Support grants",
+      "intro": "Time-boxed access the Chief Admin has given our team. Without an active grant we cannot open the school's data.",
+      "none": "No support grants in the last 90 days.",
+      "readOnly": "read-only",
+      "readWrite": "read and write",
+      "status": {
+        "active": "Active",
+        "scheduled": "Scheduled",
+        "ended": "Ended",
+        "revoked": "Revoked"
+      }
+    },
+    "alerts": {
+      "title": "Security alerts",
+      "intro": "Raised when a count at a school jumps, such as a burst of failed sign-ins. Counts only; the details stay in the school's own audit log.",
+      "none": "No open alerts.",
+      "showAll": "Show acknowledged alerts too",
+      "acknowledge": "Acknowledge",
+      "acknowledgedBy": "acknowledged by {{name}}"
+    }
+  },
+  "roles": {
+    "chief": "Chief Admin",
+    "principal": "Principal",
+    "vice_principal": "Vice Principal",
+    "clerk": "Clerk",
+    "class_teacher": "Class Teacher",
+    "subject_teacher": "Subject Teacher",
+    "staff": "Staff",
+    "parent": "Parent / Guardian",
+    "student": "Student",
+    "fee_collector": "Fee Collector"
+  },
+  "people": {
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "draft": "Draft",
+      "ok": "Ready",
+      "error": "Error",
+      "duplicate": "Duplicate",
+      "archived": "Archived",
+      "rejected": "Rejected",
+      "failed": "Failed",
+      "committed": "Imported",
+      "locked": "Locked"
+    }
+  },
+  "students": {
+    "title": "Students",
+    "import": "Import",
+    "admit": "Admit student",
+    "admitTitle": "Admit a student",
+    "admitIntro": "Enter the student's details and at least one guardian. You can add more details on the profile later.",
+    "empty": "No students to show here yet.",
+    "setupCodesLink": "Student sign-in codes for this class",
+    "columnsButton": "Columns",
+    "pageInfo": "Page {{page}} of {{pages}} · {{total}} students",
+    "perPage": "Per page",
+    "seats": "{{used}} of {{limit}} student seats used, {{available}} left.",
+    "seatsWarning": "The licence is nearly full. Ask the Chief Admin to add seats in time.",
+    "seatLimitTitle": "No student seats left",
+    "columns": {
+      "roll": "Roll no.",
+      "name": "Name",
+      "admissionNo": "Admission no.",
+      "section": "Section",
+      "gender": "Gender",
+      "dob": "Date of birth"
+    },
+    "gender": {
+      "female": "Female",
+      "male": "Male",
+      "other": "Other"
+    },
+    "status": {
+      "active": "Active",
+      "left": "Left"
+    },
+    "filter": {
+      "section": "Section",
+      "allSections": "All sections",
+      "search": "Search",
+      "searchHint": "Name or admission number"
+    },
+    "form": {
+      "studentSection": "Student",
+      "guardianSection": "Guardians",
+      "guardianIntro": "A guardian's mobile number lets them sign in to the parent app later. Brothers and sisters with the same guardian phone share one parent login.",
+      "secondGuardian": "Second guardian",
+      "addSecondGuardian": "Add a second guardian",
+      "removeGuardian": "Remove",
+      "idsSection": "ID numbers (optional)",
+      "admissionNo": "Admission number",
+      "name": "Full name",
+      "dob": "Date of birth",
+      "gender": "Gender",
+      "section": "Class and section",
+      "chooseSection": "Choose a section",
+      "roll": "Roll number",
+      "submit": "Admit student",
+      "required": "This is required.",
+      "nameRequired": "Enter the student's full name.",
+      "dobRequired": "Enter the date of birth.",
+      "sectionRequired": "Choose a section.",
+      "rollInvalid": "A roll number is a whole number up to 999.",
+      "guardianRequired": "Enter the guardian's name.",
+      "phoneInvalid": "Enter a mobile number with country code, for example +919800000000.",
+      "emailInvalid": "Enter a valid email address."
+    },
+    "duplicate": {
+      "body": "A student with the same name, date of birth and guardian phone already exists (admission no. {{admission}}). Check it is not the same child.",
+      "open": "Open that student",
+      "different": "This is a different child"
+    },
+    "profile": {
+      "back": "Back to students",
+      "rollShort": "Roll {{roll}}",
+      "tabsLabel": "Student profile sections",
+      "tabs": {
+        "details": "Details",
+        "guardians": "Guardians",
+        "custom": "Custom fields",
+        "ids": "Consents and IDs"
+      },
+      "readOnly": "You can view this profile but not change it.",
+      "saved": "Saved.",
+      "admissionFixed": "The admission number does not change.",
+      "classTeacherNote": "A class teacher can change only the roll number and the class's own columns; the office changes the rest.",
+      "loginName": "Student login name"
+    },
+    "guardians": {
+      "add": "Add guardian",
+      "edit": "Edit guardian",
+      "empty": "No guardians yet.",
+      "name": "Guardian name",
+      "relation": "Relation",
+      "relationHint": "Mother, father, guardian…",
+      "phone": "Mobile number",
+      "phoneHint": "Needed for the parent login.",
+      "email": "Email",
+      "parentLoginIntro": "Parents sign in with a one-time code sent by SMS to the guardian's mobile number; there is no password. Brothers and sisters who share a guardian share one parent login, so one sign-in shows all the children.",
+      "loginOn": "Parent login on",
+      "loginOff": "No parent login",
+      "turnOn": "Turn parent login on",
+      "turnOff": "Turn parent login off",
+      "siblings_one": "Also guardian of {{count}} more student (sibling).",
+      "siblings_other": "Also guardian of {{count}} more students (siblings)."
+    },
+    "custom": {
+      "empty": "No custom fields apply to this student.",
+      "noneFillable": "You can view these fields but not fill them.",
+      "sensitiveHint": "A value is saved but hidden. Type a new value only to replace it."
+    },
+    "ids": {
+      "pen": "PEN",
+      "apaar": "APAAR ID",
+      "idHint": "Letters and digits, 6 to 20 characters.",
+      "aadhaarLast4": "Aadhaar: last 4 digits only",
+      "aadhaarHint": "Full Aadhaar numbers are never stored. Enter only the last four digits.",
+      "aadhaarInvalid": "Enter exactly four digits, or leave it empty.",
+      "consentIntro": "PEN and APAAR are kept only with the guardian's consent. Tick the consent first, then enter the number.",
+      "otherConsents": "Other consents",
+      "consent": {
+        "pen": "The guardian consents to keeping the PEN",
+        "apaar": "The guardian consents to keeping the APAAR ID",
+        "photo_public": "The guardian consents to the student's photo being shown publicly",
+        "third_party_sharing": "The guardian consents to sharing details with third parties"
+      },
+      "consentRecord": "{{purpose}}: {{state}} on {{at}} by {{by}}",
+      "given": "given",
+      "withdrawn": "withdrawn",
+      "noConsents": "No consents recorded yet.",
+      "officeOnly": "Only the office can see and change ID numbers."
+    }
+  },
+  "staff": {
+    "title": "Staff",
+    "import": "Import",
+    "add": "Add staff",
+    "draftForPrincipal": "Draft for the Principal",
+    "draftExplain": "This sends a draft to the Principal. The account is created only when the Principal approves it.",
+    "draftedBy": "Drafted by {{name}}",
+    "empty": "No staff to show here yet.",
+    "noDrafts": "No drafts waiting for approval.",
+    "back": "Back to staff",
+    "approve": "Approve",
+    "reject": "Reject",
+    "rejectTitle": "Reject the draft for {{name}}",
+    "rejectReason": "Reason (the person who drafted it sees this)",
+    "deactivate": "Deactivate",
+    "deactivateTitle": "Deactivate {{name}}?",
+    "deactivateBody": "They lose access at once and every device is signed out. Their record and history are kept.",
+    "filter": {
+      "label": "Show",
+      "all": "All",
+      "drafts": "Drafts",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "inactive": "Inactive",
+      "rejected": "Rejected"
+    },
+    "account": {
+      "active": "Active",
+      "pending": "Waiting for password",
+      "locked": "Locked",
+      "inactive": "Inactive"
+    },
+    "type": {
+      "teaching": "Teaching",
+      "non_teaching": "Non-teaching"
+    },
+    "form": {
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Mobile number",
+      "contactHint": "The password setup link goes to the email, else by SMS. With neither, you get a setup code to hand over.",
+      "designation": "Designation",
+      "roles": "Roles",
+      "create": "Add staff",
+      "sendDraft": "Send to the Principal"
+    },
+    "setupCode": {
+      "title": "Password setup code",
+      "warning": "Give this code to the person so they can set their own password. It is shown only once and is not shown again.",
+      "expires": "Valid until {{at}}.",
+      "done": "I have noted the code"
+    },
+    "profile": {
+      "type": "Type",
+      "joined": "Joined on",
+      "requestedRoles": "Requested roles",
+      "account": "Account",
+      "noAccount": "No account yet",
+      "mfaOn": "two-step sign-in on",
+      "mfaOff": "two-step sign-in off",
+      "wings": "Wings",
+      "classTeacherOf": "Class teacher of",
+      "teaches": "Subjects taught"
+    }
+  },
+  "imports": {
+    "title": {
+      "students": "Import students",
+      "staff": "Import staff"
+    },
+    "intro": "Fill the template, upload it, check the report, then import. Nothing is created until you press Import.",
+    "step": {
+      "template": "Download the template",
+      "upload": "Upload the filled file",
+      "check": "Check and import"
+    },
+    "templateHint": {
+      "students": "One row per student. Keep the column names. Your custom columns are included.",
+      "staff": "One row per staff member. Keep the column names."
+    },
+    "downloadTemplate": "Download template",
+    "file": "File",
+    "fileHint": "An .xlsx or .csv file up to 10 MB.",
+    "upload": "Upload and check",
+    "uploadAgain": "Upload another file",
+    "checking": "Checking the file…",
+    "committing": "Importing…",
+    "queued": "Waiting to start…",
+    "progress": "Progress",
+    "progressCount": "{{done}} of {{total}} rows",
+    "failed": "The import stopped. Upload the file again.",
+    "seatCheck": "Seat check",
+    "seatNumbers": "Licence: {{limit}} seats · used {{used}} · this file adds {{adding}} · {{available}} available",
+    "counts": {
+      "ok": "Ready",
+      "errors": "Errors",
+      "duplicates": "Duplicates"
+    },
+    "filterLabel": "Rows to show",
+    "filter": {
+      "all": "All rows",
+      "problems": "Problems only"
+    },
+    "downloadReport": "Download report",
+    "table": {
+      "row": "Row",
+      "result": "Result",
+      "record": "Record",
+      "messages": "What to fix"
+    },
+    "rowStatus": {
+      "ok": "Ready",
+      "error": "Error",
+      "duplicate": "Duplicate"
+    },
+    "status": {
+      "queued": "Queued",
+      "validating": "Checking",
+      "validated": "Checked",
+      "committing": "Importing",
+      "committed": "Imported",
+      "failed": "Failed"
+    },
+    "commit_one": "Import {{count}} record",
+    "commit_other": "Import {{count}} records",
+    "created_one": "{{count}} record imported.",
+    "created_other": "{{count}} records imported.",
+    "backToList": {
+      "students": "Go to the student list",
+      "staff": "Go to the staff list"
+    }
+  },
+  "setupCodes": {
+    "title": "Student sign-in codes: {{section}}",
+    "intro": "Students sign in with their own login name and a password they set themselves. Each student gets a one-time setup code to set it.",
+    "how1": "Print the sheet and give each student their own line.",
+    "how2": "The student opens Campus TAB, enters the school code, their login name and the setup code, then sets a password.",
+    "how3": "Making new codes cancels any earlier codes for this class.",
+    "issue": "Make setup codes",
+    "loginOff": "Student sign-in is switched off for this school. The Chief Admin can switch student sign-in on in the school settings.",
+    "once": "These codes are shown only once and expire after {{hours}} hours. Print them now.",
+    "print": "Print",
+    "noStudents": "No active students in this section.",
+    "table": {
+      "roll": "Roll",
+      "name": "Name",
+      "login": "Login name",
+      "code": "Setup code"
+    }
+  },
+  "customFields": {
+    "title": "Custom fields",
+    "intro": "Add your own columns to student and staff records. You see and change only the fields at your level and scope.",
+    "create": "New field",
+    "editTitle": "Edit field",
+    "empty": "No custom fields yet.",
+    "edit": "Edit",
+    "archive": "Archive",
+    "restore": "Restore",
+    "promote": "Promote",
+    "requiredTag": "Required",
+    "ownerLevel": "Level {{level}}",
+    "entity": {
+      "student": "Student",
+      "enrolment": "Student in a class (this year)",
+      "staff": "Staff"
+    },
+    "scope": {
+      "school": "Whole school",
+      "wing": "Wing: {{wing}}",
+      "section": "Class {{section}}",
+      "subjectSection": "{{subject}} in {{section}}"
+    },
+    "status": {
+      "active": "Active",
+      "archived": "Archived"
+    },
+    "table": {
+      "label": "Field",
+      "type": "Type",
+      "scope": "Where",
+      "owner": "Owner",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "type": {
+      "text": "Short text",
+      "long_text": "Long text",
+      "number": "Number",
+      "date": "Date",
+      "dropdown": "Dropdown",
+      "multi_select": "Multiple choice",
+      "yes_no": "Yes / No",
+      "file": "File",
+      "grade": "Grade",
+      "phone": "Phone",
+      "email": "Email"
+    },
+    "form": {
+      "scope": "Where it applies",
+      "scopeHint": "Only the places you look after are offered.",
+      "entity": "Record",
+      "entitySectionHint": "A class or subject column belongs to the student's place in the class this year.",
+      "labelEn": "Name in English",
+      "labelHi": "Name in Hindi",
+      "optional": "Optional",
+      "type": "Type",
+      "options": "Choices",
+      "optionsHint": "One choice per line.",
+      "required": "Must be filled",
+      "subjectTeachers": "Also show to subject teachers of this class",
+      "noAadhaar": "Aadhaar and bank account fields cannot be created.",
+      "submit": "Create field"
+    }
+  },
+  "setup": {
+    "title": "School setup",
+    "intro": "Set up the school step by step. Each step saves as you go, so you can stop and come back later.",
+    "stepsLabel": "Setup steps",
+    "saved": "Saved.",
+    "finish": "Go to students",
+    "steps": {
+      "profile": "School profile",
+      "year": "Academic year",
+      "classes": "Classes",
+      "subjects": "Subjects",
+      "staff": "Staff and teaching",
+      "students": "Import students"
+    },
+    "profile": {
+      "title": "School profile and logo",
+      "intro": "The name and logo appear on every screen, report and receipt.",
+      "noAccess": "Only the Chief Admin can change the school profile. Go on to the next step.",
+      "name": "School name",
+      "shortName": "Short name",
+      "board": "Board",
+      "boards": {
+        "CBSE": "CBSE",
+        "ICSE": "ICSE",
+        "STATE": "State board",
+        "IB": "IB",
+        "CAMBRIDGE": "Cambridge",
+        "OTHER": "Other"
+      },
+      "affiliation": "Affiliation number",
+      "accent": "Accent colour",
+      "accentHint": "A colour like #0F766E.",
+      "logo": "Logo",
+      "logoAlt": "Current school logo",
+      "logoFile": "Logo file",
+      "logoHint": "PNG, JPG or WebP, up to 512 KB.",
+      "logoType": "Choose a PNG, JPG or WebP image.",
+      "logoSize": "The logo must be 512 KB or smaller.",
+      "logoSaved": "Logo saved.",
+      "upload": "Upload logo"
+    },
+    "year": {
+      "title": "Academic year",
+      "intro": "Classes, sections and students belong to the current year.",
+      "name": "Year",
+      "nameHint": "Like 2026-27",
+      "startsOn": "Starts on",
+      "endsOn": "Ends on",
+      "makeCurrentNew": "Make this the current year",
+      "makeCurrent": "Make current",
+      "add": "Add year",
+      "status": {
+        "planned": "Planned",
+        "current": "Current",
+        "closed": "Closed"
+      }
+    },
+    "classes": {
+      "title": "Classes and sections",
+      "intro": "Add each class of the current year with its sections.",
+      "grade": "Grade",
+      "gradeHint": "Like 6, 10 or LKG",
+      "name": "Class name",
+      "defaultName": "Class {{grade}}",
+      "wing": "Wing",
+      "sections": "Sections",
+      "sectionsHint": "Separated by commas, like A, B, C",
+      "add": "Add class",
+      "newSection": "New section for {{class}}",
+      "addSection": "Add a section to {{class}}",
+      "removeSection": "Remove section {{section}}",
+      "sectionPlaceholder": "D"
+    },
+    "subjects": {
+      "title": "Subjects",
+      "intro": "The subjects the school teaches.",
+      "code": "Code",
+      "name": "Subject name",
+      "kind": "Kind",
+      "kinds": {
+        "scholastic": "Scholastic",
+        "co_scholastic": "Co-scholastic"
+      },
+      "elective": "Elective",
+      "add": "Add subject"
+    },
+    "staff": {
+      "title": "Staff",
+      "intro": "Add staff one by one, or import them from a spreadsheet.",
+      "count_one": "{{count}} active staff member.",
+      "count_other": "{{count}} active staff members.",
+      "classTeachers": "Class teachers",
+      "classTeachersIntro": "Choose a class teacher for each section.",
+      "classTeacher": "Class teacher",
+      "classTeacherFor": "Class teacher of {{section}}",
+      "noSections": "Add classes and sections first.",
+      "subjectTeachers": "Subject teachers",
+      "subjectTeachersIntro": "Who teaches which subject in which section.",
+      "subject": "Subject",
+      "chooseSubject": "Choose a subject",
+      "teacher": "Teacher",
+      "chooseTeacher": "Choose a teacher",
+      "assign": "Assign",
+      "remove": "Remove"
+    }
   }
 }

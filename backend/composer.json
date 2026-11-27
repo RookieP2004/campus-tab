@@ -17,16 +17,19 @@
     ],
     "require": {
         "php": "^8.4",
+        "dedoc/scramble": "^0.13.55",
         "laravel/framework": "^13.17",
         "laravel/horizon": "^5.52",
         "laravel/reverb": "^1.14",
         "laravel/sanctum": "^4.5",
         "laravel/tinker": "^3.0",
         "mongodb/laravel-mongodb": "^5.7",
+        "openspout/openspout": "^5.15",
         "opis/json-schema": "^2.4",
         "pragmarx/google2fa": "^8.0"
     },
     "require-dev": {
+        "brianium/paratest": "^7.20",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.15",
         "laravel/pail": "^1.2.5",
@@ -58,7 +61,7 @@
         ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
-            "@php vendor/bin/pest"
+            "@php vendor/bin/pest --parallel"
         ],
         "lint": [
             "@php vendor/bin/pint --test",

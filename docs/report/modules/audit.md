@@ -27,6 +27,15 @@ _Screens come later (the Chief's audit log and recycle bin). The API is ready._
 
 There is no route that changes or deletes an audit entry.
 
+**Platform audit log (part C).** `platform_audit_logs` holds every console action and `platform:*` command ([`PlatformAuditRecorder.php`](../../../backend/app/Modules/Audit/Domain/PlatformAuditRecorder.php), [`PlatformAuditLog.php`](../../../backend/app/Modules/Audit/Models/PlatformAuditLog.php)).
+
+- It is append-only in the same way as a school's log (same query builder).
+- An action on a school is also written to that school's own `audit_logs`:
+  - the action name gets a `platform.` prefix
+  - the actor type is `platform_admin`
+  - `meta.platform_audit_id` links the two entries
+- `AuditRecorder::record()` now accepts a platform admin as the actor.
+
 ## 4. Code map
 
 `backend/app/Modules/Audit/`:
@@ -116,3 +125,6 @@ There is no route that changes or deletes an audit entry.
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 1B | Append-only audit log with redaction and per-reader visibility; recycle bin with restore and the Chief's purge | Phase 1 item 8, with the owner's rules for the audit log |
+| 2026-11-27 | 1C | Platform audit log; school copies of console actions on that school | Phase 1 part C: every console action audited, school actions visible to the school |
+| 2026-11-27 | 2 | `AuditRecorder::withMeta()` adds meta to every entry inside it (an import is audited under one batch id); students and staff in the recycle bin | Phase 2 rule 6 |
+| 2026-11-27 | 1C | Restoring a user or student from the recycle bin checks the seats | The owner's seat rule |

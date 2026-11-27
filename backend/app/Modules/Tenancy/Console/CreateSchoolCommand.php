@@ -2,7 +2,7 @@
 
 namespace App\Modules\Tenancy\Console;
 
-use App\Modules\Tenancy\Domain\TenantProvisioner;
+use App\Modules\Platform\Domain\SchoolConsole;
 use Illuminate\Console\Command;
 use Illuminate\Validation\ValidationException;
 
@@ -21,10 +21,10 @@ class CreateSchoolCommand extends Command
 
     protected $description = 'Create a school (tenant) record, ready for a licence key';
 
-    public function handle(TenantProvisioner $provisioner): int
+    public function handle(SchoolConsole $schools): int
     {
         try {
-            $tenant = $provisioner->create([
+            $tenant = $schools->createSchool(null, [
                 'code' => (string) $this->argument('code'),
                 'name' => (string) $this->argument('name'),
                 'email' => $this->option('email'),

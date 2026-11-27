@@ -5,6 +5,7 @@ namespace App\Modules\Identity\Domain;
 use App\Modules\Audit\Domain\AuditRecorder;
 use App\Modules\Identity\Models\DeviceSession;
 use App\Modules\Identity\Models\User;
+use App\Modules\Tenancy\Domain\SchoolConfigService;
 use App\Modules\Tenancy\Models\Tenant;
 use App\Support\Http\ApiException;
 use App\Support\Tenancy\TenantContext;
@@ -39,6 +40,7 @@ class SignInService
         private readonly Mfa $mfa,
         private readonly AuditRecorder $audit,
         private readonly Repository $cache,
+        private readonly SchoolConfigService $configs,
     ) {}
 
     public static function failed(): ApiException
@@ -74,6 +76,14 @@ class SignInService
                 Hash::check($password, self::dummyHash());
                 $this->failIp($request);
                 $this->audit->record('sign_in.blocked', 'security', 'users', (string) $user->getKey(), meta: ['reason' => 'locked'], actor: $user);
+
+                throw self::failed();
+            }
+
+            // Student sign-in is a school setting, off by default: same answer as a wrong password.
+            if ($user->roles === [Role::Student->value] && ! in_array('student_login', $this->configs->current()->body['sign_in']['methods'] ?? [], true)) {
+                Hash::check($password, self::dummyHash());
+                $this->failIp($request);
 
                 throw self::failed();
             }

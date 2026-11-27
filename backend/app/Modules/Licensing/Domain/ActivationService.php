@@ -157,7 +157,7 @@ class ActivationService
         return [$licence, $tenant];
     }
 
-    private static function maskEmail(?string $email): ?string
+    public static function maskEmail(?string $email): ?string
     {
         if (! is_string($email) || ! str_contains($email, '@')) {
             return null;
@@ -168,7 +168,7 @@ class ActivationService
         return mb_substr($name, 0, 1).str_repeat('*', max(mb_strlen($name) - 1, 3)).'@'.$domain;
     }
 
-    private static function maskPhone(?string $phone): ?string
+    public static function maskPhone(?string $phone): ?string
     {
         if (! is_string($phone) || strlen($phone) < 4) {
             return null;

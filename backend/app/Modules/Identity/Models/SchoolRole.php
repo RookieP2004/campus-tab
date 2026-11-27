@@ -30,7 +30,7 @@ class SchoolRole extends Model
     protected $table = 'roles';
 
     /** @var list<string> */
-    protected $fillable = ['tenant_id', 'name', 'label', 'level', 'duty', 'permissions', 'is_system'];
+    protected $fillable = ['tenant_id', 'name', 'label', 'level', 'duty', 'permissions', 'seeded_permissions', 'is_system'];
 
     /** @var array<string, mixed> */
     protected $attributes = ['permissions' => [], 'is_system' => false, 'duty' => null];

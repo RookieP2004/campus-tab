@@ -2,6 +2,7 @@
 
 use App\Modules\Tenancy\Http\Controllers\PublicConfigController;
 use App\Modules\Tenancy\Http\Controllers\SchoolConfigController;
+use App\Modules\Tenancy\Http\Controllers\SchoolLogoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -11,6 +12,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('public/tenants/{code}/config', [PublicConfigController::class, 'show'])
     ->middleware('throttle:public')
     ->name('public.tenants.config');
+
+Route::get('public/tenants/{code}/logo', [SchoolLogoController::class, 'show'])
+    ->middleware('throttle:public')
+    ->name('public.tenants.logo');
+
+Route::middleware('school')
+    ->post('config/logo', [SchoolLogoController::class, 'store'])
+    ->middleware('permission:config.edit')
+    ->name('config.logo');
 
 Route::middleware('school')
     ->prefix('config')

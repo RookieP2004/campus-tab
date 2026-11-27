@@ -50,10 +50,17 @@ return [
             'provider' => 'users',
         ],
 
-        // Our platform team: separate accounts and provider. The web console
-        // arrives in Phase 1 part C.
+        // Our platform team's support tokens (support sessions): separate
+        // accounts and provider.
         'platform' => [
             'driver' => 'sanctum',
+            'provider' => 'platform_admins',
+        ],
+
+        // The platform console in the web app: session cookie only, never a
+        // token. Checked by the console middleware (Platform module).
+        'console' => [
+            'driver' => 'session',
             'provider' => 'platform_admins',
         ],
     ],

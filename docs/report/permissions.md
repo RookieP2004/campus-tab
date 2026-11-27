@@ -22,6 +22,33 @@
 - **Support agents** hold only their grant's permissions. They can never touch support grants, purge, edit roles or a user's roles, export, unlock marks, approve corrections, or do any step-up action.
 - **Fee records are append-only**; reversals instead of edits (Phase 8).
 
+## Phase 2 abilities (as coded)
+
+| Ability | Chief | Principal | Vice Principal | Clerk | Class T. | Subject T. |
+| --- | --- | --- | --- | --- | --- | --- |
+| `academic.view` (years, classes, sections, subjects, assignments) | School | School | School | School | School | School |
+| `academic.manage` | School | School | — | — | — | — |
+| `students.view` | School | School | Wing | School | Class | Subj |
+| `students.edit` | School | School | Wing | School | Class (roll number and own columns only) | — |
+| `students.admit` (create, import, delete) | School | School | — | School | — | — |
+| `students.login_codes` (student setup codes) | School | School | Wing | — | Class | — |
+| `guardians.manage` (guardians, parent login) | School | School | — | School | — | — |
+| `staff.view` | School | School | School | School | — | — |
+| `staff.create` (with the account, at once) | School | School | — | — | — | — |
+| `staff.draft` (draft for the Principal) | — | — | — | School | — | — |
+| `staff.approve` · `staff.edit` · `staff.deactivate` | School | School | — | — | — | — |
+| `imports.students` | School | School | — | School | — | — |
+| `imports.staff` | School | School | — | — | — | — |
+| `custom_fields.manage` | School | School | Wing | — (`custom_fields.clerical`) | Class | Subj |
+
+- **Parents** hold `students.view:child`; **students** hold `students.view:own`.
+- **Scope facts come from records** (decision 0011):
+  - **child:** guardians linked to the account
+  - **class:** sections where the person's staff record is the class teacher
+  - **subject:** teaching assignments
+  - **wing:** the staff record's wings
+- **Existing schools** get these with `php artisan identity:sync-roles --with-new-permissions`.
+
 ## Step-up actions (`config/identity.php`)
 
 | Action | Routes now | Valid for |

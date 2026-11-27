@@ -52,6 +52,8 @@ class MeController
             'theme' => $user->theme,
             'mfa' => ['enabled' => $user->mfaEnabled(), 'required' => $user->mfaRequired()],
             'school' => ['code' => $tenant->code, 'name' => $tenant->name],
+            // Scope facts from the school's records, so screens can offer only what applies.
+            'scope' => $user->accessScope(),
             // For the screens: warn a minute before an idle sign-out.
             'session' => [
                 'idle_minutes' => TrackDeviceSession::idleMinutes($user),

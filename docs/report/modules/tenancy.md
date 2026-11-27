@@ -35,6 +35,11 @@ All paths are under `/api/v1`. The full generated list is in [api.md](../api.md)
 
 The `/config` routes run in the `school` middleware group (auth, `tenant`, `device`, `mfa.enrolled`, `licence`, so an expired licence makes them read-only), and each names its permission.
 
+**Phase 2.**
+
+- **Logo:** `POST /config/logo` (PNG, JPEG or WebP, up to 512 KB, `config.edit`) stores the logo privately and sets `school.logo_url`. `GET /public/tenants/{code}/logo` serves it for the sign-in screen and the brand stack ([`SchoolLogoController.php`](../../../backend/app/Modules/Tenancy/Http/Controllers/SchoolLogoController.php)).
+- **Config:** `sign_in.methods` may now include `student_login`.
+
 ## 4. Code map
 
 Back end, `backend/app/Modules/Tenancy/`:
@@ -165,3 +170,5 @@ Part B maps these checks onto the RBAC permission strings without changing the s
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 1A | Tenants, tenant isolation and guard, public branding, versioned config with section rights | Phase 1 items 1, 3, 4 and 5 |
 | 2026-11-27 | 1B | Config rights on permission strings; system roles seeded per school; `user_can_choose_language` removed and `available_languages` renamed `featured_languages` (every user may pick any language); config versions audited | Phase 1 items 6 to 8 and the owner's language rule |
+| 2026-11-27 | 1C | `platform:create-school` and the console create schools through `Platform\SchoolConsole` (audited); `platform_sessions` and `platform_audit_logs` are platform collections | Phase 1 item 10 |
+| 2026-11-27 | 2 | School logo upload and public logo URL; `student_login` sign-in method | Phase 2 setup wizard and rule 4 |

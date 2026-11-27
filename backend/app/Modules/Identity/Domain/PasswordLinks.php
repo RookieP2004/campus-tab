@@ -52,12 +52,13 @@ class PasswordLinks
      *
      * @return array{channel: string, to: string|null, code: string|null, expires_at: string}|null
      */
-    public function send(Tenant $tenant, User $user, ?User $by = null): ?array
+    public function send(Tenant $tenant, User $user, ?User $by = null, ?int $validMinutes = null): ?array
     {
         $purpose = $user->isInvited() ? PasswordToken::PURPOSE_SET : PasswordToken::PURPOSE_RESET;
-        $minutes = $purpose === PasswordToken::PURPOSE_SET
+        // Student setup codes printed by the class teacher are valid 48 hours either way.
+        $minutes = $validMinutes ?? ($purpose === PasswordToken::PURPOSE_SET
             ? (int) config('identity.passwords.set_link_hours', 48) * 60
-            : (int) config('identity.passwords.reset_link_minutes', 30);
+            : (int) config('identity.passwords.reset_link_minutes', 30));
 
         $hasEmail = is_string($user->email) && $user->email !== '';
         $hasPhone = is_string($user->phone) && $user->phone !== '';

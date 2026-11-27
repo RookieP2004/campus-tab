@@ -20,7 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
  *
  *  - none, or revoked (remote sign-out, password change, deactivation,
  *    MFA reset): 401 session_revoked
- *  - unused for 15 minutes (level 60 and up) or 30 minutes (everyone else),
+ *  - unused for 15 minutes (level 60 and up) or 30 minutes (everyone else;
+ *    requests marked X-Background-Request: 1 do not count as use),
  *    or signed in for more than 8 hours: 401 session_expired. The same
  *    rule for browser cookies and app tokens; values in config/identity.php.
  *
@@ -68,14 +69,22 @@ class TrackDeviceSession
                 : 'You were signed out after '.$idle.' minutes without use. Sign in again.', 401);
         }
 
-        // Every request counts as use; written at most every 30 seconds.
-        if ($lastSeen === null || $lastSeen->lessThan(now()->subSeconds(30))) {
+        // Real use only: a background request (refetch, polling, the
+        // notification socket) is checked above but never extends the idle
+        // time. Written at most every 30 seconds.
+        if (! self::isBackground($request) && ($lastSeen === null || $lastSeen->lessThan(now()->subSeconds(30)))) {
             $session->forceFill(['last_seen_at' => now(), 'ip' => $request->ip()])->save();
         }
 
         $request->attributes->set('device_session', $session);
 
         return $next($request);
+    }
+
+    /** A request the screens sent on their own (header in config/identity.php). */
+    public static function isBackground(Request $request): bool
+    {
+        return $request->headers->get((string) config('identity.background_header', 'X-Background-Request')) === '1';
     }
 
     /** 15 minutes for level 60 and up, 30 for everyone else (config/identity.php). */

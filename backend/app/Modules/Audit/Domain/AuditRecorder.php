@@ -5,6 +5,7 @@ namespace App\Modules\Audit\Domain;
 use App\Modules\Audit\Models\AuditLog;
 use App\Modules\Identity\Domain\SupportAgentUser;
 use App\Modules\Identity\Models\DeviceSession;
+use App\Modules\Identity\Models\PlatformAdmin;
 use App\Modules\Identity\Models\User;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,31 @@ class AuditRecorder
     public const CATEGORIES = ['academic', 'admin', 'security', 'fees'];
 
     private static int $muted = 0;
+
+    /** @var array<string, mixed> meta added to every entry, e.g. an import batch id */
+    private static array $contextMeta = [];
+
+    /**
+     * Run a closure with extra meta on every entry it writes, for example
+     * ['import_batch_id' => …] so a whole import is audited under one id.
+     *
+     * @template T
+     *
+     * @param  array<string, mixed>  $meta
+     * @param  Closure(): T  $callback
+     * @return T
+     */
+    public static function withMeta(array $meta, Closure $callback): mixed
+    {
+        $previous = self::$contextMeta;
+        self::$contextMeta = array_merge($previous, $meta);
+
+        try {
+            return $callback();
+        } finally {
+            self::$contextMeta = $previous;
+        }
+    }
 
     /**
      * Run a closure without automatic model entries, when the caller records
@@ -58,7 +84,8 @@ class AuditRecorder
      * @param  array<string, mixed>|null  $before
      * @param  array<string, mixed>|null  $after
      * @param  array<string, mixed>  $meta
-     * @param  User|null  $actor  who acted, when it is not the signed-in user (sign-in events)
+     * @param  User|PlatformAdmin|null  $actor  who acted, when it is not the signed-in user
+     *                                          (sign-in events; a platform admin acting from the console)
      */
     public function record(
         string $action,
@@ -68,12 +95,12 @@ class AuditRecorder
         ?array $before = null,
         ?array $after = null,
         array $meta = [],
-        ?User $actor = null,
+        User|PlatformAdmin|null $actor = null,
     ): AuditLog {
         $redacted = [];
         $before = Redactor::clean($before, $redacted, 'before');
         $after = Redactor::clean($after, $redacted, 'after');
-        $meta = Redactor::clean($meta, $redacted, 'meta') ?? [];
+        $meta = Redactor::clean(array_merge(self::$contextMeta, $meta), $redacted, 'meta') ?? [];
 
         $who = $actor ?? $this->signedInUser();
         $request = $this->request();
@@ -122,8 +149,12 @@ class AuditRecorder
     /**
      * @return array{type: string, id: string|null, name: string|null}
      */
-    private function describe(?User $user): array
+    private function describe(User|PlatformAdmin|null $user): array
     {
+        if ($user instanceof PlatformAdmin) {
+            return ['type' => 'platform_admin', 'id' => (string) $user->getKey(), 'name' => $user->name];
+        }
+
         if ($user instanceof SupportAgentUser) {
             return ['type' => 'support_agent', 'id' => (string) $user->agent->getKey(), 'name' => $user->agent->name];
         }

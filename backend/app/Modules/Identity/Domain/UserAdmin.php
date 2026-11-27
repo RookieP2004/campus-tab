@@ -5,6 +5,7 @@ namespace App\Modules\Identity\Domain;
 use App\Modules\Audit\Domain\AuditRecorder;
 use App\Modules\Identity\Models\SchoolRole;
 use App\Modules\Identity\Models\User;
+use App\Modules\Licensing\Domain\Seats;
 use App\Modules\Tenancy\Models\Tenant;
 use App\Support\Http\ApiException;
 use App\Support\Tenancy\TenantContext;
@@ -46,6 +47,11 @@ class UserAdmin
     public function create(User $actor, Tenant $tenant, array $input): array
     {
         $roles = $this->checkAssignable($actor, $input['roles'], []);
+
+        // Staff seats: every account except parents and students uses one.
+        if (Seats::usesStaffSeat($roles)) {
+            app(Seats::class)->assertRoom('staff');
+        }
         $parentOnly = array_diff($roles, [Role::Parent->value]) === [];
 
         if ($parentOnly && empty($input['phone'])) {
@@ -81,6 +87,11 @@ class UserAdmin
         $this->mustOutrank($actor, $target);
         $before = $target->roles ?? [];
         $roles = $this->checkAssignable($actor, $roles, $before);
+
+        // A parent or student account becoming staff takes a staff seat.
+        if (! Seats::usesStaffSeat($before) && Seats::usesStaffSeat($roles) && $target->status !== User::STATUS_INACTIVE) {
+            app(Seats::class)->assertRoom('staff');
+        }
 
         return $this->guarded(function () use ($target, $before, $roles): User {
             if (in_array(Role::Chief->value, $before, true) && ! in_array(Role::Chief->value, $roles, true)) {

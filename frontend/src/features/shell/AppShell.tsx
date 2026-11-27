@@ -1,21 +1,38 @@
-import { CalendarDays, ChevronDown, LayoutDashboard } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { CalendarDays, ChevronDown, LayoutDashboard, LogOut, MonitorSmartphone, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { NavLink, Outlet } from 'react-router';
+import { NavLink, Outlet, useNavigate } from 'react-router';
 import { BrandLockup } from '@/components/brand/BrandLockup';
+import { Button } from '@/components/ui/button';
+import { signIn } from '@/features/auth/api';
+import { useCurrentUser } from '@/features/auth/RequireSession';
 import { cn } from '@/lib/utils';
+import { navItems } from './navItems';
 import { LanguagePicker } from './LanguagePicker';
 import { SchoolCard } from './SchoolCard';
 import { ServerStatus } from './ServerStatus';
 import { ThemePicker } from './ThemePicker';
 
 /**
- * Phase 0 shell: brand stack, one navigation item, theme and language
- * pickers and an empty content area. Phase 3 completes it (icon rail at
- * 768-1023 px, bottom tabs under 768 px, search, notifications, profile).
+ * The signed-in shell: brand stack, navigation (only what the person's
+ * permissions allow; the server checks every request anyway), theme and
+ * language pickers, the account's devices and sign-out. Phase 3 completes
+ * it (icon rail at 768-1023 px, bottom tabs under 768 px, search,
+ * notifications, role switcher).
  * Layout follows docs/design/screens/{light,dark}/Sidebar.dc.html.
  */
 export function AppShell() {
   const { t } = useTranslation();
+  const me = useCurrentUser();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const items = navItems.filter((item) => !item.permission || me.permissions.some((p) => item.permission?.some((needed) => p.startsWith(needed))));
+
+  const signOut = async () => {
+    await signIn.logout().catch(() => undefined);
+    queryClient.clear();
+    navigate('/sign-in', { replace: true });
+  };
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -32,24 +49,15 @@ export function AppShell() {
           <BrandStack />
           <nav aria-label={t('a11y.mainNavigation')}>
             <ul className="flex flex-col gap-0.5">
-              <li>
-                <NavLink
-                  to="/"
-                  end
-                  className={({ isActive }) =>
-                    cn(
-                      'flex h-10 items-center gap-3 rounded-lg px-2.5 text-sm',
-                      isActive ? 'bg-primary-soft font-semibold text-primary' : 'text-fg hover:bg-surface-muted',
-                    )
-                  }
-                >
-                  <LayoutDashboard aria-hidden="true" className="size-[18px]" />
-                  {t('nav.home')}
-                </NavLink>
-              </li>
+              <NavItem to="/" end icon={LayoutDashboard} label={t('nav.home')} />
+              {items.map((item) => (
+                <NavItem key={item.to} to={item.to} icon={item.icon} label={t(item.label)} />
+              ))}
+              <NavItem to="/account/sessions" icon={MonitorSmartphone} label={t('nav.devices')} />
             </ul>
           </nav>
           <div className="mt-auto flex flex-col gap-2.5 border-t border-border pt-3.5">
+            <p className="truncate px-1.5 text-sm font-medium" data-testid="signed-in-name">{me.name}</p>
             <ServerStatus />
           </div>
         </aside>
@@ -61,8 +69,22 @@ export function AppShell() {
             <div className="flex items-center gap-2">
               <LanguagePicker />
               <ThemePicker />
+              <Button variant="outline" size="sm" onClick={() => void signOut()}>
+                <LogOut aria-hidden="true" />
+                <span className="hidden sm:inline">{t('session.signOut')}</span>
+              </Button>
             </div>
           </header>
+          {/* Phones and tablets: the same links as a scrolling strip (bottom tabs arrive in Phase 3). */}
+          <nav aria-label={t('a11y.mainNavigation')} className="border-b border-border bg-surface px-2 lg:hidden">
+            <ul className="flex gap-1 overflow-x-auto py-1">
+              <NavItem to="/" end icon={LayoutDashboard} label={t('nav.home')} />
+              {items.map((item) => (
+                <NavItem key={item.to} to={item.to} icon={item.icon} label={t(item.label)} />
+              ))}
+              <NavItem to="/account/sessions" icon={MonitorSmartphone} label={t('nav.devices')} />
+            </ul>
+          </nav>
 
           <main id="main" className="flex-1 px-4 py-6 lg:px-8">
             <Outlet />
@@ -73,14 +95,35 @@ export function AppShell() {
   );
 }
 
+function NavItem({ to, end, icon: Icon, label }: { to: string; end?: boolean; icon: LucideIcon; label: string }) {
+  return (
+    <li className="shrink-0">
+      <NavLink
+        to={to}
+        end={end}
+        className={({ isActive }) =>
+          cn(
+            'flex h-10 items-center gap-3 rounded-lg px-2.5 text-sm whitespace-nowrap',
+            isActive ? 'bg-primary-soft font-semibold text-primary' : 'text-fg hover:bg-surface-muted',
+          )
+        }
+      >
+        <Icon aria-hidden="true" className="size-[18px]" />
+        {label}
+      </NavLink>
+    </li>
+  );
+}
+
 /** Our logo and name, then the school's logo and name, then the year switcher. */
 function BrandStack() {
   const { t } = useTranslation();
+  const me = useCurrentUser();
 
   return (
     <div className="flex flex-col gap-3" data-testid="brand-stack">
       <BrandLockup className="px-1.5" />
-      <SchoolCard />
+      <SchoolCard code={me.school.code} />
       <button
         type="button"
         disabled

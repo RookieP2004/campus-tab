@@ -8,6 +8,8 @@ use App\Modules\Identity\Models\DeviceSession;
 use App\Modules\Identity\Models\PasswordToken;
 use App\Modules\Identity\Models\PersonalAccessToken;
 use App\Modules\Identity\Models\User;
+use App\Modules\Licensing\Domain\Seats;
+use App\Modules\People\Models\Student;
 use App\Support\Http\ApiException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -55,6 +57,15 @@ class RecycleBin
     {
         $model = $this->find($type, $id);
         $this->mustManage($actor, $model);
+
+        // A restored account or student takes its seat back, so the limit applies.
+        if ($model instanceof User && Seats::usesStaffSeat($model->roles ?? [])) {
+            app(Seats::class)->assertRoom('staff');
+        }
+
+        if ($model instanceof Student && $model->status === 'active') {
+            app(Seats::class)->assertRoom('students');
+        }
 
         if ($model instanceof User) {
             $model->forceFill(['status' => User::STATUS_ACTIVE]);

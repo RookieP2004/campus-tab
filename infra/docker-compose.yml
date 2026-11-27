@@ -15,6 +15,8 @@ x-api-base: &api-base
     - backend_vendor:/app/vendor
     - composer_cache:/composer/cache
     - ../docs:/docs
+    # The OpenAPI spec is exported here (php artisan scramble:export).
+    - ../packages/api:/packages/api
   environment: &api-env
     REPORT_PATH: /docs/report
     APP_ENV: local
@@ -101,6 +103,15 @@ services:
   horizon:
     <<: *api-base
     command: ["php", "artisan", "horizon"]
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Runs scheduled tasks (routes/console.php), e.g. the platform console's
+  # per-school numbers every 15 minutes.
+  scheduler:
+    <<: *api-base
+    command: ["php", "artisan", "schedule:work"]
     depends_on:
       api:
         condition: service_healthy

@@ -6,10 +6,10 @@ use LogicException;
 use MongoDB\Laravel\Eloquent\Builder;
 
 /**
- * The query builder for AuditLog. Reads and inserts work; every path that
+ * The query builder for AuditLog and PlatformAuditLog. Reads and inserts work; every path that
  * would change or remove existing entries throws.
  *
- * @template TModel of AuditLog
+ * @template TModel of \MongoDB\Laravel\Eloquent\Model
  *
  * @extends Builder<TModel>
  */

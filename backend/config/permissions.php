@@ -48,10 +48,28 @@ return [
         'export.class_list' => ['class'],
         'export.own_data' => ['own', 'child'],
 
+        // Academic structure (Phase 2): years, classes, sections, subjects, teaching assignments
+        'academic.view' => ['school'],
+        'academic.manage' => ['school'],
+
         // People (Phase 2)
         'students.view' => ['school', 'wing', 'class', 'subject', 'own', 'child'],
+        // edit at class scope is limited: roll number and the section's own columns
         'students.edit' => ['school', 'wing', 'class'],
+        'students.admit' => ['school'],
         'students.request_edit' => ['child'],
+        // one-time setup codes for student sign-in (a school setting, off by default)
+        'students.login_codes' => ['school', 'wing', 'class'],
+        'guardians.manage' => ['school'],
+        'staff.view' => ['school'],
+        'staff.create' => ['school'],
+        // the Clerk's "draft for principal": the account is made only on approval
+        'staff.draft' => ['school'],
+        'staff.approve' => ['school'],
+        'staff.edit' => ['school'],
+        'staff.deactivate' => ['school'],
+        'imports.students' => ['school'],
+        'imports.staff' => ['school'],
 
         // Attendance (Phase 4)
         'attendance.view' => ['school', 'wing', 'class', 'subject', 'own', 'child'],
@@ -129,7 +147,10 @@ return [
                 'users.unlock:school', 'users.send_password_link:school', 'users.reset_mfa:school',
                 'records.restore:school', 'records.purge:school',
                 'audit.view:school', 'support.view:school', 'support.grant:school', 'export.bulk:school',
-                'students.view:school', 'students.edit:school',
+                'students.view:school', 'students.edit:school', 'students.admit:school', 'students.login_codes:school', 'guardians.manage:school',
+                'academic.view:school', 'academic.manage:school',
+                'staff.view:school', 'staff.create:school', 'staff.approve:school', 'staff.edit:school', 'staff.deactivate:school',
+                'imports.students:school', 'imports.staff:school',
                 'attendance.view:school', 'attendance.mark:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
                 'leave.apply:own', 'leave.decide_principal:school', 'student_leave.approve:school',
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
@@ -148,7 +169,10 @@ return [
                 'users.view:school', 'users.create:school', 'users.edit_roles:school', 'users.deactivate:school',
                 'users.unlock:school', 'users.send_password_link:school', 'users.reset_mfa:school', 'records.restore:school',
                 'audit.view_academic:school', 'audit.view:own', 'export.academic:school',
-                'students.view:school', 'students.edit:school',
+                'students.view:school', 'students.edit:school', 'students.admit:school', 'students.login_codes:school', 'guardians.manage:school',
+                'academic.view:school', 'academic.manage:school',
+                'staff.view:school', 'staff.create:school', 'staff.approve:school', 'staff.edit:school', 'staff.deactivate:school',
+                'imports.students:school', 'imports.staff:school',
                 'attendance.view:school', 'attendance.mark:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
                 'leave.apply:own', 'leave.fast_track:school', 'leave.decide:school', 'student_leave.approve:school',
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
@@ -164,7 +188,7 @@ return [
             'level' => 70,
             'permissions' => [
                 'users.view:school', 'audit.view:own',
-                'students.view:wing', 'students.edit:wing',
+                'students.view:wing', 'students.edit:wing', 'students.login_codes:wing', 'academic.view:school', 'staff.view:school',
                 'attendance.view:wing', 'attendance.mark:wing', 'attendance.edit_after_window:wing',
                 'leave.apply:own', 'leave.fast_track:wing', 'leave.decide:wing', 'student_leave.approve:wing',
                 'tests.create:wing', 'marks.enter:wing', 'marks.verify:wing', 'marks.lock:wing',
@@ -177,7 +201,8 @@ return [
             'level' => 60,
             'permissions' => [
                 'users.view:school', 'users.draft:school', 'audit.view:own', 'export.lists:school',
-                'students.view:school', 'students.edit:school',
+                'students.view:school', 'students.edit:school', 'students.admit:school', 'guardians.manage:school',
+                'academic.view:school', 'staff.view:school', 'staff.draft:school', 'imports.students:school',
                 'attendance.view:school', 'attendance.correct:school', 'attendance.edit_after_window:school', 'staff_attendance.manage:school',
                 'leave.apply:own', 'leave.verify:school',
                 'assessment.setup:school', 'exams.schedule:school', 'tests.create:school',
@@ -191,7 +216,7 @@ return [
             'label' => 'Class Teacher',
             'level' => 50,
             'permissions' => [
-                'students.view:class', 'students.edit:class',
+                'students.view:class', 'students.edit:class', 'students.login_codes:class', 'academic.view:school',
                 'attendance.view:class', 'attendance.mark:class', 'attendance.request_edit:class', 'staff_attendance.mark:own',
                 'leave.apply:own', 'student_leave.approve:class',
                 'tests.create:class', 'marks.enter:class', 'marks.verify:class', 'marks.correction_request:class',
@@ -203,7 +228,7 @@ return [
             'label' => 'Subject Teacher',
             'level' => 40,
             'permissions' => [
-                'students.view:subject',
+                'students.view:subject', 'academic.view:school',
                 'attendance.view:subject', 'attendance.mark:subject', 'attendance.request_edit:subject', 'staff_attendance.mark:own',
                 'leave.apply:own', 'tests.create:subject', 'marks.enter:subject', 'marks.correction_request:subject',
                 'remarks.edit:subject', 'custom_fields.manage:subject', 'notices.send:subject', 'notices.view:own',
