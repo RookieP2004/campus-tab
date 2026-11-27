@@ -1,0 +1,23 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - app
+        - bootstrap/app.php
+        - config
+        - database
+        - routes
+        # Pest test files are closures bound at run time, which PHPStan cannot
+        # type; the shared test helpers are still analysed.
+        - tests/Concerns
+        - tests/TestCase.php
+    excludePaths:
+        - bootstrap/cache
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Test traits are used only from Pest files, which are not analysed.
+        -
+            identifier: trait.unused
+            path: tests/Concerns/*
