@@ -32,3 +32,40 @@
     background: var(--ct-primary-soft);
   }
 }
+
+/*
+ * Printing (the monthly register): the shell's bars are hidden with
+ * print:hidden; the page keeps its theme tokens, prints its chips in colour
+ * and lays the register out across the page.
+ */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    background: var(--ct-surface);
+    font-size: 11px;
+  }
+
+  #main {
+    padding: 0;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .register-grid th,
+  .register-grid td {
+    border: 1px solid var(--ct-border);
+    position: static;
+  }
+
+  .register-grid tr {
+    break-inside: avoid;
+  }
+}

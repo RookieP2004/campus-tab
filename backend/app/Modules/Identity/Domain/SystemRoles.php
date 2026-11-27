@@ -41,6 +41,30 @@ class SystemRoles
     }
 
     /**
+     * Takes out of every role (system or custom) the permissions whose
+     * ability the code no longer knows, for example marks.unlock, retired
+     * in Phase 6: a locked mark changes only through a correction.
+     *
+     * @return array<string, list<string>> role name => permissions removed
+     */
+    public static function dropRetiredPermissions(): array
+    {
+        $removed = [];
+
+        foreach (SchoolRole::query()->get() as $role) {
+            $kept = array_values(array_filter($role->permissions ?? [], fn (string $p) => PermissionCatalogue::isValid($p)));
+            $gone = array_values(array_diff($role->permissions ?? [], $kept));
+
+            if ($gone !== []) {
+                $role->forceFill(['permissions' => $kept])->save();
+                $removed[$role->name] = $gone;
+            }
+        }
+
+        return $removed;
+    }
+
+    /**
      * Gives system roles the permissions added to config/permissions.php
      * since they were seeded (a new phase's abilities). A permission the
      * Chief removed after seeding stays removed: only strings not in the

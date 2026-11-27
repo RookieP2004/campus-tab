@@ -41,6 +41,8 @@ class MeController
 
         return response()->json(['data' => [
             'id' => (string) $user->getKey(),
+            // For the socket: the private channel is school.<tenant_id>.user.<id>.
+            'tenant_id' => $user->tenant_id,
             'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone,

@@ -30,10 +30,26 @@ flowchart LR
   Fees --> Communication
 ```
 
+## Built so far (Phases 3 to 6)
+
+| What | From | To | How |
+| --- | --- | --- | --- |
+| Student marked absent | Attendance (`AttendanceRegister`) | Communication | a direct call to `Notifier::notify()`, type `attendance.absent`, once per student per register |
+| Notice published | Communication (`Notices::send`) | Communication | queued job `PublishNotice`, then `Notifier::notify()` |
+| Notification created | Communication (`Notifier`) | the person's open screens | broadcast event `NotificationCreated` (`notification.created`) on `school.{tenant}.user.{user}` |
+| Push and email | Communication (`Notifier`) | outside services | queued job `SendOutsideNotifications`, generic text only |
+| Dashboard cards | Dashboard | Licensing, People, Communication, Attendance, Leave, Audit | direct reads through each card provider |
+| Leave approved or cancelled | Leave (`LeaveWorkflow` → `LeaveEffects`) | Attendance | direct writes in the same transaction: staff LV (source `leave`), a child's LV; reverted for untaken days on cancel |
+| Register opened or saved | Attendance (`AttendanceRegister`) | Leave | `StudentLeaveDays::onLeave()` pre-fills LV |
+| Leave request moved | Leave | Communication | `Notifier::notify()` after commit, types `leave.updated` / `leave.waiting`, generic titles |
+| Approvals inbox | Approvals | Leave, Assessment | `ApprovalSource` (`LeaveApprovals`, `CorrectionApprovals`) |
+| Results published | Assessment (`PaperLifecycle::tellResultsOut`) | Communication | `Notifier::notify()` type `results.published`, "Results are out" only |
+| Correction raised or decided | Assessment (`Corrections`) | Communication | type `marks.correction`; the Chief told of a self-approval |
+| Markbook roll | Assessment (`Markbook`) | Attendance | `AttendanceRegister::roll()` |
+
 | Event (planned) | Sent by | Listened to by | Phase |
 | --- | --- | --- | --- |
-| Leave approved | Leave | Attendance (mark "On leave"), Communication (notify) | 5 |
 | Student marked absent | Attendance | Communication (notify parent) | 4 |
-| Marks published | Assessment | Communication, Reports | 6 |
+| Marks published | Assessment | Reports | 7 |
 | Payment confirmed | Fees | Communication (receipt to parent) | 8 |
 | Any write | every module | Audit | 1 |

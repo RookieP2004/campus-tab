@@ -2,10 +2,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, KeyRound, Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Alert, Card, Dialog, Field, Input, Select, Spinner } from '@/components/ui/form';
+import { StudentResultsTab } from '@/features/assessment/StudentResultsTab';
+import { StudentAttendance } from '@/features/attendance/StudentAttendance';
 import { errorText, fieldError } from '@/features/auth/errors';
+import { holds } from '@/features/auth/permissions';
+import { useCurrentUser } from '@/features/auth/RequireSession';
 import { apiGet } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import {
@@ -21,13 +25,16 @@ import {
 } from './api';
 import { Checkbox, CustomValueInput, PageHeader, StatusChip } from './ui';
 
-type Tab = 'details' | 'guardians' | 'custom' | 'ids';
+type Tab = 'details' | 'guardians' | 'custom' | 'ids' | 'attendance' | 'results';
 
 export function StudentProfilePage() {
   const { id = '' } = useParams();
   const { t } = useTranslation();
   const query = useQuery({ queryKey: peopleKeys.student(id), queryFn: apiGet<StudentProfile>(`/students/${id}`) });
-  const [tab, setTab] = useState<Tab>('details');
+  const me = useCurrentUser();
+  // ?tab=attendance opens straight on a tab (the below-threshold list, a parent's child card).
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState<Tab>(params.get('tab') === 'attendance' ? 'attendance' : params.get('tab') === 'results' ? 'results' : 'details');
 
   if (query.isPending) return <Spinner label={t('common.loading')} />;
   if (query.isError) return <Alert tone="danger">{errorText(t, query.error)}</Alert>;
@@ -38,6 +45,8 @@ export function StudentProfilePage() {
     { id: 'guardians', label: t('students.profile.tabs.guardians') },
     { id: 'custom', label: t('students.profile.tabs.custom') },
     { id: 'ids', label: t('students.profile.tabs.ids') },
+    ...(holds(me, 'attendance.view') ? [{ id: 'attendance' as const, label: t('students.profile.tabs.attendance') }] : []),
+    ...(holds(me, 'results.view') ? [{ id: 'results' as const, label: t('students.profile.tabs.results') }] : []),
   ];
 
   return (
@@ -52,7 +61,7 @@ export function StudentProfilePage() {
         actions={<StatusChip status={student.status === 'active' ? 'active' : 'inactive'} label={t(`students.status.${student.status}`, { defaultValue: student.status })} />}
       />
 
-      <div role="tablist" aria-label={t('students.profile.tabsLabel')} className="flex gap-1 overflow-x-auto border-b border-border">
+      <div role="tablist" aria-label={t('students.profile.tabsLabel')} className="flex gap-1 relative overflow-x-auto border-b border-border">
         {tabs.map((item) => (
           <button
             key={item.id}
@@ -77,6 +86,8 @@ export function StudentProfilePage() {
         {tab === 'guardians' ? <GuardiansTab student={student} /> : null}
         {tab === 'custom' ? <CustomTab student={student} /> : null}
         {tab === 'ids' ? <IdsTab student={student} /> : null}
+        {tab === 'attendance' ? <StudentAttendance studentId={student.id} /> : null}
+        {tab === 'results' ? <StudentResultsTab studentId={student.id} /> : null}
       </div>
     </div>
   );
@@ -322,6 +333,7 @@ function CustomTab({ student }: { student: StudentProfile }) {
     Object.fromEntries(student.columns.map((c) => [c.key, student.custom[c.key] === MASKED ? null : student.custom[c.key]])),
   );
   const [changed, setChanged] = useState<Set<string>>(new Set());
+  const [shown, setShown] = useState<Set<string>>(new Set());
 
   if (student.columns.length === 0) return <Card>{t('students.custom.empty')}</Card>;
 
@@ -348,7 +360,25 @@ function CustomTab({ student }: { student: StudentProfile }) {
             <Field
               key={column.key}
               label={localLabel(column.label, i18n.language)}
-              hint={column.sensitive && student.custom[column.key] === MASKED ? t('students.custom.sensitiveHint') : undefined}
+              hint={
+                column.sensitive && student.custom[column.key] === MASKED && !shown.has(column.key) ? (
+                  <>
+                    {t('students.custom.sensitiveHint')}{' '}
+                    {student.sensitive_values && column.key in student.sensitive_values ? (
+                      <button
+                        type="button"
+                        className="text-primary underline-offset-2 hover:underline"
+                        onClick={() => {
+                          setValues({ ...values, [column.key]: student.sensitive_values?.[column.key] ?? null });
+                          setShown(new Set(shown).add(column.key));
+                        }}
+                      >
+                        {t('students.custom.show')}
+                      </button>
+                    ) : null}
+                  </>
+                ) : undefined
+              }
             >
               {(p) => <CustomValueInput {...p} column={column} value={values[column.key]} onChange={(v) => set(column, v)} />}
             </Field>

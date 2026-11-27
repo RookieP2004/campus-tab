@@ -8,11 +8,11 @@ import { useSchoolCode } from '@/stores/school';
  * public config (GET /public/tenants/{code}/config). Until a school is
  * chosen it shows a neutral placeholder, so the layout never jumps.
  */
-export function SchoolCard({ code }: { code?: string | null }) {
+export function SchoolCard({ code, compact = false }: { code?: string | null; compact?: boolean }) {
   const remembered = useSchoolCode((s) => s.code);
   const { data } = usePublicConfig(code ?? remembered);
 
-  return <SchoolBadge config={data ?? null} />;
+  return <SchoolBadge config={data ?? null} compact={compact} />;
 }
 
 export function SchoolBadge({ config, compact = false }: { config: PublicConfig | null; compact?: boolean }) {
@@ -20,7 +20,7 @@ export function SchoolBadge({ config, compact = false }: { config: PublicConfig 
 
   return (
     <div
-      className="flex items-center gap-2.5 rounded-[10px] border border-border p-2.5"
+      className="flex min-w-0 max-w-full items-center gap-2.5 rounded-[10px] border border-border p-2.5"
       style={config ? { borderInlineStartColor: config.accent, borderInlineStartWidth: 3 } : undefined}
       data-testid="school-card"
     >

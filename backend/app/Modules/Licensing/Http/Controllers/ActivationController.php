@@ -8,6 +8,7 @@ use App\Modules\Licensing\Domain\ActivationService;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 /**
  * Activating a school with its licence key (no sign-in yet).
@@ -38,6 +39,7 @@ class ActivationController
             'chief.email' => ['required', 'email', 'max:150'],
             'chief.phone' => ['required', 'regex:/^\+?[0-9]{10,15}$/'],
             'chief.password' => PasswordPolicy::rules(),
+            'chief.language' => ['sometimes', 'string', Rule::in(config('identity.languages'))],
             'device_name' => ['nullable', 'string', 'max:100'],
         ]);
 
@@ -55,6 +57,11 @@ class ActivationController
         ]);
 
         $user = $result['user'];
+
+        // The language chosen while activating becomes the Chief's own.
+        if (isset($input['chief']['language'])) {
+            $context->run($result['tenant']->id, fn () => $user->forceFill(['language' => $input['chief']['language']])->save());
+        }
         $session = $context->run($result['tenant']->id, fn () => $sessions->issue($request, $user, 'activation', limited: true));
 
         return response()->json(['data' => array_merge([

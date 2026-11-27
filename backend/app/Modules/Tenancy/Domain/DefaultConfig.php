@@ -42,9 +42,14 @@ class DefaultConfig
             'modules' => $modules,
             'sign_in' => ['methods' => ['password', 'parent_otp']],
             'policies' => [
-                'attendance' => ['student_mode' => 'daily', 'edit_window_hours' => 4, 'min_percent_alert' => 75],
-                'leave' => ['chain' => ['clerk', 'principal'], 'clerk_can_reject' => false, 'remind_after_hours' => 24, 'escalate_after_hours' => 48],
-                'marks' => ['auto_publish_class_tests' => true],
+                'attendance' => [
+                    'student_mode' => 'daily', 'edit_window_hours' => 4, 'min_percent_alert' => 75,
+                    // Days a missed register can still be entered from paper by the teacher.
+                    'late_entry_days' => 7, 'school_starts_at' => '08:00', 'periods_per_day' => 8,
+                    'staff' => ['late_after' => '08:15', 'geofence' => ['enabled' => false]],
+                ],
+                'leave' => ['chain' => ['clerk', 'principal'], 'clerk_can_reject' => false, 'remind_after_hours' => 24, 'escalate_after_hours' => 48, 'student_principal_after_days' => 3],
+                'marks' => ['auto_publish_class_tests' => true, 'class_teacher_can_enter' => false],
                 'fees' => ['gateway' => 'none', 'waiver_by' => 'principal', 'receipt_prefix' => null],
             ],
         ];

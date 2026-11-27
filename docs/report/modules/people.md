@@ -37,7 +37,7 @@ The front-end files are in `frontend/src/features/{students,staff,imports}/`; se
 | `GET /students` | section_id?, q?, page?, per_page? | rows the person may see + `columns` (their custom columns) + `meta` | `students.view` (scope-filtered) |
 | `GET /students/seats` | — | limit, used, available, warning (90%) | `students.view` |
 | `POST /students` | admission_no, name, dob, gender, section_id, roll_no?, guardians[], ids{pen, apaar, aadhaar_last4}, consents{pen, apaar}, custom{}, confirm_not_duplicate? | profile | `students.admit` |
-| `GET /students/{id}` | — | profile: enrolment, guardians, consents, IDs (only for those who may edit), custom values, `can` | `students.view` + record scope |
+| `GET /students/{id}` | — | profile: enrolment, guardians, consents, IDs (only for those who may edit), custom values (sensitive ones masked), `sensitive_values` (decrypted, only the sensitive fields the person may fill), `can` | `students.view` + record scope |
 | `PATCH /students/{id}` | name, dob, gender, status, roll_no, ids, consents, custom | profile | `students.edit` + record scope (class scope: roll_no and custom only) |
 | `DELETE /students/{id}` | — | to the recycle bin | `students.admit` |
 | `POST /students/{id}/guardians` · `PATCH /guardians/{id}` | name, relation, phone, email | — | `guardians.manage` |
@@ -207,3 +207,4 @@ The full matrix is in [permissions.md](../permissions.md). For schools created e
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 2 | Module built | Phase 2 items 2, 3 and 7 with the owner's rules 1–8 |
 | 2026-11-27 | 2 | Seats moved to `Licensing\Domain\Seats` with a staff limit; the staff import report shows the staff seat check first | The owner's seat rule |
+| 2026-11-27 | Session 2 | Sensitive custom values are sealed on write and masked in `row()`; `GET /students/{id}` adds `sensitive_values` (`StudentRecords::revealed()`) for those who may fill the field. Demo school: the Clerk is also the Attendance Officer, with one approved and one pending holiday | Encryption of sensitive fields ([customisation.md](customisation.md)); Phase 4 demo data |

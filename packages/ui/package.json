@@ -15,5 +15,8 @@
   "files": [
     "src",
     "assets"
-  ]
+  ],
+  "peerDependencies": {
+    "react": "^19.3.1"
+  }
 }

@@ -200,7 +200,7 @@ export function StudentListPage() {
         list.data.data.length === 0 ? (
           <Card>{t('students.empty')}</Card>
         ) : (
-          <div className="overflow-x-auto rounded-card border border-border bg-surface">
+          <div className="relative overflow-x-auto rounded-card border border-border bg-surface">
             <table className="w-full min-w-max border-collapse text-sm" data-testid="student-table">
               <thead>
                 {table.getHeaderGroups().map((group) => (

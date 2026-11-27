@@ -87,7 +87,7 @@ export function SecurityCard({ security, alerts }: { security: SecurityWindows |
       {security === null ? (
         <p className="mt-3 text-sm text-muted">{t('console.usage.notYet')}</p>
       ) : (
-        <div className="mt-3 overflow-x-auto">
+        <div className="mt-3 relative overflow-x-auto">
           <table className="w-full min-w-[480px] text-sm">
             <thead>
               <tr className="text-start text-xs text-muted">
@@ -262,7 +262,7 @@ export function PaymentsCard({ school }: { school: ConsoleSchoolDetails }) {
       {school.payments.length === 0 ? (
         <p className="mt-3 text-sm text-muted">{t('console.payments.none')}</p>
       ) : (
-        <div className="mt-3 overflow-x-auto">
+        <div className="mt-3 relative overflow-x-auto">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
               <tr className="text-xs text-muted">

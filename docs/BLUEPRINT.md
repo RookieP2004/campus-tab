@@ -188,6 +188,7 @@ Ten levels rank who can do what. A user can manage only people below their own l
 - **"Delete staff" means deactivate.** The Principal removes access and the record moves to the recycle bin; history stays for audit. Only the Chief can purge it permanently, after 30 days. This is a deliberate safety change to your brief: one wrong click should never erase years of attendance and marks.
 
 * **Fee Collector is a duty, not a level.** The Principal gives it to any staff member or clerk who takes fees at the counter; it adds fee-collection rights and nothing else.
+* **Attendance Officer is a duty, not a level.** The Principal gives it, usually to the Clerk, to enter staff attendance for people who couldn't check in themselves. It adds only that, and only for people below the officer's own level: nobody enters their own attendance through it.
 * **Language is personal.** Every account starts in English. Each person can switch to a regional language at sign-up or later in settings, and it changes only their own screens.
 
 ## Permission matrix
@@ -208,7 +209,7 @@ The Vice Principal gets the Principal's column, limited to their wing. Platform 
 | Admit or edit student | School | School | School | Limited fields, Class | — | — | Request edit, Child | — |
 | Mark student attendance | School | School | Corrections | Class | Subj (period mode) | — | View, Child | View, Own |
 | Edit attendance after window | School | School | With reason | Req | Req | — | — | — |
-| Staff attendance | School | School | Manage | Own | Own | Own | — | — |
+| Staff attendance | School | School | Manage (Attendance Officer: enter for others below them) | Own | Own | Own | — | — |
 | Apply for leave | Own | Own | Own | Own | Own | Own | Child (student leave) | — |
 | Leave stage 1: verify | — | Fast-track | School | — | — | — | — | — |
 | Leave stage 2: decide | Principal's own leave | School | — | — | — | — | — | — |
@@ -234,7 +235,7 @@ Fee permissions have their own table in the Fees section.
 
 - No escalation: nobody can create a role or user above their level, or grant a permission they lack.
 - The last Chief can't be removed or demoted.
-- Sensitive actions ask for MFA again: export, permanent delete, role edits, unlocking marks, support grants.
+- Sensitive actions ask for MFA again: export, permanent delete, role edits, approving a change to a locked mark, support grants. There is no "unlock marks" action: a locked mark changes only through a correction the Principal approves.
 - Every check runs on the server. The UI hides what you can't do, but hiding is never the protection.
 
 ## Core workflows
@@ -280,12 +281,14 @@ Parent applies with dates, reason and an optional attachment → Class Teacher a
 
 1. Each school picks a mode: *daily* (class teacher, once a day — the v1 default) or *period-wise* (subject teacher, each period).
 2. The screen opens with everyone present; the teacher taps the absentees. Codes: Present, Absent, Late, Half-day, Leave (filled from approved leave), Holiday (from the calendar).
-3. Teachers can edit until the window closes (default 4 hours after school starts). After that, a correction needs the Clerk or Principal and a reason.
-4. An absence notifies the parent by push now, by WhatsApp in v1.5.
-5. Marking works offline and syncs later. A sync into a locked day is held as a conflict for the Clerk, never written silently.
+3. Teachers can edit until the window closes (default 4 hours after school starts). After that, a correction needs the Clerk or Principal and a reason. Every change is audited.
+4. An absence notifies the parent by push now, by WhatsApp in v1.5. For a day entered late, the notice goes out when the entry is saved and names the date ("Aarav was absent on 3 December").
+5. Marking is online. If the internet fails, the teacher keeps the register on paper and enters it once the problem is fixed, on the same screen or by Excel upload (template, dry-run check, then commit), within a set number of days (school setting, default 7). A late entry needs a reason, can carry a photo of the paper register, only fills a day that was never marked, shows as a late entry and is audited. Past the limit, the Clerk or the Principal enters it with a reason.
 6. Reports: daily summary, monthly register, attendance % for the report card, and an alert below the school's threshold (e.g. 75%).
 
-**Staff:** check-in by app (optional geofence), office QR code, biometric device import, or manual entry by the Clerk. Late-arrival rules are configurable, and approved leave fills itself in.
+**Staff:** check-in by app button (optional geofence: only whether the check-in was inside the area is stored, never the location), office QR code, biometric device import (CSV), or manual entry by the Attendance Officer for staff who couldn't check in, with the time and a reason. A manual entry always comes from someone at a higher level than the person it is for, never from the person themself: the Attendance Officer records teachers and staff, the Vice Principal or Principal records the Clerk, the Principal records the Vice Principal, the Chief records the Principal. Late-arrival rules are configurable, and approved leave fills itself in.
+
+**Holidays:** the Clerk keeps the holiday calendar; the Principal approves it.
 
 ### Tests and marks
 
@@ -300,7 +303,7 @@ Structure: Academic year → Term → Assessment type (weekly, monthly, periodic
 
 A change after lock is a **correction request**: who asked, old and new value, reason. Only the Principal can approve it, from their own account; the Clerk and the Chief can only request. The change applies after approval, and the record keeps the old mark, the new mark, the reason, who asked, who approved and when. This is a fixed rule, not a setting.
 
-The markbook works like a spreadsheet: keyboard movement, paste from Excel, codes AB (absent) and ML (medical), a block on values above max marks, autosave and offline entry. On a phone it becomes one card per student with a numeric keypad.
+The markbook works like a spreadsheet: keyboard movement, paste from Excel, codes AB (absent) and ML (medical), a block on values above max marks, and autosave with a conflict check (two people editing the same paper get a conflict, never an overwrite). Marks entry is **online only**: there is no offline entry, and a save that fails stays on screen until it goes through. On a phone it becomes one card per student with a numeric keypad.
 
 ### Yearly report card
 
@@ -605,7 +608,7 @@ The school is the data fiduciary and we are its data processor. The main DPDP du
 
 - **The PowerSchool lesson.** Its 2024 breach came through a support portal, using a subcontractor's account that had no MFA ([source](https://techcrunch.com/2025/01/17/malware-stole-internal-powerschool-passwords-from-engineers-hacked-computer/)). Our answer: no standing support access. The Chief grants access for a fixed time and scope, read-only by default, behind MFA, with every action logged and visible to the school.
 - **MFA** is mandatory for Platform, Chief, Principal, Vice Principal and Clerk accounts, optional for teachers. Parents sign in by OTP.
-- **Step-up checks:** export, permanent delete, role edits, unlocking marks and support grants ask for MFA again.
+- **Step-up checks:** export, permanent delete, role edits, approving a correction to a locked mark (with the Principal's typed reason) and support grants ask for MFA again.
 - **Encryption:** TLS in transit, Atlas encryption at rest, app-level encryption for sensitive fields such as medical notes.
 - **Exports:** MFA, rate limits, watermarking, an audit entry, and an alert to the Chief on any large export.
 - **Hygiene:** OWASP ASVS level 2 as the checklist, dependency scanning in CI, virus scan on uploads, an external penetration test before launch.

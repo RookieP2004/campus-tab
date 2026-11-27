@@ -72,7 +72,7 @@ export function ConsoleLayout() {
         </div>
       </header>
       <nav aria-label={t('a11y.mainNavigation')} className="border-b border-border bg-surface px-2 lg:px-6">
-        <ul className="flex gap-1 overflow-x-auto">
+        <ul className="flex gap-1 relative overflow-x-auto">
           {links.map(({ to, label, icon: Icon, end }) => (
             <li key={to}>
               <NavLink

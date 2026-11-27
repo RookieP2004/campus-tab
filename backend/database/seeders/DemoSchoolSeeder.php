@@ -6,10 +6,13 @@ use App\Modules\AcademicStructure\Domain\Structure;
 use App\Modules\AcademicStructure\Models\AcademicYear;
 use App\Modules\AcademicStructure\Models\Section;
 use App\Modules\AcademicStructure\Models\Subject;
+use App\Modules\Attendance\Models\CalendarEvent;
 use App\Modules\Audit\Domain\AuditRecorder;
 use App\Modules\Customisation\Models\CustomField;
 use App\Modules\Identity\Domain\Role;
 use App\Modules\Identity\Models\User;
+use App\Modules\Leave\Domain\LeaveWorkflow;
+use App\Modules\Leave\Http\Controllers\LeaveSetupController;
 use App\Modules\Licensing\Domain\LicenceIssuer;
 use App\Modules\Licensing\Models\Licence;
 use App\Modules\People\Domain\ParentLogins;
@@ -22,6 +25,7 @@ use App\Modules\Tenancy\Domain\SchoolConfigService;
 use App\Modules\Tenancy\Domain\TenantProvisioner;
 use App\Modules\Tenancy\Models\Tenant;
 use App\Support\Tenancy\TenantContext;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use RuntimeException;
 
@@ -120,6 +124,16 @@ class DemoSchoolSeeder extends Seeder
             $staff[$key] = $this->staffRecord($user, $designation, $n++, $key === 'vp' ? ['primary'] : [], $key === 'kamla' ? 'non_teaching' : 'teaching');
         }
 
+        // Ramesh, the Clerk, is also the Attendance Officer (a duty the Principal gives).
+        $clerkUser = User::query()->find($staff['clerk']->user_id);
+        $clerkUser?->forceFill(['roles' => array_values(array_unique([...$clerkUser->roles, 'attendance_officer']))])->save();
+
+        // Holidays: one approved, one waiting for the Principal.
+        $by = ['id' => (string) $clerkUser?->getKey(), 'name' => 'Ramesh Kumar'];
+        CalendarEvent::create(['date' => '2026-12-25', 'end_date' => '2026-12-25', 'type' => 'holiday', 'title' => 'Christmas', 'status' => 'approved',
+            'created_by' => $by, 'decided_by' => ['id' => (string) $staff['principal']->user_id, 'name' => 'Dr. Meera Iyer']]);
+        CalendarEvent::create(['date' => '2027-01-26', 'end_date' => '2027-01-26', 'type' => 'holiday', 'title' => 'Republic Day', 'status' => 'pending', 'created_by' => $by]);
+
         // Year, classes, sections, subjects, teachers.
         $structure = app(Structure::class);
         $year = AcademicYear::create(['name' => '2026-27', 'starts_on' => '2026-04-01', 'ends_on' => '2027-03-31']);
@@ -196,6 +210,39 @@ class DemoSchoolSeeder extends Seeder
         CustomField::create(['entity' => 'enrolment', 'key' => 'seat_row', 'label' => ['en' => 'Seat row', 'hi' => 'बैठने की पंक्ति'], 'type' => 'dropdown',
             'options' => ['Row 1', 'Row 2', 'Row 3', 'Row 4'], 'scope' => ['level' => 'section', 'ref' => (string) $sections['7-B']->getKey()], 'owner_level' => 50,
             'status' => 'active', 'owner' => ['id' => (string) $staff['anjali']->user_id, 'name' => 'Anjali Verma']]);
+
+        $this->leave($staff);
+        (new DemoMarksSeeder)->setContainer(app())->run();
+    }
+
+    /**
+     * Phase 5: the starter leave types and three requests, made through the
+     * real workflow: Anjali's casual leave verified by the Clerk and waiting
+     * for the Principal, Sunita's sick leave with the Clerk, and Kamla's
+     * casual leave approved for today (she shows as away).
+     *
+     * @param  array<string, Staff>  $staff
+     */
+    private function leave(array $staff): void
+    {
+        LeaveSetupController::addStarterTypes();
+        $workflow = app(LeaveWorkflow::class);
+        $user = fn (string $key) => User::query()->findOrFail($staff[$key]->user_id);
+        $today = CarbonImmutable::now('Asia/Kolkata');
+        $workday = function (int $ahead) use ($today): string {
+            $d = $today->addDays($ahead);
+
+            return ($d->isSunday() ? $d->addDay() : $d)->toDateString();
+        };
+
+        $anjali = $workflow->apply($user('anjali'), ['type_code' => 'CL', 'from' => $workday(6), 'to' => $workday(7), 'reason' => 'Family wedding in Indore. Lesson plans for both days are shared with the department.']);
+        $workflow->verify($user('clerk'), $anjali, 'Balance OK. No exams on these days.');
+
+        $workflow->apply($user('sunita'), ['type_code' => 'SL', 'from' => $workday(1), 'to' => $workday(1), 'reason' => 'Dentist appointment in the morning.']);
+
+        $kamla = $workflow->apply($user('kamla'), ['type_code' => 'CL', 'from' => $workday(0), 'to' => $workday(0), 'reason' => 'Bank work for the family.']);
+        $workflow->verify($user('clerk'), $kamla, null);
+        $workflow->approve($user('principal'), $kamla, null);
     }
 
     /**

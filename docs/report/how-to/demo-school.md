@@ -43,5 +43,23 @@ Clerk and above (and anyone with a teacher role, if they choose) **set up an aut
 - **Dr. Meera Iyer** sees every class and both custom columns (*House* is school-wide).
 - **Kavita Joshi** sees only the primary wing (3-A).
 - **Suresh Patel** sees exactly his two children.
-- **Ramesh Kumar** can admit students, import them, and draft staff for the Principal to approve.
+- **Ramesh Kumar** can admit students, import them, and draft staff for the Principal to approve. He is also the **Attendance Officer**, so he can enter a teacher's or staff member's check-in by hand (never his own), and he keeps the holiday calendar: Christmas (25 December 2026) is approved, Republic Day (26 January 2027) waits for Dr. Meera Iyer's approval.
 - **Student sign-in** is switched on in the demo school, so Anjali can print setup codes for 7-B.
+
+## Leave (Phase 5)
+
+The seeder adds the starter leave types (casual, sick, earned, duty, leave without pay) and three requests, made through the real workflow with dates counted from the day you seed:
+
+- **Anjali Verma**'s casual leave, verified by Ramesh Kumar and **waiting for Dr. Meera Iyer** in `/approvals`.
+- **Sunita Rao**'s sick leave, **with the Clerk**. Ramesh sees it in his inbox; Dr. Meera Iyer sees it flagged "You can fast-track".
+- **Kamla Devi**'s casual leave for **today**, approved: she shows as away on the dashboard and the leave calendar, and her staff attendance shows On leave.
+
+A school made before Phase 5 needs `php artisan identity:sync-roles --with-new-permissions` and `php artisan leave:seed-types --school=SUNRISE-BPL`.
+
+## Tests and marks (Phase 6)
+
+`DemoMarksSeeder` (run by `DemoSchoolSeeder`, or on its own for a school made before Phase 6: `php artisan db:seed --class=DemoMarksSeeder`):
+
+- **Unit Test 1:** 7-B Mathematics (Anjali Verma) and 7-B Science (Rakesh Sharma) are entered, verified, locked and published. Suresh Patel sees Aarav's marks under **Results**.
+- **A correction is waiting:** Rakesh Sharma asked to change the first 7-B student's Science mark by 4. Dr. Meera Iyer approves it in `/approvals` with a fresh authenticator code and a typed reason.
+- **Unit Test 2:** 8-A Science is open with 9 of 12 marks in (the markbook design), and 8-A English is open and empty. Rakesh Sharma enters the rest at `/tests`.

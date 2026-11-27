@@ -21,7 +21,7 @@ beforeEach(function () {
 });
 
 it('lists the sensitive actions in config, valid for 10 minutes', function () {
-    expect(config('identity.step_up.actions'))->toBe(['export', 'permanent_delete', 'role_edit', 'marks_unlock', 'support_grant', 'mfa_reset'])
+    expect(config('identity.step_up.actions'))->toBe(['export', 'permanent_delete', 'role_edit', 'marks_correction_approve', 'support_grant', 'mfa_reset'])
         ->and(config('identity.step_up.valid_minutes'))->toBe(10);
 });
 

@@ -6,6 +6,7 @@ import { Link, Navigate, useParams, useSearchParams } from 'react-router';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Alert, Field, Input } from '@/components/ui/form';
+import { usePreferences } from '@/stores/preferences';
 import { useSchoolCode } from '@/stores/school';
 import { signIn, usePublicConfig } from './api';
 import { AuthLayout } from './AuthLayout';
@@ -90,7 +91,14 @@ export function SetPasswordPage() {
       ) : (
         <NewPasswordForm
           submit={(password, confirmation) =>
-            signIn.setPassword({ school_code: school, token, password, password_confirmation: confirmation })
+            signIn.setPassword({
+              school_code: school,
+              token,
+              password,
+              password_confirmation: confirmation,
+              // The language picked on this page becomes the person's own.
+              language: usePreferences.getState().language,
+            })
           }
           onDone={() => setCode(school)}
           doneLink="/sign-in"

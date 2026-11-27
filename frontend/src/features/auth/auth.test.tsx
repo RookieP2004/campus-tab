@@ -35,7 +35,7 @@ describe('signing in', () => {
     const user = userEvent.setup();
     await renderApp('/school');
 
-    await user.type(screen.getByLabelText('School code'), 'sunrise-bpl');
+    await user.type(await screen.findByLabelText('School code'), 'sunrise-bpl');
     await user.click(screen.getByRole('button', { name: 'Continue' }));
 
     expect(await screen.findByRole('heading', { name: 'Sign in' })).toBeInTheDocument();

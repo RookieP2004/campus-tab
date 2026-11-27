@@ -15,6 +15,7 @@ use App\Modules\People\Models\Enrolment;
 use App\Modules\People\Models\Guardian;
 use App\Modules\People\Models\Student;
 use App\Support\Http\ApiException;
+use App\Support\Privacy\SensitiveValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -309,7 +310,8 @@ class StudentRecords
 
         foreach ($columns as $field) {
             $value = $values[$field->key] ?? null;
-            $custom[$field->key] = $field->sensitive && $value !== null ? '••••' : $value;
+            // Sensitive values stay masked in every list and profile.
+            $custom[$field->key] = $field->sensitive && $value !== null ? SensitiveValue::MASK : $value;
         }
 
         return [
@@ -324,6 +326,27 @@ class StudentRecords
             'roll_no' => $s->currentEnrolment?->roll_no,
             'custom' => $custom,
         ];
+    }
+
+    /**
+     * The sensitive values this person may fill, decrypted, for the profile's
+     * "Show" button. Everyone else only ever gets the mask.
+     *
+     * @param  Collection<int, CustomField>  $columns
+     * @return array<string, mixed>
+     */
+    public function revealed(User $actor, Student $s, Collection $columns): array
+    {
+        $values = array_merge($s->custom ?? [], $s->currentEnrolment !== null ? $s->currentEnrolment->custom : []);
+        $out = [];
+
+        foreach ($columns as $field) {
+            if ($field->sensitive && isset($values[$field->key]) && $this->fields->canFill($actor, $field)) {
+                $out[$field->key] = SensitiveValue::open($values[$field->key]);
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -488,6 +511,11 @@ class StudentRecords
             }
 
             $normalised = $this->fields->normalise($field, $value);
+
+            // Sensitive fields are stored encrypted (SensitiveValue).
+            if ($field->sensitive) {
+                $normalised = SensitiveValue::seal($normalised);
+            }
 
             if ($field->entity === 'enrolment') {
                 $enrolment[$field->key] = $normalised;

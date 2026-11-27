@@ -31,7 +31,7 @@ export function ThemePicker({ className }: { className?: string }) {
             title={t(`theme.${value}`)}
             onClick={() => setTheme(value)}
             className={cn(
-              'inline-flex size-10 items-center justify-center rounded-[5px] text-muted transition-colors duration-(--ct-motion) focus-visible:outline-2 focus-visible:outline-ring',
+              'inline-flex size-11 items-center justify-center rounded-[5px] text-muted transition-colors duration-(--ct-motion) focus-visible:outline-2 focus-visible:outline-ring',
               selected ? 'bg-primary-soft text-primary' : 'hover:bg-surface-muted hover:text-fg',
             )}
           >

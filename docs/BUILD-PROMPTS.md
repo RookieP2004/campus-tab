@@ -127,13 +127,14 @@ Done when every school role signs in at phone and desktop widths and sees its ow
 ```text
 Read "Core workflows > Attendance". Build the Attendance module. The class teacher's phone screen follows docs/design/screens/light/TeacherAttendance.dc.html.
 1. attendance_days per section per date (per period in period mode), entries embedded; mode from school config.
-2. Taker screen: everyone present by default, tap to toggle, codes P/A/L/HD; leave and holidays pre-filled; offline via a Dexie queue with Idempotency-Key; syncs into locked days become conflicts for review.
+2. Taker screen: everyone present by default, tap to toggle, codes P/A/L/HD; leave and holidays pre-filled; online only. If the internet fails, the teacher keeps the register on paper and enters it once the problem is fixed, on the same screen or by Excel upload (template, dry-run check, then commit), within a set number of days (config, default 7). A late entry needs a reason, can carry a photo of the paper register, only fills a day never marked, shows as a late entry and is audited. Past the limit, a Clerk or the Principal enters it with a reason.
 3. Edit window from config; later edits need Clerk or Principal plus a reason; all audited.
-4. Parent notification on absence.
-5. Staff check-in: app button (optional geofence), office QR, CSV import from biometric devices, manual by Clerk; late rules.
-6. Holiday calendar: Clerk maintains, Principal approves.
-7. Reports: daily summary, printable monthly register, attendance % per student, below-threshold alert.
-Done when a teacher marks a class of 45 in under 30 seconds on a phone, offline marking syncs correctly, and a late edit without permission is refused.
+4. Parent notification on absence. For a late-entered day it goes out when the entry is saved and names the date ("Aarav was absent on 3 December").
+5. Staff check-in: app button (optional geofence), office QR, CSV import from biometric devices, and manual entry by the Attendance Officer (a duty the Principal gives, usually to the Clerk) for staff who couldn't check in online, with time and reason; late rules. A manual entry always comes from someone at a higher level than the person it is for, never from the person themself: the Attendance Officer records teachers and staff; the Vice Principal or Principal records the Clerk; the Principal records the Vice Principal; the Chief records the Principal. Enforce it as the same level check as the user-management guard, with a test for each pair.
+6. Geofenced check-in stores only whether the check-in was inside the area, never the raw location.
+7. Holiday calendar: Clerk maintains, Principal approves.
+8. Reports: daily summary, printable monthly register, attendance % per student, below-threshold alert.
+Done when a teacher marks a class of 45 in under 30 seconds on a phone; a teacher enters a missed day from the paper register with a reason and it shows as a late entry; the Attendance Officer records a staff check-in but cannot record their own; and a late edit without permission is refused.
 ```
 
 ### Phase 5 — Leave
@@ -158,7 +159,7 @@ Read "Core workflows > Tests and marks" and the assessment rows of the permissio
 2. assessments and papers (section x subject x assessment) with marks embedded; Subject Teachers create class tests within their own scope.
 3. Lifecycle draft -> open -> submitted -> verified -> locked -> published, each action permission-checked; optional auto-publish for class tests.
 4. Correction requests after lock: Clerk, teachers and the Chief can only request. The change applies only when the Principal approves from their own account, re-confirmed with MFA. Store old mark, new mark, reason, requester, approver and times on the request and in the audit log. Not configurable.
-5. Markbook grid: keyboard navigation, paste from Excel, AB/ML codes, max-marks validation, autosave with ETag conflicts, offline; card view on phones.
+5. Markbook grid: keyboard navigation, paste from Excel, AB/ML codes, max-marks validation, autosave with ETag conflicts; card view on phones. Online only: there is no offline marks entry.
 6. Completion grid for Class Teacher and Principal.
 Done when two teachers editing the same paper get a conflict instead of an overwrite, a locked paper refuses edits, a post-lock change without the Principal's approval is refused, and every changed mark shows old and new values in the audit log.
 ```

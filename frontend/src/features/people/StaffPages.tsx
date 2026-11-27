@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Check, ChevronRight, Plus, Upload, UserX, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Alert, Card, Dialog, Field, Input, Spinner, Textarea } from '@/components/ui/form';
 import { errorText, fieldError } from '@/features/auth/errors';
@@ -19,9 +19,12 @@ const STAFF_ROLES = ['principal', 'vice_principal', 'clerk', 'class_teacher', 's
 export function StaffListPage() {
   const { t } = useTranslation();
   const me = useCurrentUser();
-  const [filter, setFilter] = useState<'' | 'draft' | 'active' | 'inactive'>('');
+  // ?status=draft (the dashboard's approvals card) and ?new=1 (quick create) open straight on that view.
+  const [params] = useSearchParams();
+  const initial = params.get('status');
+  const [filter, setFilter] = useState<'' | 'draft' | 'active' | 'inactive'>(initial === 'draft' || initial === 'active' || initial === 'inactive' ? initial : '');
   const list = useStaffList(filter);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(params.get('new') === '1');
   const [setup, setSetup] = useState<PasswordSetup | null>(null);
   const can = list.data?.can;
 

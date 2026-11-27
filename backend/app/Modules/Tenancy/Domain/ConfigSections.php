@@ -9,7 +9,9 @@ namespace App\Modules\Tenancy\Domain;
  *  - The Principal may change the policies (attendance, leave, marks, fees)
  *    and the academic settings only. Branding, modules, school identity,
  *    locale, sign-in methods and anything licence-related stay with the
- *    Chief. This is an allow-list: a section added to the schema later is
+ *    Chief. Inside those, a few switches stay the Chief's (CHIEF_ONLY):
+ *    letting the Clerk reject leave is "the Chief's call" in the blueprint.
+ *    This is an allow-list: a section added to the schema later is
  *    Chief-only until it is listed here.
  *  - Both may view all of it.
  *
@@ -26,6 +28,11 @@ class ConfigSections
         'academic',
     ];
 
+    /** @var list<string> Chief-only even inside a Principal-editable section. */
+    public const CHIEF_ONLY = [
+        'policies.leave.clerk_can_reject',
+    ];
+
     /**
      * @param  list<string>  $paths
      * @return list<string> the paths the Principal may not change
@@ -37,6 +44,12 @@ class ConfigSections
 
     public static function principalMayEdit(string $path): bool
     {
+        foreach (self::CHIEF_ONLY as $locked) {
+            if ($path === $locked || str_starts_with($path, $locked.'.') || str_starts_with($locked, $path.'.')) {
+                return false;
+            }
+        }
+
         foreach (self::PRINCIPAL_EDITABLE as $section) {
             if ($path === $section || str_starts_with($path, $section.'.')) {
                 return true;

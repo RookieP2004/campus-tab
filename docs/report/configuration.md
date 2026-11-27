@@ -39,6 +39,8 @@ Defined in [`backend/.env.example`](../../backend/.env.example). In Docker, [`in
 | `PARENT_OTP_IP_MAX_SENDS` | `60` | Parent OTP sends per IP per 10 minutes |
 | `PARENT_OTP_IP_MAX_FAILURES` | `100` | Wrong parent OTPs per IP per 15 minutes |
 | `PASSWORD_RESET_IP_MAX` | `100` | Forgot-password requests per IP per 15 minutes |
+| `PUSH_DRIVER` | not set: `log` in local and testing, `none` elsewhere | Push notifications: `log` writes them to the log (device count, title and the generic text; never the device tokens); `array` keeps them in memory (tests, forced in `phpunit.xml`); `none` sends nothing. `log` and `array` are allowed **only** when `APP_ENV` is `local` or `testing`; anywhere else the app refuses to start with them. A real driver comes with the apps (Phase 9) |
+| `ATTENDANCE_QR_MINUTES` | `5` | How often the office QR code for staff check-in changes (`config/attendance.php` `qr_minutes`); the code just before is still accepted |
 | `SESSION_LIFETIME` | `30` | Outer bound for the browser cookie, in minutes; the real idle and total limits are in `config/identity.php`. The cookie always ends when the browser closes |
 
 ## Environment variables (front end)
@@ -67,7 +69,7 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
 | `tenancy.php` | `platform_collections` | Collections that are not school data (decision 0005) |
 | `identity.php` | `languages`, `default_language`, `themes`, `default_theme` | Every language the app ships (any user may pick any of them), English and Match device by default |
 | `identity.php` | `mfa.*` | Required from level 60; challenge 5 minutes and 5 tries; 10 recovery codes; TOTP window ±1 step; enrol-only session 30 minutes |
-| `identity.php` | `step_up.*` | Valid 10 minutes; actions `export`, `permanent_delete`, `role_edit` (roles and users' roles), `marks_unlock`, `support_grant`, `mfa_reset`. Later phases add fee rebates, waivers and locked-mark approvals |
+| `identity.php` | `step_up.*` | Valid 10 minutes; actions `export`, `permanent_delete`, `role_edit` (roles and users' roles), `marks_correction_approve` (Phase 6; `marks_unlock` removed), `support_grant`, `mfa_reset`. Later phases add fee rebates, waivers and locked-mark approvals |
 | `identity.php` | `sign_in.*` | 5 failures in a row lock an account for 15 minutes; per-IP limit from `SIGN_IN_IP_MAX_FAILURES` |
 | `identity.php` | `parent_otp.*` | Code lasts 5 minutes, 5 tries; 3 sends per phone per 10 minutes; 10 failures per phone per hour; per-IP limits from env |
 | `identity.php` | `sessions.*` | Sign in every time: idle limit 15 minutes at level 60 and up (`idle_minutes_mfa_roles`), 30 minutes otherwise (`idle_minutes`), 8 hours in total (`max_hours`) |
@@ -104,6 +106,64 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
   - `factor` (5) and `repeat_after_hours` (6)
   - `min_per_hour`: failed_sign_ins 20, lockouts 5, password_resets 10, mfa_resets 3, chief_changes 2
 
+### Phase 3 settings: notices, notifications, dashboard
+
+- **`config/communication.php`:**
+
+  | Key | Default | What it changes |
+  | --- | --- | --- |
+  | `notices.attachment_types` | pdf, png, jpg, jpeg, webp, docx, xlsx | File types a notice may carry |
+  | `notices.attachment_max_kb` | 5120 | Largest attachment (5 MB) |
+  | `notices.attachments_per_notice` | 5 | Most attachments on one notice |
+  | `notices.link_minutes` | 5 | How long a signed download link works (also used for the attendance register photo) |
+  | `notices.list_days` | 120 | Notices older than this drop out of the list |
+  | `push_driver` | env `PUSH_DRIVER` | See the environment table |
+  | `default_preferences` | push on, email off | Each person can change both |
+  | `generic_texts` | `notice`, `attendance.absent`, `default` | What push and email say; `:school` is the school's name. Never a name, mark or other private detail |
+  | `types` | notice, attendance.absent | Types a person can mute |
+
+- **`config/dashboard.php` `providers`:** the dashboard card providers, in order: `SchoolAdminCards`, `PeopleCards`, `NoticeCards`, `AttendanceCards` ([modules/dashboard.md](modules/dashboard.md)).
+
+### Phase 4 settings: attendance
+
+- **`config/attendance.php` `qr_minutes`** (env `ATTENDANCE_QR_MINUTES`, 5).
+- **School config `policies.attendance`:** the new keys are in the table below (`late_entry_days`, `school_starts_at`, `periods_per_day`, `staff.late_after`, `staff.geofence`). See [modules/attendance.md](modules/attendance.md).
+
+### Phase 5 settings: leave
+
+- **`config/leave.php`:**
+
+  | Key | Default | What it changes |
+  | --- | --- | --- |
+  | `documents.types` | pdf, png, jpg, jpeg, webp | Files a leave request may carry |
+  | `documents.max_kb` | 5120 | Largest document (5 MB) |
+  | `documents.per_request` | 3 | Most documents on one request |
+  | `documents.link_minutes` | 5 | How long a signed document link works |
+  | `max_span_days` | 180 | Longest leave one request may cover |
+  | `weekly_off` | [7] (Sunday) | ISO weekdays that are always off |
+  | `starter_types` | CL, SL, EL, DL, LWP | What "Add the starter types" and `leave:seed-types` add |
+
+- **`config/approvals.php` `sources`:** the approvals inbox sources (`LeaveApprovals`).
+- **`config/communication.php`:** `generic_texts` and `types` gain `leave.updated` and `leave.waiting`.
+- **`config/dashboard.php`:** `LeaveCards` added.
+- **Scheduler:** `leave:remind` runs hourly (`routes/console.php`).
+
+### Phase 6 settings: tests and marks
+
+- **`config/assessment.php`:**
+
+  | Key | Default | What it changes |
+  | --- | --- | --- |
+  | `codes` | AB absent, ML medical | Codes typed instead of a mark |
+  | `mark_step` | 0.5 | Marks are whole or end in .5 |
+  | `remark_max` | 200 | Longest remark beside a mark |
+  | `reason_min` | 10 | Shortest correction reason, and the Principal's typed reason |
+  | `types` · `class_test_types` | eight types · weekly, monthly | What can be scheduled; what a teacher's class test can be |
+  | `presets` | cbse_6_8, cbse_9_10, generic | Starter schemes, each with "check against your board's latest circular" |
+
+- **`config/identity.php`:** step-up action `marks_correction_approve` replaces `marks_unlock`.
+- **`config/approvals.php`:** `CorrectionApprovals` added. **`config/communication.php`:** `results.published`, `marks.correction`. **`config/dashboard.php`:** `AssessmentCards`.
+
 ## School config keys
 
 Each school's versioned config, validated by [`school-config.schema.json`](../../backend/app/Modules/Tenancy/Schemas/school-config.schema.json). Every object forbids unknown keys. "Edits" says who may change the key (Tenancy page, section 9).
@@ -128,11 +188,26 @@ The language settings never limit anyone: every user may always pick any languag
 | `policies.attendance.student_mode` | daily, period (daily) | Chief, Principal |
 | `policies.attendance.edit_window_hours` | 0–168 (4) | Chief, Principal |
 | `policies.attendance.min_percent_alert` | 0–100 (75) | Chief, Principal |
-| `policies.leave.chain` | clerk, principal (both) | Chief, Principal |
-| `policies.leave.clerk_can_reject` | true/false (false) | Chief, Principal |
+| `policies.attendance.late_entry_days` | 0–60 (7) | Chief, Principal |
+| `policies.attendance.school_starts_at` | `HH:MM` (08:00) | Chief, Principal |
+| `policies.attendance.periods_per_day` | 1–12 (8) | Chief, Principal |
+| `policies.attendance.staff.late_after` | `HH:MM` (08:15) | Chief, Principal |
+| `policies.attendance.staff.geofence` | `{enabled}` required; `lat` −90–90, `lng` −180–180, `radius_m` 50–5000 (`{enabled: false}`) | Chief, Principal |
+
+What the attendance keys do:
+
+- **`edit_window_hours`** counts from **`school_starts_at`** on the day: until then the teacher changes the register freely; after it only the Clerk or the Principal, with a reason.
+- **`late_entry_days`:** how many days after the date a teacher may still enter a missed register from paper (with a reason). After that only the Clerk or the Principal.
+- **`periods_per_day`:** the periods a register can be taken for in period mode.
+- **`staff.late_after`:** a staff check-in after this time is late (L).
+- **`staff.geofence`:** with `enabled` and a point and radius (200 m when `radius_m` is missing), app check-ins need the phone's location and must be inside. Only inside or outside is stored; screens are told only whether the geofence is on.
+| `policies.leave.chain` | clerk, vice_principal, principal; must include principal (clerk, principal) | Chief, Principal |
+| `policies.leave.clerk_can_reject` | true/false (false) | **Chief only** (`ConfigSections::CHIEF_ONLY`) |
 | `policies.leave.remind_after_hours` | 1–168 (24) | Chief, Principal |
 | `policies.leave.escalate_after_hours` | 1–336 (48) | Chief, Principal |
-| `policies.marks.auto_publish_class_tests` | true/false (true) | Chief, Principal |
+| `policies.leave.student_principal_after_days` | 1–60 (3): longer student leave is also shown to the Principal | Chief, Principal |
+| `policies.marks.auto_publish_class_tests` | true/false (true): a class test is published at submit and stays editable until locked | Chief, Principal |
+| `policies.marks.class_teacher_can_enter` | true/false (false): class teachers may type marks for their class | Chief, Principal |
 | `policies.fees.gateway` | none, razorpay (none) | Chief, Principal |
 | `policies.fees.waiver_by` | principal, chief (principal) | Chief, Principal |
 | `policies.fees.receipt_prefix` | text or null (null) | Chief, Principal |

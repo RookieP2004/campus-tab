@@ -254,6 +254,8 @@ class StudentController
             'guardians' => $guardians->map(fn (Guardian $g) => self::guardian($g))->values()->all(),
             'consents' => $consents,
             'columns' => $columns->map(fn (CustomField $f) => $this->column($user, $f))->values()->all(),
+            // Decrypted sensitive values, only for those who may fill them; the screen keeps them masked until "Show".
+            'sensitive_values' => $this->records->revealed($user, $student, $columns),
             'can' => [
                 'edit' => Gate::allows('update', $student),
                 'manage_guardians' => Gate::allows('manageGuardians', Student::class),

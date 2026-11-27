@@ -27,6 +27,9 @@ use Symfony\Component\Finder\Finder;
  */
 class ReportGenerateCommand extends Command
 {
+    /** Modules whose report page has another name (kept in step with .github/scripts/check-report.mjs). */
+    private const PAGE_ALIASES = ['Identity' => 'identity-and-access'];
+
     protected $signature = 'report:generate
         {--check : Do not write; fail if a generated section is out of date}
         {--path= : Report folder (default: REPORT_PATH or ../docs/report)}';
@@ -111,7 +114,7 @@ class ReportGenerateCommand extends Command
             $routes = collect($router->getRoutes()->getRoutes())
                 ->filter(fn (Route $r) => str_starts_with($r->getActionName(), $prefix))
                 ->count();
-            $page = 'modules/'.Str::kebab($module).'.md';
+            $page = 'modules/'.(self::PAGE_ALIASES[$module] ?? Str::kebab($module)).'.md';
 
             $rows[] = "| {$module} | [`backend/app/Modules/{$module}/`](../../backend/app/Modules/{$module}/) | {$routes} | [{$page}]({$page}) |";
         }

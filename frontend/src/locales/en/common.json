@@ -9,7 +9,9 @@
   "school": {
     "placeholderName": "Your school",
     "placeholderDetail": "School logo and name appear after sign-in",
-    "yearPlaceholder": "Academic year"
+    "yearPlaceholder": "Academic year",
+    "year": "Academic year",
+    "yearCurrent": "{{name}} (current)"
   },
   "nav": {
     "home": "Home",
@@ -17,11 +19,548 @@
     "setup": "School setup",
     "students": "Students",
     "staff": "Staff",
-    "customFields": "Custom fields"
+    "customFields": "Custom fields",
+    "notices": "Notices",
+    "schoolSettings": "School settings",
+    "notificationSettings": "Notification settings",
+    "myChild": "My child",
+    "myStudents": "My students",
+    "approvals": "Approvals",
+    "admissions": "Admissions",
+    "inbox": "Inbox",
+    "more": "More",
+    "attendance": "Attendance",
+    "myAttendance": "My attendance",
+    "staffAttendance": "Staff attendance",
+    "calendar": "Holiday calendar",
+    "leave": "Leave",
+    "tests": "Tests and marks",
+    "results": "Results"
   },
-  "home": {
-    "title": "Welcome to Campus TAB",
-    "body": "This is the app shell. Screens are added phase by phase: school setup next, then dashboards, attendance, leave, marks, report cards and fees."
+  "more": {
+    "screens": "Screens",
+    "account": "Account"
+  },
+  "search": {
+    "title": "Search",
+    "open": "Search",
+    "label": "Search screens, students and staff",
+    "placeholder": "Search students, staff, screens…",
+    "results": "Results",
+    "groups": {
+      "screens": "Screens",
+      "people": "People"
+    },
+    "types": {
+      "student": "Student",
+      "staff": "Staff"
+    },
+    "none": "Nothing matches. Try another name.",
+    "hint": "Up and down arrows to move, Enter to open, Esc to close.",
+    "searching": "Searching…"
+  },
+  "quickCreate": {
+    "title": "Create new",
+    "button": "New",
+    "admit": "Admit a student",
+    "notice": "Send a notice",
+    "staff": "Add staff",
+    "import": "Import students",
+    "attendance": "Take attendance"
+  },
+  "profile": {
+    "menu": "Account menu",
+    "open": "Open the account menu",
+    "viewAs": "Show my dashboard as"
+  },
+  "status": {
+    "draft": "Draft",
+    "pending": "Pending",
+    "verified": "Verified",
+    "approved": "Approved",
+    "returned": "Returned",
+    "rejected": "Rejected",
+    "locked": "Locked",
+    "published": "Published"
+  },
+  "modules": {
+    "attendance": "Attendance",
+    "leave": "Leave",
+    "assessment": "Marks and exams",
+    "reports": "Report cards",
+    "fees": "Fees",
+    "communication": "Notices and messages"
+  },
+  "dashboard": {
+    "open": "Open",
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}"
+    },
+    "viewingAs": "Showing the dashboard for: {{role}}",
+    "empty": {
+      "title": "Nothing on your dashboard yet",
+      "body": "Cards appear here as your school sets up classes, staff and students."
+    },
+    "by": "by {{name}}",
+    "banner": {
+      "action": "Open settings"
+    },
+    "cards": {
+      "licence": "Licence and seats",
+      "newModule": "New module available: {{module}}. Switch it on in Settings.",
+      "approvals": "Waiting for your approval",
+      "usersByRole": "Accounts by role",
+      "recentAudit": "Recent activity",
+      "recycleBin": "Recycle bin",
+      "onRoll": "On roll",
+      "admissions": "Admissions and imports",
+      "myClass": "My class {{section}}",
+      "myClasses": "My classes",
+      "children": "My children",
+      "myRecord": "My record",
+      "notices": "Notices",
+      "takeAttendance": "Attendance: {{section}}",
+      "checkIn": "Today's check-in",
+      "attendanceToday": "Attendance today",
+      "calendarApprovals": "Holidays waiting for approval",
+      "belowThreshold": "Below {{threshold}}% attendance",
+      "leaveWaiting": "Leave waiting for you",
+      "staffAway": "Staff away today",
+      "myLeave": "My leave balance",
+      "marksToEnter": "Marks to enter",
+      "marksToVerify": "Papers to verify",
+      "marksProgress": "Marks this year",
+      "selfApprovedMarks": "Mark corrections the Principal raised and approved"
+    },
+    "attendance": {
+      "present": "Students present",
+      "presentOf": "{{present}} of {{students}} students",
+      "marked": "Sections marked",
+      "absent_one": "{{count}} absent",
+      "absent_other": "{{count}} absent",
+      "staff": "Staff in",
+      "staffLine": "{{late}} late · {{notIn}} not in",
+      "unmarked": "Not marked yet: {{sections}}"
+    },
+    "action": {
+      "checkIn": "Check in",
+      "checkOut": "Check out",
+      "seeMyDay": "See my attendance",
+      "inAt": "In at {{time}}",
+      "outAt": "out at {{time}}",
+      "late": "late",
+      "lateAfter": "Late after {{time}}",
+      "openRegister": "Open the register",
+      "changeAttendance": "Change attendance",
+      "viewAttendance": "View attendance",
+      "takeAttendance": "Take attendance",
+      "holiday": "Holiday: {{title}}",
+      "marked_one": "Marked · {{count}} absent",
+      "marked_other": "Marked · {{count}} absent",
+      "notMarked": "Not marked yet today"
+    },
+    "licence": {
+      "states": {
+        "active": "Active",
+        "grace": "Grace period",
+        "read_only": "Read-only",
+        "expired": "Expired",
+        "revoked": "Revoked",
+        "suspended": "Suspended",
+        "pending": "Pending"
+      },
+      "plan": "Plan: {{plan}}",
+      "validTo": "Valid until {{date}}",
+      "studentSeats": "Student seats used",
+      "staffSeats": "Staff seats used",
+      "seatsOf": "of {{limit}} · {{available}} left",
+      "nearlyFull": "nearly full"
+    },
+    "todo": {
+      "count_one": "{{count}} item waiting",
+      "count_other": "{{count}} items waiting",
+      "empty": "Nothing is waiting for you.",
+      "review": "Review",
+      "kinds": {
+        "staff_draft": "Staff",
+        "other": "Other",
+        "leave": "Leave",
+        "marks": "Marks"
+      }
+    },
+    "fields": {
+      "students": "Students",
+      "staff": "Staff",
+      "count": "Records",
+      "name": "Name",
+      "section": "Class"
+    },
+    "list": {
+      "strength": "Students in the class",
+      "thisMonth_one": "{{count}} student admitted this month",
+      "thisMonth_other": "{{count}} students admitted this month",
+      "birthdays": "Birthdays this week",
+      "empty": "Nothing to show yet.",
+      "warning": "Security event"
+    },
+    "children": {
+      "none": "No children are linked to your account yet. Ask the school office.",
+      "switcher": "Choose a child",
+      "section": "Class {{section}}",
+      "profile": "Open profile",
+      "attendance": "Attendance"
+    },
+    "notices": {
+      "unread_one": "{{count}} unread",
+      "unread_other": "{{count}} unread"
+    }
+  },
+  "notices": {
+    "title": "Notices",
+    "new": "Send a notice",
+    "newTitle": "Send a notice",
+    "back": "All notices",
+    "empty": "No notices yet.",
+    "unread": "unread",
+    "attachmentCount_one": "{{count}} attachment",
+    "attachmentCount_other": "{{count}} attachments",
+    "attachments": "Attachments",
+    "openFile": "opens in a new tab",
+    "cannotSend": "Your account cannot send notices.",
+    "audience": {
+      "school": "Whole school",
+      "role": "Roles",
+      "class": "Classes",
+      "section": "Sections",
+      "classCount_one": "{{count}} class",
+      "classCount_other": "{{count}} classes",
+      "sectionCount_one": "{{count}} section",
+      "sectionCount_other": "{{count}} sections"
+    },
+    "form": {
+      "title": "Title",
+      "body": "Message",
+      "audience": "Who gets it",
+      "pick": {
+        "role": "Choose the roles",
+        "class": "Choose the classes",
+        "section": "Choose the sections"
+      },
+      "noChoices": "There is nothing you can choose here.",
+      "refsRequired": "Choose at least one.",
+      "titleRequired": "Write a title of at least 3 characters.",
+      "titleTooLong": "Keep the title to 150 characters.",
+      "bodyRequired": "Write the message.",
+      "bodyTooLong": "Keep the message to 5000 characters.",
+      "attachments": "Attachments (optional)",
+      "attachmentsHint": "Up to {{count}} files: PDF, PNG, JPG, WebP, Word (.docx) or Excel (.xlsx), each up to {{size}}.",
+      "file_type": "{{name}} cannot be attached. Use PDF, PNG, JPG, WebP, Word (.docx) or Excel (.xlsx).",
+      "file_size": "{{name}} is larger than 5 MB.",
+      "file_count_one": "You can attach at most {{count}} file.",
+      "file_count_other": "You can attach at most {{count}} files.",
+      "removeFile": "Remove {{name}}",
+      "send": "Send notice"
+    },
+    "receipts": {
+      "title": "Who has read it",
+      "timeline": "Delivery",
+      "sent": "Sent",
+      "readBy": "Read by {{read}} of {{total}}",
+      "allRead": "Everyone has read it",
+      "none": "Nobody has opened it yet."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "bell_one": "Notifications, {{count}} unread",
+    "bell_other": "Notifications, {{count}} unread",
+    "markAllRead": "Mark all as read",
+    "seeAll": "See all",
+    "empty": "No notifications yet.",
+    "unread": "unread",
+    "unreadCount_one": "{{count}} unread",
+    "unreadCount_other": "{{count}} unread",
+    "types": {
+      "notice": "New notices",
+      "attendance": {
+        "absent": "Absence alerts"
+      },
+      "leave": {
+        "updated": "Updates on my leave requests",
+        "waiting": "Leave requests waiting for me"
+      },
+      "results": {
+        "published": "Results are out"
+      },
+      "marks": {
+        "correction": "Mark corrections"
+      }
+    },
+    "settings": {
+      "title": "Notification settings",
+      "intro": "Choose how Campus TAB tells you about new things. You always see them in the app after you sign in.",
+      "channels": "How to tell me",
+      "push": "Push notifications on my phone",
+      "pushHint": "They never show names or marks: a lock screen can be seen by others.",
+      "email": "Email",
+      "emailHint": "A short note that there is something new, never the details.",
+      "types": "What to tell me about",
+      "typesHint": "Switch a kind off to stop push and email for it.",
+      "saved": "Your notification settings are saved."
+    }
+  },
+  "attendance": {
+    "date": "Date",
+    "month": "Month",
+    "period": "Period",
+    "periodN": "Period {{n}}",
+    "backHome": "Attendance",
+    "lateEntry": "Late entry",
+    "marked": "Marked",
+    "notMarked": "Not marked",
+    "codes": {
+      "P": "Present",
+      "A": "Absent",
+      "L": "Late",
+      "HD": "Half-day",
+      "LV": "On leave",
+      "H": "Holiday"
+    },
+    "counts": {
+      "P": "Present {{n}}",
+      "A": "Absent {{n}}",
+      "L": "Late {{n}}",
+      "HD": "Half-day {{n}}",
+      "LV": "On leave {{n}}",
+      "H": "Holiday {{n}}"
+    },
+    "taker": {
+      "title": "{{section}} attendance",
+      "back": "Back to attendance",
+      "list": "Students",
+      "hint": "Everyone starts present. Tap a name to mark them absent; hold it, or use the … button, for late or half-day.",
+      "tapToChange": "tap to change",
+      "readOnlyNote": "cannot be changed here",
+      "onLeaveNote": "approved leave",
+      "moreFor": "More choices for {{name}}",
+      "chooseFor": "Status for {{name}}",
+      "save_one": "Save attendance · {{count}} student",
+      "save_other": "Save attendance · {{count}} students",
+      "saved_one": "Saved at {{time}} · {{count}} parent told about the absence",
+      "saved_other": "Saved at {{time}} · {{count}} parents told about absence",
+      "markedBy": "Marked by {{name}}, {{when}}",
+      "offline": "No internet connection. Nothing has been sent. Keep the register on paper today, then enter it here or by Excel once the internet is back, within {{days}} days.",
+      "holiday": "Holiday: {{title}}. There is nothing to mark on this day.",
+      "lateEntryTitle": "Late entry from the paper register",
+      "lateEntryBody": "This day ({{date}}) was never marked. Enter it from the paper register and say why it is late. You can add a photo of the page after saving.",
+      "lateEntryOffice": "This day is more than {{days}} days old, so only the Clerk or the Principal can enter it. You are entering it as the office.",
+      "lateEditOffice": "The edit window for this day has closed. You are changing it as the office, so say why.",
+      "askOffice": "Ask the Clerk or the Principal to make the change, with a reason.",
+      "windowCloses": "You can change this until {{time}} today.",
+      "reasonLabelLateEntry": "Why is this day entered late?",
+      "reasonLabelLateEdit": "Why is the register changed after the edit window?",
+      "reasonLateEntry": "Say why this day is entered late, in at least 5 characters (for example \"No internet on 3 December; entered from the paper register\").",
+      "reasonLateEdit": "Say why the register is changed, in at least 5 characters.",
+      "enteredBy": "Entered by {{name}}, {{when}}",
+      "byOffice": "by the office",
+      "reason": "Reason",
+      "viewPhoto": "See the photo of the paper register",
+      "windowPassed": "Today's edit window has passed. You can still mark the day; after you save, any change goes through the Clerk or the Principal."
+    },
+    "refusals": {
+      "attendance_window_closed": "The edit window for this day has closed.",
+      "late_entry_past_limit": "Days more than {{days}} days old can be entered only by the Clerk or the Principal, with a reason.",
+      "attendance_forbidden": "You cannot mark this section's register.",
+      "holiday": "This day is a holiday in the school calendar.",
+      "future_date": "A register cannot be marked for a day that has not come yet."
+    },
+    "photo": {
+      "label": "Photo of the paper register (optional)",
+      "hint": "PNG, JPG or WebP, up to 5 MB.",
+      "type": "Choose a PNG, JPG or WebP photo.",
+      "size": "The photo must be 5 MB or smaller."
+    },
+    "excel": {
+      "title": "Enter from Excel",
+      "intro": "Download the template, write P, A, L or HD for each student from the paper register, upload it, check it, then enter it.",
+      "template": "Download template",
+      "file": "Filled template",
+      "reasonHint": "Write the reason above before you enter the file.",
+      "check": "Check the file",
+      "commit_one": "Enter {{count}} row",
+      "commit_other": "Enter {{count}} rows",
+      "counts": "{{ok}} rows ready, {{errors}} with problems, {{absent}} absent.",
+      "committed": "Entered. The register is updated.",
+      "reasonFirst": "Write the reason for the late entry first, in at least 5 characters."
+    },
+    "home": {
+      "noSections": "There are no sections for you to show.",
+      "sections": "Sections",
+      "sectionLine": "{{absent}} absent · {{percent}}% present",
+      "notMarkedLine": "Not marked yet",
+      "more": "More attendance screens"
+    },
+    "summary": {
+      "title": "Daily summary",
+      "present": "Students present",
+      "presentOf": "{{present}} of {{students}} students in marked sections",
+      "sectionsMarked": "Sections marked",
+      "absentCount_one": "{{count}} absent",
+      "absentCount_other": "{{count}} absent",
+      "staff": "Staff in",
+      "staffLine": "{{late}} late · {{notIn}} not in",
+      "tableCaption": "Attendance by section on {{date}}",
+      "section": "Section",
+      "state": "State",
+      "links": "Links",
+      "open": "Open",
+      "register": "Monthly register"
+    },
+    "below": {
+      "title": "Below {{threshold}}% attendance",
+      "none": "No students are below the threshold."
+    },
+    "register": {
+      "title": "Monthly register",
+      "titleFor": "{{section}} · {{month}}",
+      "chooseSection": "Choose a section",
+      "print": "Print",
+      "empty": "There are no students in this section.",
+      "caption": "Attendance code for each student and day",
+      "roll": "Roll",
+      "name": "Name",
+      "noMark": "not marked",
+      "legend": "P present · A absent · L late · HD half-day · LV on leave · H holiday.",
+      "lateLegend": "* entered late from the paper register."
+    },
+    "student": {
+      "yearPercent": "attendance this year",
+      "below": "Below the school's {{threshold}}% attendance threshold.",
+      "noDays": "No attendance was marked this month."
+    },
+    "me": {
+      "notStaff": "Your account has no staff record, so there is nothing to check in.",
+      "notIn": "Not checked in",
+      "inAt": "In at {{time}}",
+      "outAt": "Out at {{time}}",
+      "late": "Late (after {{time}})",
+      "inside": "You were inside the school area.",
+      "outside": "You were outside the school area.",
+      "checkIn": "Check in",
+      "checkOut": "Check out",
+      "done": "You have checked in and out for today.",
+      "geofenceHint": "The school checks that you are at school. Your browser asks for your location once; only inside or outside is kept, never where you are.",
+      "qrTitle": "Use the office QR code",
+      "qrCode": "Code from the office screen",
+      "qrHint": "Type or paste the code shown under the QR code at the office.",
+      "checkInCode": "Check in with this code",
+      "checkOutCode": "Check out with this code",
+      "month": "This month",
+      "noDays": "No days are recorded this month yet.",
+      "locationNeeded": "Allow location for Campus TAB to check in: the school needs to know you are at school.",
+      "offline": "No internet connection. Check in again when you are back online, or ask the office to enter it."
+    },
+    "staff": {
+      "none": "There are no staff to show.",
+      "list": "Staff",
+      "late": "Late",
+      "noRecord": "No record",
+      "enteredBy": "entered by {{name}}",
+      "manual": "Enter manually",
+      "manualTitle": "Manual entry for {{name}}",
+      "status": "Status",
+      "in": "Time in",
+      "out": "Time out",
+      "reason": "Reason",
+      "reasonHint": "Why they could not check in themselves. At least 5 characters.",
+      "reasonRequired": "Write a reason of at least 5 characters."
+    },
+    "sources": {
+      "app": "App",
+      "qr": "QR code",
+      "biometric": "Biometric",
+      "manual": "Manual",
+      "leave": "Leave",
+      "screen": "Screen",
+      "excel": "Excel"
+    },
+    "biometric": {
+      "title": "Biometric import",
+      "intro": "Upload the device's CSV with the columns employee_code, date, in and out. Check it first, then write it.",
+      "file": "CSV file",
+      "commit_one": "Write {{count}} row",
+      "commit_other": "Write {{count}} rows",
+      "counts": "{{ok}} rows ready, {{errors}} with problems.",
+      "written_one": "{{count}} record written.",
+      "written_other": "{{count}} records written.",
+      "rowProblem": "Row {{row}} ({{label}}): {{messages}}"
+    },
+    "qr": {
+      "open": "Office QR code",
+      "title": "Office check-in code",
+      "intro": "Staff scan this code, or type the code under it, to check in or out. It changes every few minutes.",
+      "alt": "QR code for staff check-in",
+      "refreshes": "This code changes at {{time}}."
+    }
+  },
+  "calendar": {
+    "add": "Add an entry",
+    "manageHint": "New entries wait for the Principal's approval.",
+    "empty": "Nothing is in the calendar this month.",
+    "range": "{{from}} to {{to}}",
+    "types": {
+      "holiday": "Holiday",
+      "event": "Event"
+    },
+    "status": {
+      "pending": "Waiting for approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "addedBy": "Added by {{name}}",
+    "approvedBy": "Approved by {{name}}",
+    "rejectedBy": "Rejected by {{name}}",
+    "approve": "Approve",
+    "reject": "Reject",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editTitle": "Edit the entry",
+    "addTitle": "Add to the calendar",
+    "title": "Title",
+    "type": "Type",
+    "from": "From",
+    "to": "To",
+    "toHint": "Leave empty for one day.",
+    "pendingNote": "It counts only after the Principal approves it.",
+    "titleRequired": "Write a title of at least 2 characters.",
+    "endBeforeStart": "The last day cannot be before the first.",
+    "rejectTitle": "Reject \"{{title}}\"?",
+    "note": "Note (optional)"
+  },
+  "settings": {
+    "school": {
+      "title": "School settings",
+      "intro": "The school's name, logo and colour, the modules in use and how students sign in.",
+      "readOnly": "Only the Chief Admin can change these settings. You can see them here.",
+      "reload": "Load the latest settings",
+      "saved": "School settings saved.",
+      "identity": "School and branding",
+      "accentInvalid": "Use a colour like #0F766E.",
+      "accentPicker": "Pick the accent colour",
+      "modules": "Modules",
+      "modulesIntro": "Switch on what the school uses. Only modules in your licence can be switched on.",
+      "signIn": "Sign-in",
+      "studentLogin": "Students sign in with their own account",
+      "studentLoginHint": "When on, class teachers can print sign-in codes for their students.",
+      "moduleOff": {
+        "title": "Switch off {{module}}?",
+        "body": "People will no longer see this module's screens. Its records are kept and come back when you switch it on again.",
+        "type": "Type {{word}} to confirm",
+        "confirm": "Switch off"
+      }
+    }
   },
   "theme": {
     "label": "Theme",
@@ -183,7 +722,28 @@
       "network": "We couldn't reach Campus TAB. Check your connection and try again.",
       "http_error": "Something went wrong. Try again.",
       "renewal_not_later": "A renewal must end later than the current last valid day.",
-      "note_required": "A correction needs a note saying what it corrects."
+      "note_required": "A correction needs a note saying what it corrects.",
+      "notice_audience_forbidden": "You can send notices only to your own classes or sections.",
+      "config_conflict": "Someone else changed the school settings. Load the latest settings, then make your change again.",
+      "config_section_forbidden": "Only the Chief Admin can change these settings.",
+      "module_not_licensed": "One of these modules is not part of the school's licence, so it cannot be switched on.",
+      "permission_denied": "Your account is not allowed to do this.",
+      "not_found": "This item was not found. It may have been removed.",
+      "attendance_window_closed": "The edit window for this day has closed. Ask the Clerk or the Principal to make the change, with a reason.",
+      "late_entry_past_limit": "This day is too old to enter yourself. Ask the Clerk or the Principal to enter it, with a reason.",
+      "attendance_forbidden": "You cannot mark this section's register.",
+      "reason_required": "Write a reason of at least 5 characters.",
+      "holiday": "This day is a holiday in the school calendar.",
+      "future_date": "A register cannot be marked for a day that has not come yet.",
+      "location_required": "The school checks where you check in. Allow location for Campus TAB and try again.",
+      "qr_invalid": "That code is not right or has expired. Use the code on the office screen now.",
+      "already_checked_in": "You have already checked in today.",
+      "not_checked_in": "Check in first, then check out.",
+      "own_attendance": "Nobody can enter their own attendance. Someone at a higher level enters it for you.",
+      "level_too_low": "You can enter attendance only for people below your level. Ask someone senior to enter this one.",
+      "calendar_not_pending": "Only an entry waiting for approval can be changed.",
+      "student_not_in_section": "One of the students is not in this section. Reload the register.",
+      "attendance_status_invalid": "Use Present, Absent, Late or Half-day."
     }
   },
   "session": {
@@ -415,7 +975,8 @@
     "staff": "Staff",
     "parent": "Parent / Guardian",
     "student": "Student",
-    "fee_collector": "Fee Collector"
+    "fee_collector": "Fee Collector",
+    "attendance_officer": "Attendance Officer"
   },
   "people": {
     "status": {
@@ -508,7 +1069,9 @@
         "details": "Details",
         "guardians": "Guardians",
         "custom": "Custom fields",
-        "ids": "Consents and IDs"
+        "ids": "Consents and IDs",
+        "attendance": "Attendance",
+        "results": "Results"
       },
       "readOnly": "You can view this profile but not change it.",
       "saved": "Saved.",
@@ -537,7 +1100,8 @@
     "custom": {
       "empty": "No custom fields apply to this student.",
       "noneFillable": "You can view these fields but not fill them.",
-      "sensitiveHint": "A value is saved but hidden. Type a new value only to replace it."
+      "sensitiveHint": "A value is saved but hidden. Type a new value only to replace it.",
+      "show": "Show"
     },
     "ids": {
       "pen": "PEN",
@@ -884,6 +1448,499 @@
       "chooseTeacher": "Choose a teacher",
       "assign": "Assign",
       "remove": "Remove"
+    }
+  },
+  "auditLog": {
+    "actions": {
+      "sign_in": "Signed in",
+      "sign_in__blocked": "Sign-in blocked",
+      "sign_in__otp_sent": "Sign-in code sent",
+      "sign_out": "Signed out",
+      "sign_out__others": "Signed out other devices",
+      "sign_out__remote": "Signed out a device",
+      "mfa__enrolled": "Set up two-step sign-in",
+      "mfa__reset": "Two-step sign-in reset",
+      "step_up": "Confirmed with a code",
+      "created": "Created",
+      "updated": "Changed",
+      "deleted": "Deleted",
+      "restored": "Restored",
+      "user__created": "Account created",
+      "user__unlocked": "Account unlocked",
+      "user__roles_changed": "Roles changed",
+      "user__deactivated": "Account switched off",
+      "import__committed": "Import finished",
+      "student_login__codes_issued": "Student set-up codes printed",
+      "parent_login__enabled": "Parent sign-in switched on",
+      "parent_login__disabled": "Parent sign-in switched off",
+      "staff__draft_approved": "Staff draft approved",
+      "staff__draft_rejected": "Staff draft rejected",
+      "chief__added": "Chief Admin added",
+      "chief__removed": "Chief Admin removed",
+      "licence__activated": "Licence activated",
+      "support__session_opened": "Support session opened"
+    },
+    "entities": {
+      "users": "Accounts",
+      "students": "Students",
+      "staff": "Staff",
+      "calendar_events": "Holiday calendar",
+      "attendance_days": "Class attendance",
+      "staff_attendance": "Staff attendance",
+      "notices": "Notices",
+      "school_configs": "School settings",
+      "sections": "Sections",
+      "custom_fields": "Custom fields",
+      "imports": "Imports"
+    }
+  },
+  "approvals": {
+    "intro": "Leave and other requests waiting for your decision.",
+    "filter": "Filter",
+    "empty": "Nothing is waiting for you.",
+    "choose": "Choose a request on the left to see it here.",
+    "backToList": "Back to the list",
+    "awayThisWeek": "Away this week",
+    "openCalendar": "Open the leave calendar",
+    "kinds": {
+      "all": "All",
+      "leave": "Leave",
+      "marks": "Marks",
+      "fees": "Fees",
+      "staff": "Staff"
+    },
+    "flags": {
+      "fast_track": "You can fast-track",
+      "cancel_requested": "Asked to cancel",
+      "long_student_leave": "Long student leave",
+      "self_approved": "Self-approved",
+      "raised_by_you": "Raised by you"
+    },
+    "marksLine": "{{old}} → {{new}} · asked by {{name}}"
+  },
+  "leave": {
+    "range": "{{from}} – {{to}}",
+    "dayCount_one": "{{count}} day",
+    "dayCount_other": "{{count}} days",
+    "held_one": "{{count}} day held for a request",
+    "held_other": "{{count}} days held for requests",
+    "restoredDays_one": "{{count}} day given back",
+    "restoredDays_other": "{{count}} days given back",
+    "halfDay": {
+      "label": "Half day",
+      "full": "Full day",
+      "first": "First half",
+      "second": "Second half"
+    },
+    "status": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "returned": "Returned",
+      "verified": "Verified",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "withdrawn": "Withdrawn",
+      "cancelled": "Cancelled"
+    },
+    "stages": {
+      "clerk": "Clerk",
+      "vice_principal": "Vice Principal",
+      "principal": "Principal",
+      "chief": "Chief Admin",
+      "class_teacher": "class teacher",
+      "applicant": "applicant",
+      "decider": "decider"
+    },
+    "steps": {
+      "submitted": "Sent by {{name}}",
+      "resubmitted": "Sent again by {{name}}",
+      "verified": "Checked by {{name}} ({{stage}})",
+      "forwarded": "Passed on by {{name}} ({{stage}})",
+      "returned": "Returned by {{name}} for correction",
+      "rejected": "Rejected by {{name}}",
+      "rejected_fast_track": "Rejected by {{name}} (fast-track)",
+      "fast_tracked": "Fast-tracked by {{name}} at the office stage",
+      "approved": "Approved by {{name}}",
+      "approved_changed": "Approved by {{name}}, with other dates",
+      "withdrawn": "Withdrawn by {{name}}",
+      "cancel_requested": "{{name}} asked to cancel it",
+      "cancelled": "Cancelled by {{name}}",
+      "cancel_declined": "{{name}} kept the leave",
+      "waitingFor": "Waiting for the {{stage}}",
+      "then": "Then the {{stage}}"
+    },
+    "lastStep": {
+      "submitted": "Sent by {{name}}",
+      "resubmitted": "Sent again by {{name}}",
+      "verified": "Checked by {{name}} ({{stage}})",
+      "forwarded": "Passed on by {{name}} ({{stage}})",
+      "returned": "Returned by {{name}} for correction",
+      "rejected": "Rejected by {{name}}",
+      "rejected_fast_track": "Rejected by {{name}} (fast-track)",
+      "fast_tracked": "Fast-tracked by {{name}} at the office stage",
+      "approved": "Approved by {{name}}",
+      "approved_changed": "Approved by {{name}}, with other dates",
+      "withdrawn": "Withdrawn by {{name}}",
+      "cancel_requested": "{{name}} asked to cancel it",
+      "cancelled": "Cancelled by {{name}}",
+      "cancel_declined": "{{name}} kept the leave"
+    },
+    "type": "Leave type",
+    "dates": "Dates",
+    "days": "Days",
+    "from": "From",
+    "to": "To",
+    "balanceOf": "{{type}} balance",
+    "balanceNow": "{{available}} of {{quota}}",
+    "balanceAfter": "{{available}} of {{quota}} → {{after}} after",
+    "reason": "Reason",
+    "documents": "Documents",
+    "attach": "Attach a document",
+    "timeline": "Steps",
+    "privateHint": "Only you and the people who check and decide this request can see the reason and documents.",
+    "studentLeave": "Student leave",
+    "studentOf": "Student, {{section}} · applied by {{parent}}",
+    "studentOfShort": "Student, {{section}}",
+    "fastTracked": "The Principal decided this at the office stage (fast-track); the Clerk has been told.",
+    "longStudentLeave": "This leave is longer than the school's limit, so the Principal can see it too.",
+    "changedDates": "new dates {{from}} – {{to}}",
+    "cancelAsked": "{{name}} has asked to cancel this leave.",
+    "remarkRequired": "Remark (required)",
+    "remarkOptional": "Remark (optional)",
+    "rejectHint": "The applicant sees this remark.",
+    "withdrawHint": "The request is taken back and any days held for it are given back.",
+    "cover": {
+      "title": "Periods that need cover",
+      "day": "Day",
+      "class": "Class",
+      "what": "Cover for",
+      "teacher": "Teacher away",
+      "register": "Class register",
+      "hint": "From the teacher's classes and subjects this year. The timetable module will assign substitutes."
+    },
+    "actions": {
+      "approve": "Approve",
+      "approveFast": "Approve (fast-track)",
+      "approveTitle": "Approve {{name}}'s leave",
+      "otherDates": "Approve with other dates",
+      "otherDatesTitle": "Approve {{name}}'s leave for other dates",
+      "verify": "Verify and forward",
+      "verifyTitle": "Verify {{name}}'s request and pass it on",
+      "return": "Return for correction",
+      "returnTitle": "Return {{name}}'s request for correction",
+      "reject": "Reject",
+      "rejectTitle": "Reject {{name}}'s leave",
+      "submit": "Send the request",
+      "withdraw": "Withdraw",
+      "withdrawTitle": "Withdraw this request?",
+      "requestCancel": "Ask to cancel",
+      "requestCancelTitle": "Ask to cancel this approved leave",
+      "cancel": "Cancel the leave",
+      "cancelTitle": "Cancel {{name}}'s approved leave",
+      "keep": "Keep the leave",
+      "keepTitle": "Keep the leave and tell the applicant why"
+    },
+    "done": {
+      "submit": "Sent. You can follow every step here.",
+      "withdraw": "Withdrawn. Any days held are back in the balance.",
+      "verify": "Passed on. {{name}} has been told.",
+      "return": "Returned to {{name}} with your remark.",
+      "approve": "Approved. {{name}} has been told, the days are taken from the balance and attendance shows On leave.",
+      "reject": "Rejected. {{name}} has been told, with your remark.",
+      "cancel": "Cancelled. The days not taken are back in the balance.",
+      "keep": "The leave stays. {{name}} has been told.",
+      "cancel-request": "Asked. The person who decides it has been told."
+    },
+    "myBalance": "My balance this year",
+    "myRequests": "My requests",
+    "childRequests": "My children's requests",
+    "noRequests": "No requests yet.",
+    "decided": "Requests I checked or decided",
+    "more": "More about leave",
+    "back": "Back to leave",
+    "request": "Leave request",
+    "apply": {
+      "title": "Apply for leave",
+      "send": "Send the request",
+      "noTypes": "The school has not set up leave types yet. Ask the Principal.",
+      "sandwichOn": "These days off count as leave for this type:",
+      "sandwichOff": "These days off are not counted:",
+      "goesTo": "Goes to: {{chain}}",
+      "notEnough": "There are not enough days left for this request.",
+      "documentRequired": "Supporting document (required for this many days)",
+      "documentOptional": "Supporting document (optional)"
+    },
+    "child": {
+      "title": "Apply for my child",
+      "who": "Child",
+      "none": "No children are linked to your account.",
+      "hint": "Only you and the class teacher see the reason."
+    },
+    "calendar": {
+      "title": "Leave calendar",
+      "hint": "Who is away. The type and reason stay private.",
+      "today": "This fortnight",
+      "nobody": "Nobody away"
+    },
+    "settings": {
+      "title": "Leave settings",
+      "types": "Leave types",
+      "typesHint": "Names, yearly days and rules are yours to set. Changing a quota changes everyone's balance this year.",
+      "starter": "Add the starter types",
+      "addType": "Add a leave type",
+      "editType": "Change the leave type",
+      "edit": "Change",
+      "archived": "No longer offered",
+      "noLimit": "No yearly limit",
+      "quota_one": "{{count}} day a year",
+      "quota_other": "{{count}} days a year",
+      "sandwichOn": "Days off inside count",
+      "sandwichOff": "Days off inside not counted",
+      "halfDays": "Half days allowed",
+      "documentAfter_one": "Document above {{count}} day",
+      "documentAfter_other": "Document above {{count}} days",
+      "code": "Code",
+      "name": "Name",
+      "quotaLabel": "Days a year",
+      "quotaHint": "Leave empty for no limit (for example duty leave).",
+      "documentLabel": "Document needed above this many days",
+      "documentHint": "Leave empty if no document is ever needed.",
+      "sandwichLabel": "Count holidays and Sundays inside the leave",
+      "sandwichHint": "The sandwich rule: when on, days off between the first and last working day count as leave days.",
+      "halfDayLabel": "Allow half days",
+      "activeLabel": "Offer this type",
+      "delegation": "Hand over leave decisions",
+      "delegationHint": "A Vice Principal decides leave in your place on these dates. They never decide leave for anyone at or above their own level, nor their own.",
+      "noDeputies": "There is no active Vice Principal to hand decisions to.",
+      "deputy": "Vice Principal",
+      "chooseDeputy": "Choose…",
+      "delegate": "Hand over",
+      "end": "End now",
+      "state": {
+        "active": "Active now",
+        "upcoming": "Starts later",
+        "over": "Ended",
+        "ended": "Ended early"
+      }
+    }
+  },
+  "tests": {
+    "breadcrumb": "Breadcrumb",
+    "back": "Back to tests and marks",
+    "empty": "No tests or exams yet this year.",
+    "classTest": "Class test",
+    "paperCount_one": "{{count}} paper",
+    "paperCount_other": "{{count}} papers",
+    "enteredOf": "{{entered}} of {{total}} entered",
+    "outOf": "out of {{max}}",
+    "maxMarks": "Max marks",
+    "date": "Test date",
+    "closes": "Entry closes",
+    "codes": "Codes",
+    "codesHint": "AB absent · ML medical",
+    "section": "Section",
+    "completion": "Completion",
+    "history": "What happened to this paper",
+    "types": {
+      "weekly": "Weekly test",
+      "monthly": "Monthly test",
+      "periodic": "Periodic test",
+      "half_yearly": "Half-yearly exam",
+      "annual": "Annual exam",
+      "practical": "Practical",
+      "project": "Project",
+      "internal": "Internal assessment"
+    },
+    "paperStatus": {
+      "draft": "Draft",
+      "open": "Open for entry",
+      "submitted": "Submitted",
+      "verified": "Verified",
+      "locked": "Locked",
+      "published": "Published"
+    },
+    "chip": {
+      "draft": "Draft",
+      "pending": "Open for entry",
+      "approved": "Submitted",
+      "verified": "Verified",
+      "locked": "Locked",
+      "published": "Published"
+    },
+    "codeNames": {
+      "AB": "Absent",
+      "ML": "Medical"
+    },
+    "historyActions": {
+      "created": "Made by {{name}}",
+      "opened": "Opened for entry by {{name}}",
+      "submitted": "Submitted by {{name}}",
+      "submitted_published": "Submitted and published by {{name}} (class test)",
+      "sent_back": "Sent back by {{name}}",
+      "verified": "Verified by {{name}}",
+      "locked": "Locked by {{name}}",
+      "published": "Published by {{name}}",
+      "corrected": "A correction approved by {{name}}"
+    },
+    "stats": {
+      "entered": "Entered",
+      "enteredOf": "{{count}} of {{total}}",
+      "average": "Average",
+      "highest": "Highest",
+      "absent": "Absent (AB, ML)"
+    },
+    "actions": {
+      "open": "Open for entry",
+      "openAll": "Open every paper",
+      "submit": "Submit to class teacher",
+      "verify": "Verify",
+      "sendBack": "Send back",
+      "lock": "Lock",
+      "lockAll": "Lock every verified paper",
+      "publish": "Publish results",
+      "publishAll": "Publish every locked paper"
+    },
+    "confirm": {
+      "send-back": "Send this paper back to its teacher",
+      "lock": "Lock this paper?",
+      "publish": "Publish these results?"
+    },
+    "lockHint": "Once locked, no one can type a mark. A change after that needs a correction the Principal approves.",
+    "publishHint": "Students and parents will see these marks. They are told only that results are out, never the marks.",
+    "sendBackNote": "What should be checked?",
+    "done": {
+      "open": "Open for entry.",
+      "submit": "Submitted to the class teacher.",
+      "verify": "Verified.",
+      "send-back": "Sent back with your note.",
+      "lock": "Locked.",
+      "publish": "Published. Students and parents have been told results are out.",
+      "openAll": "Every paper you may open is open.",
+      "lockAll": "Every verified paper is locked.",
+      "publishAll": "Every locked paper is published."
+    },
+    "markbook": {
+      "roll": "Roll",
+      "student": "Student",
+      "marksOutOf": "Marks out of {{max}}",
+      "remark": "Remark",
+      "optional": "Optional",
+      "remarkOptional": "Remark (optional)",
+      "markFor": "Marks for {{name}}",
+      "remarkFor": "Remark for {{name}}",
+      "above": "More than {{max}}",
+      "invalid": "Use 0–{{max}}, AB or ML",
+      "keys": "Tab moves across, Enter or the arrow keys move down and up, and a column pasted from Excel fills down from the cell.",
+      "saving": "Saving…",
+      "savedAt": "Saved automatically · {{time}}",
+      "allSaved": "Everything is saved",
+      "unsaved_one": "{{count}} change not saved yet",
+      "unsaved_other": "{{count}} changes not saved yet",
+      "offline": "You are offline. Marks are entered online only: keep this page open and they will save when you are back online.",
+      "conflict": "Someone else saved marks on this paper since you opened it. Their marks are shown now, and the cells you changed are kept and highlighted. Check them, then save yours.",
+      "saveMine": "Save my changes",
+      "saveNow": "Save now",
+      "fix_one": "Fix {{count}} mark to submit",
+      "fix_other": "Fix {{count}} marks to submit",
+      "missing_one": "{{count}} student has no mark",
+      "missing_other": "{{count}} students have no mark",
+      "returned": "Sent back: “{{note}}”",
+      "locked": "Locked by {{name}}. A mark changes now only through a correction the Principal approves.",
+      "flow": "After you submit, the class teacher checks the class's papers, then the Principal or the Clerk locks them and results go to students and parents. Once locked, a mark can change only with the Principal's approval."
+    },
+    "new": {
+      "titleExam": "Schedule a test or exam",
+      "titleTest": "Set a class test",
+      "kind": "Kind",
+      "exam": "School exam",
+      "name": "Name",
+      "type": "Type",
+      "papers": "Classes and subjects",
+      "noPapers": "You have no classes or subjects to set a test for.",
+      "create": "Create"
+    },
+    "correction": {
+      "ask": "Ask to correct",
+      "waiting": "Correction waiting",
+      "title": "Ask to correct the mark of {{name}}",
+      "current": "The locked mark is {{mark}}.",
+      "newMark": "New mark (0–{{max}}, AB or ML)",
+      "reason": "Reason",
+      "hint": "At least 10 characters. The Principal sees it, and it is kept with the change.",
+      "send": "Send to the Principal",
+      "sent": "Sent. The mark changes only if the Principal approves it.",
+      "listTitle": "Mark corrections",
+      "rule": "A locked mark changes only when the Principal approves a correction, from their own account with a fresh authenticator code and a typed reason. This is fixed, not a setting.",
+      "onlySelf": "Only the ones the Principal raised and approved",
+      "none": "No corrections here.",
+      "status": {
+        "pending": "Waiting",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "askedBy": "Asked by {{name}}",
+      "decidedBy": {
+        "approved": "Approved by {{name}}",
+        "rejected": "Rejected by {{name}}",
+        "pending": ""
+      },
+      "lockedMark": "Locked mark",
+      "asked": "Asked for",
+      "openPaper": "Open the paper",
+      "ownWarning": "You raised this correction. Approving it is a separate step: you will be asked for a new authenticator code, and the Chief Admin will see it as self-approved.",
+      "yourReason": "Your reason",
+      "yourReasonHint": "Required to approve or reject (at least 10 characters). Kept with the change and in the audit log.",
+      "selfStepUp": "You raised this correction yourself. Enter a new code from your authenticator app to approve it as a separate step.",
+      "approve": "Approve the change",
+      "confirmApprove": "Confirm and approve",
+      "reject": "Keep the locked mark",
+      "approvedDone": "Approved. {{name}}'s mark is changed, and the old and new marks are in the audit log.",
+      "rejectedDone": "Rejected. The locked mark stays."
+    },
+    "scheme": {
+      "title": "Assessment schemes",
+      "new": "New scheme",
+      "name": "Name",
+      "grades": "Classes",
+      "gradesHint": "For example 6, 7, 8",
+      "preset": "Start from",
+      "blank": "An empty scheme",
+      "create": "Create",
+      "forGrades": "Classes {{grades}}",
+      "fromPreset": "Started from “{{preset}}”.",
+      "terms": "Terms",
+      "termsHint": "Separate with commas",
+      "components": "Components and weightage",
+      "key": "Key",
+      "componentName": "Name",
+      "weight": "Weight %",
+      "remove": "Remove {{name}}",
+      "addComponent": "Add a component",
+      "total": "Total {{total}}% (must be 100%)",
+      "gradeScale": "Grade scale",
+      "grade": "Grade",
+      "from": "From %",
+      "addGrade": "Add a grade",
+      "pass": "Pass percentage",
+      "grace": "Grace marks",
+      "rounding": "Rounding",
+      "roundings": {
+        "half_up": "Half up",
+        "up": "Up",
+        "down": "Down",
+        "none": "None"
+      },
+      "saved": "Saved."
+    },
+    "results": {
+      "title": "Results",
+      "child": "Child",
+      "childN": "Child {{n}}",
+      "for": "Published results for {{name}}",
+      "none": "No results published yet.",
+      "assessment": "Test",
+      "subject": "Subject",
+      "marks": "Marks"
     }
   }
 }
