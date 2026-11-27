@@ -248,7 +248,7 @@ function LogoUpload({ logoUrl, canEdit, onUploaded }: { logoUrl: string | null; 
   return (
     <div className="flex flex-wrap items-end gap-4 border-t border-border pt-4">
       {logoUrl ? <img src={logoUrl} alt={t('setup.profile.logoAlt')} className="size-16 rounded-full border border-border object-cover" /> : null}
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+      <div className="flex min-w-60 flex-1 flex-col gap-1.5">
         <label htmlFor={id} className="text-sm font-medium">
           {t('setup.profile.logoFile')}
         </label>

@@ -59,7 +59,7 @@ export function StudentProfilePage() {
         actions={<StatusChip status={student.status === 'active' ? 'active' : 'inactive'} label={t(`students.status.${student.status}`, { defaultValue: student.status })} />}
       />
 
-      <div role="tablist" aria-label={t('students.profile.tabsLabel')} className="flex gap-1 overflow-x-auto border-b border-border">
+      <div role="tablist" aria-label={t('students.profile.tabsLabel')} className="flex gap-1 relative overflow-x-auto border-b border-border">
         {tabs.map((item) => (
           <button
             key={item.id}

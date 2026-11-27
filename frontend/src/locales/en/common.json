@@ -144,6 +144,7 @@
       "lateAfter": "Late after {{time}}",
       "openRegister": "Open the register",
       "changeAttendance": "Change attendance",
+      "viewAttendance": "View attendance",
       "takeAttendance": "Take attendance",
       "holiday": "Holiday: {{title}}",
       "marked_one": "Marked · {{count}} absent",
@@ -343,7 +344,8 @@
       "enteredBy": "Entered by {{name}}, {{when}}",
       "byOffice": "by the office",
       "reason": "Reason",
-      "viewPhoto": "See the photo of the paper register"
+      "viewPhoto": "See the photo of the paper register",
+      "windowPassed": "Today's edit window has passed. You can still mark the day; after you save, any change goes through the Clerk or the Principal."
     },
     "refusals": {
       "attendance_window_closed": "The edit window for this day has closed.",
@@ -951,7 +953,8 @@
     "staff": "Staff",
     "parent": "Parent / Guardian",
     "student": "Student",
-    "fee_collector": "Fee Collector"
+    "fee_collector": "Fee Collector",
+    "attendance_officer": "Attendance Officer"
   },
   "people": {
     "status": {
@@ -1422,6 +1425,50 @@
       "chooseTeacher": "Choose a teacher",
       "assign": "Assign",
       "remove": "Remove"
+    }
+  },
+  "auditLog": {
+    "actions": {
+      "sign_in": "Signed in",
+      "sign_in__blocked": "Sign-in blocked",
+      "sign_in__otp_sent": "Sign-in code sent",
+      "sign_out": "Signed out",
+      "sign_out__others": "Signed out other devices",
+      "sign_out__remote": "Signed out a device",
+      "mfa__enrolled": "Set up two-step sign-in",
+      "mfa__reset": "Two-step sign-in reset",
+      "step_up": "Confirmed with a code",
+      "created": "Created",
+      "updated": "Changed",
+      "deleted": "Deleted",
+      "restored": "Restored",
+      "user__created": "Account created",
+      "user__unlocked": "Account unlocked",
+      "user__roles_changed": "Roles changed",
+      "user__deactivated": "Account switched off",
+      "import__committed": "Import finished",
+      "student_login__codes_issued": "Student set-up codes printed",
+      "parent_login__enabled": "Parent sign-in switched on",
+      "parent_login__disabled": "Parent sign-in switched off",
+      "staff__draft_approved": "Staff draft approved",
+      "staff__draft_rejected": "Staff draft rejected",
+      "chief__added": "Chief Admin added",
+      "chief__removed": "Chief Admin removed",
+      "licence__activated": "Licence activated",
+      "support__session_opened": "Support session opened"
+    },
+    "entities": {
+      "users": "Accounts",
+      "students": "Students",
+      "staff": "Staff",
+      "calendar_events": "Holiday calendar",
+      "attendance_days": "Class attendance",
+      "staff_attendance": "Staff attendance",
+      "notices": "Notices",
+      "school_configs": "School settings",
+      "sections": "Sections",
+      "custom_fields": "Custom fields",
+      "imports": "Imports"
     }
   }
 }

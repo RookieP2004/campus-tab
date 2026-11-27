@@ -41,7 +41,7 @@ export function SetupWizardPage() {
       <PageHeader title={t('setup.title')} intro={t('setup.intro')} />
 
       <nav aria-label={t('setup.stepsLabel')}>
-        <ol className="flex gap-2 overflow-x-auto pb-1">
+        <ol className="flex gap-2 relative overflow-x-auto pb-1">
           {STEPS.map((s, i) => (
             <li key={s} className="shrink-0">
               <button

@@ -2994,6 +2994,7 @@ export interface operations {
                         data: {
                             date: string;
                             staff: {
+                                can_enter: boolean;
                                 designation: string | null;
                                 name: string;
                                 record: {

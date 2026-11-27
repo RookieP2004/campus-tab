@@ -76,7 +76,7 @@ sequenceDiagram
   H-->>C: 200 if both ok, else 503
 ```
 
-The report generator reads the router's route list, the folders under `app/Modules/` and every model class, builds a Markdown table for each, and replaces only the text between `<!-- generated:NAME:start -->` and `<!-- generated:NAME:end -->` markers in `README.md`, `api.md` and `data-dictionary.md`. With `--check` it writes nothing and fails if any table would change; CI runs it that way.
+The report generator reads the router's route list, the folders under `app/Modules/` and every model class, builds a Markdown table for each, and replaces only the text between `<!-- generated:NAME:start -->` and `<!-- generated:NAME:end -->` markers in `README.md`, `api.md` and `data-dictionary.md`. With `--check` it writes nothing and fails if any table would change; CI runs it that way. A module whose report page has a different name is listed in `PAGE_ALIASES` (today only Identity → `identity-and-access.md`); `.github/scripts/check-report.mjs` keeps the same list, so the README link and the CI check agree.
 
 ## 6. Data it reads and writes
 
@@ -126,3 +126,4 @@ The health endpoint is public on purpose and leaks no internal detail (a test ch
 | Date | Phase | What changed | Why |
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Module created: health check, error shape, report generator | Phase 0 foundations |
+| 2026-11-27 | Session 2 | Report generator links Identity to `identity-and-access.md` (`PAGE_ALIASES`); the error renderer turns a policy's "deny as not found" into a 404 `not_found` | The README linked a page that does not exist; parents asking for a whole class register must get 404, not 403 |

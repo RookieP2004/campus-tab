@@ -14119,6 +14119,9 @@
                                                                     }
                                                                 ]
                                                             },
+                                                            "can_enter": {
+                                                                "type": "boolean"
+                                                            },
                                                             "record": {
                                                                 "type": [
                                                                     "object",
@@ -14194,6 +14197,7 @@
                                                             "name",
                                                             "designation",
                                                             "roles",
+                                                            "can_enter",
                                                             "record"
                                                         ]
                                                     }

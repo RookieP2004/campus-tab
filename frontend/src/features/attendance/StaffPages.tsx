@@ -253,7 +253,7 @@ export function StaffAttendancePage() {
               ) : (
                 <StatusChip status="draft" label={t('attendance.staff.noRecord')} />
               )}
-              {canEnter ? (
+              {canEnter && s.can_enter ? (
                 <Button variant="outline" size="sm" className="h-11" onClick={() => setEntering({ staffId: s.staff_id, name: s.name })}>
                   <UserCog aria-hidden="true" />
                   {t('attendance.staff.manual')}

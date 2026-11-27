@@ -216,7 +216,7 @@ function TodoBody({ card }: { card: DashboardCard }) {
             id: `${index}:${asString(item.link) ?? ''}`,
             tag: t(`dashboard.todo.kinds.${kind}`, { defaultValue: kind }),
             title: asString(item.label) ?? '',
-            detail: [asString(item.detail), by ? t('dashboard.by', { name: by }) : null, at ? formatDateTime(at, i18n.language) : null].filter(Boolean).join(' · '),
+            detail: [isoDay(asString(item.detail), i18n.language), by ? t('dashboard.by', { name: by }) : null, at ? formatDateTime(at, i18n.language) : null].filter(Boolean).join(' · '),
             status: { status: 'pending' as const, label: t('status.pending') },
             action: asString(item.link) ? (
               <Link to={asString(item.link) as string} className={buttonVariants({ variant: 'outline', size: 'sm', className: 'h-11' })}>
@@ -291,7 +291,7 @@ function ActionBody({ card }: { card: DashboardCard }) {
         ? t('dashboard.action.lateAfter', { time: asString(data.late_after) })
         : null;
   } else if ('marked' in data || 'section_id' in data) {
-    label = t(holiday ? 'dashboard.action.openRegister' : data.marked === true ? 'dashboard.action.changeAttendance' : 'dashboard.action.takeAttendance');
+    label = t(holiday ? 'dashboard.action.openRegister' : data.marked === true ? (data.editable === false ? 'dashboard.action.viewAttendance' : 'dashboard.action.changeAttendance') : 'dashboard.action.takeAttendance');
     line = holiday
       ? t('dashboard.action.holiday', { title: holiday })
       : data.marked === true
@@ -353,6 +353,17 @@ function KpiBody({ data }: { data: Data }) {
   );
 }
 
+/** A bare "2027-01-26" becomes a readable date; anything else is shown as it is. */
+function isoDay(value: string | null, language: string): string | null {
+  return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? formatDate(value, language) : value;
+}
+
+/** "sign_in.blocked" → "Sign in blocked": a readable fallback for an audit code with no label yet. */
+function humanise(code: string): string {
+  const words = code.replace(/[._]+/g, ' ').trim();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
 function ListBody({ data }: { data: Data }) {
   const { t, i18n } = useTranslation();
   const items = asArray(data.items);
@@ -373,7 +384,12 @@ function ListBody({ data }: { data: Data }) {
             const status = asString(item.status);
             const by = asString(item.by);
             const at = asString(item.at);
-            const detail = [asString(item.detail), by ? t('dashboard.by', { name: by }) : null, at ? formatDateTime(at, i18n.language) : null].filter(Boolean).join(' · ');
+            const audit = item.audit === true;
+            const rawLabel = asString(item.label) ?? '';
+            const rawDetail = asString(item.detail);
+            const shownLabel = audit ? t(`auditLog.actions.${rawLabel.replace(/\./g, '__')}`, { defaultValue: humanise(rawLabel) }) : rawLabel;
+            const shownDetail = audit && rawDetail ? t(`auditLog.entities.${rawDetail}`, { defaultValue: humanise(rawDetail) }) : isoDay(rawDetail, i18n.language);
+            const detail = [shownDetail, by ? t('dashboard.by', { name: by }) : null, at ? formatDateTime(at, i18n.language) : null].filter(Boolean).join(' · ');
             const label = (
               <span className="flex items-center gap-1.5 text-sm font-medium">
                 {item.tone === 'warning' ? (
@@ -382,7 +398,7 @@ function ListBody({ data }: { data: Data }) {
                     <span className="sr-only">{t('dashboard.list.warning')}: </span>
                   </>
                 ) : null}
-                {asString(item.label)}
+                {shownLabel}
               </span>
             );
             return (
@@ -420,7 +436,7 @@ function ChildrenBody({ data }: { data: Data }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div role="radiogroup" aria-label={t('dashboard.children.switcher')} className="flex gap-2 overflow-x-auto pb-1">
+      <div role="radiogroup" aria-label={t('dashboard.children.switcher')} className="flex gap-2 relative overflow-x-auto pb-1">
         {items.map((child) => {
           const selected = child === current;
           const name = asString(child.label) ?? '';

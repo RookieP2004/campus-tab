@@ -14,19 +14,19 @@ CI runs `npm run i18n:check -w @campus-tab/frontend`, which fails when this
 page is out of date.
 
 <!-- generated:i18n:start -->
-English has 1113 keys.
+English has 1154 keys.
 
 | Code | Language | Shipped | File | Missing keys |
 | --- | --- | --- | --- | --- |
 | `hi` | Hindi (हिन्दी) | yes | yes | none (complete) |
-| `bn` | Bengali (বাংলা) | no | no | all 1113 keys missing, falls back to English |
-| `mr` | Marathi (मराठी) | no | no | all 1113 keys missing, falls back to English |
-| `gu` | Gujarati (ગુજરાતી) | no | no | all 1113 keys missing, falls back to English |
-| `pa` | Punjabi (ਪੰਜਾਬੀ) | no | no | all 1113 keys missing, falls back to English |
-| `ta` | Tamil (தமிழ்) | no | no | all 1113 keys missing, falls back to English |
-| `te` | Telugu (తెలుగు) | no | no | all 1113 keys missing, falls back to English |
-| `kn` | Kannada (ಕನ್ನಡ) | no | no | all 1113 keys missing, falls back to English |
-| `ml` | Malayalam (മലയാളം) | no | no | all 1113 keys missing, falls back to English |
-| `or` | Odia (ଓଡ଼ିଆ) | no | no | all 1113 keys missing, falls back to English |
-| `ur` | Urdu (اردو) | no | no | all 1113 keys missing, falls back to English |
+| `bn` | Bengali (বাংলা) | no | no | all 1154 keys missing, falls back to English |
+| `mr` | Marathi (मराठी) | no | no | all 1154 keys missing, falls back to English |
+| `gu` | Gujarati (ગુજરાતી) | no | no | all 1154 keys missing, falls back to English |
+| `pa` | Punjabi (ਪੰਜਾਬੀ) | no | no | all 1154 keys missing, falls back to English |
+| `ta` | Tamil (தமிழ்) | no | no | all 1154 keys missing, falls back to English |
+| `te` | Telugu (తెలుగు) | no | no | all 1154 keys missing, falls back to English |
+| `kn` | Kannada (ಕನ್ನಡ) | no | no | all 1154 keys missing, falls back to English |
+| `ml` | Malayalam (മലയാളം) | no | no | all 1154 keys missing, falls back to English |
+| `or` | Odia (ଓଡ଼ିଆ) | no | no | all 1154 keys missing, falls back to English |
+| `ur` | Urdu (اردو) | no | no | all 1154 keys missing, falls back to English |
 <!-- generated:i18n:end -->

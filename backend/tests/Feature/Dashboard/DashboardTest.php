@@ -113,7 +113,8 @@ it('puts the class teacher\'s register for today at the top, and today\'s attend
 
     $cards = $this->actingWithToken($teacher['user'])->getJson('/api/v1/me/dashboard')->json('data.cards');
     expect($cards[0])->toMatchArray(['id' => 'take_attendance.'.$this->s7['B']->getKey(), 'link' => '/attendance/'.$this->s7['B']->getKey()])
-        ->and($cards[0]['data']['marked'])->toBeFalse();
+        ->and($cards[0]['data']['marked'])->toBeFalse()
+        ->and($cards[0]['data']['editable'])->toBeTrue();
 
     $today = collect($this->actingWithToken($principal['user'])->getJson('/api/v1/me/dashboard')->json('data.cards'))->firstWhere('id', 'attendance_today');
     expect($today['data']['totals'])->toMatchArray(['sections' => 2, 'marked_sections' => 0])

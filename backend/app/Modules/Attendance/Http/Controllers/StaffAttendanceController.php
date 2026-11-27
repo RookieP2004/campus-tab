@@ -73,6 +73,8 @@ class StaffAttendanceController
     {
         Gate::authorize('viewStaffDay', StaffAttendance::class);
         $date = (string) $request->query('date', $this->settings->today());
+        /** @var User $actor */
+        $actor = $request->user();
         $records = StaffAttendance::query()->where('date', $date)->get()->keyBy('staff_id');
 
         $users = User::query()->whereIn('_id', Staff::query()->whereNotNull('user_id')->pluck('user_id')->all())->get()->keyBy(fn (User $u) => (string) $u->getKey());
@@ -84,6 +86,7 @@ class StaffAttendanceController
                 'name' => $s->name,
                 'designation' => $s->designation,
                 'roles' => isset($users[$s->user_id ?? '']) ? $users[$s->user_id]->roles : [],
+                'can_enter' => $this->service->canEnterFor($actor, $users[$s->user_id ?? ''] ?? null),
                 'record' => isset($records[(string) $s->getKey()]) ? self::present($records[(string) $s->getKey()]) : null,
             ])->values(),
         ]]);

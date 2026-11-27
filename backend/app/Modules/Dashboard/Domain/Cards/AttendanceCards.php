@@ -50,6 +50,8 @@ class AttendanceCards implements CardProvider
                         'section_id' => (string) $section->getKey(),
                         'date' => $today,
                         'marked' => $day instanceof AttendanceDay,
+                        // After the edit window a teacher can only look; the card says "View".
+                        'editable' => ! ($day instanceof AttendanceDay) || $this->settings->now()->lessThan($this->settings->windowClosesAt($today)),
                         'absent' => $day instanceof AttendanceDay ? count(array_filter($day->entries, fn ($e) => $e['status'] === 'A')) : null,
                         'holiday' => CalendarEvent::holidayOn($today)?->title,
                     ],
@@ -85,9 +87,9 @@ class AttendanceCards implements CardProvider
             $pending = CalendarEvent::query()->where('status', 'pending')->orderBy('date')->limit(5)->get();
             if ($pending->isNotEmpty()) {
                 $cards[] = [
-                    'id' => 'calendar_approvals', 'kind' => 'todo', 'title' => 'dashboard.cards.calendarApprovals', 'priority' => 1, 'link' => '/calendar',
+                    'id' => 'calendar_approvals', 'kind' => 'todo', 'title' => 'dashboard.cards.calendarApprovals', 'priority' => 1, 'link' => '/calendar?month='.substr((string) $pending->first()->date, 0, 7),
                     'data' => ['count' => CalendarEvent::query()->where('status', 'pending')->count(),
-                        'items' => $pending->map(fn (CalendarEvent $e) => ['label' => $e->title, 'detail' => $e->date, 'link' => '/calendar'])->values()->all()],
+                        'items' => $pending->map(fn (CalendarEvent $e) => ['label' => $e->title, 'detail' => $e->date, 'link' => '/calendar?month='.substr((string) $e->date, 0, 7)])->values()->all()],
                 ];
             }
         }

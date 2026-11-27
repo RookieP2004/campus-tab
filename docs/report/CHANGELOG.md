@@ -2,6 +2,35 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-27 · Session 2 · Browser review fixes
+
+**What changed** (found by walking every Phase 2–4 screen at 360 px and 1280 px in light and dark, and by doing each "done when" step in Chrome):
+
+- **Phone header:** the school name now shortens with "…" and no longer runs under the search button; the year picker shows just the year ("2026-27") so it is no longer cut off.
+- **Taking attendance:** after a save that closes the day for the teacher (first marking after the edit window), the "Saved · N parents told" line stays on screen and the "window closed" warning waits until the next visit. The late-entry banner shows the date as a date ("Tuesday, 24 November 2026"), and the title no longer reads " attendance" while loading.
+- **Staff attendance:** "Enter manually" appears only on the rows the person may actually enter (never their own, only people below their level). The server tells the screen with a new `can_enter` flag on each row; it still refuses anything else.
+- **Role names:** the Attendance Officer duty shows as "Attendance Officer" / "उपस्थिति अधिकारी", not `attendance_officer`.
+- **Dashboard:**
+  - Recent activity shows readable actions and records ("Set up two-step sign-in · Accounts"), not audit codes.
+  - Dates in card lists are formatted.
+  - "Holidays waiting for approval" opens the calendar on the holiday's month.
+  - A class teacher's register card says "View attendance" once the edit window has closed.
+- **Dark theme:** the soft primary background is darker (`#172554`), so blue text on it (active nav item, avatar initials) passes 4.5:1. Lighthouse accessibility is 100 on the dashboard and the attendance taker, phone and desktop, light and dark.
+- **School settings:** the logo upload button wraps under the file picker on phones.
+- **Phone width:** every sideways-scrolling area (tables, tab strips) is now `relative`, so the screen-reader-only labels inside a table can no longer stretch the whole page. The Daily summary, Custom fields, student list and monthly register now fit 360 px.
+- **Teacher marking after the edit window for the first time:** the taker no longer says "You can change this until 12:00 PM today" at 8 PM; it says the window has passed, the day can still be marked, and later changes go through the Clerk or the Principal.
+
+**Why:** the owner's review before commit.
+
+**Files:**
+
+- **Front end:** `features/shell/{BrandStack,SchoolCard}.tsx`, `features/attendance/{TakerPage,StaffPages,api}.tsx`, `features/attendance/attendance.test.tsx`, `features/dashboard/cards.tsx`, `features/settings/SchoolSettingsPage.tsx`, scroll wrappers in `features/{attendance,console,dashboard,people,setup}`, `locales/{en,hi}/common.json`, `packages/ui/src/tokens.css`, `packages/api/{openapi.json,src/schema.ts}`
+- **Back end:** `Attendance/Domain/StaffAttendanceService.php` (`canEnterFor`), `Attendance/Http/Controllers/StaffAttendanceController.php`, `Dashboard/Domain/Cards/{AttendanceCards,SchoolAdminCards}.php`, tests in `tests/Feature/Attendance/StaffAttendanceTest.php` and `tests/Feature/Dashboard/DashboardTest.php`
+
+**Report pages updated:** this entry, `modules/attendance.md`, `modules/system.md` (the report generator's page alias and the 404 renderer from earlier in Session 2, which the report check found missing), `languages.md`.
+
+**How to test:** sign in as Ramesh (`clerk@sunrise.test`) at `/attendance/staff`: his own row and the Principal's have no "Enter manually" button. At 360 px the header shows "Sunrise P…" and "2026-27" without overlap.
+
 ## 2026-11-27 · Session 2 · Phase 4 screens (attendance) and follow-ups
 
 **What changed:**

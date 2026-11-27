@@ -97,6 +97,18 @@ class StaffAttendanceService
     }
 
     /**
+     * Whether $actor may enter $target's attendance by hand: never their own,
+     * only for people below their level. The screen uses it to hide the button.
+     */
+    public function canEnterFor(User $actor, ?User $target): bool
+    {
+        return $target instanceof User
+            && (string) $target->getKey() !== (string) $actor->getKey()
+            && $this->access->allows($actor, 'staff_attendance.enter')
+            && $this->authority->outranks($actor, $target);
+    }
+
+    /**
      * @param  array{date: string, status: string, in?: string|null, out?: string|null, reason: string}  $input
      */
     public function manual(User $actor, Staff $staff, array $input): StaffAttendance

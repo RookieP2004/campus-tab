@@ -87,7 +87,7 @@ class SchoolAdminCards implements CardProvider
             $cards[] = [
                 'id' => 'recent_audit', 'kind' => 'list', 'title' => 'dashboard.cards.recentAudit', 'priority' => 40, 'link' => null,
                 'data' => ['items' => $events->map(fn (AuditLog $e) => [
-                    'label' => $e->action, 'detail' => $e->entity, 'by' => $e->actor['name'] ?? null, 'at' => $e->at->toIso8601String(), 'tone' => $e->category === 'security' ? 'warning' : null,
+                    'label' => $e->action, 'detail' => $e->entity, 'audit' => true, 'by' => $e->actor['name'] ?? null, 'at' => $e->at->toIso8601String(), 'tone' => $e->category === 'security' ? 'warning' : null,
                 ])->values()->all()],
             ];
         }

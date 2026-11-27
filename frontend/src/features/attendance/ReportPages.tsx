@@ -82,7 +82,7 @@ export function AttendanceSummaryPage() {
             ) : null}
           </div>
 
-          <Card className="overflow-x-auto p-0">
+          <Card className="relative overflow-x-auto p-0">
             <table className="w-full min-w-[640px] text-sm">
               <caption className="sr-only">{t('attendance.summary.tableCaption', { date: data.date })}</caption>
               <thead>
@@ -219,7 +219,7 @@ export function AttendanceRegisterPage() {
       {data && data.students.length === 0 ? <EmptyState title={t('attendance.register.empty')} /> : null}
 
       {data && data.students.length > 0 ? (
-        <div className="overflow-x-auto rounded-card border border-border bg-surface print:overflow-visible print:border-0">
+        <div className="relative overflow-x-auto rounded-card border border-border bg-surface print:overflow-visible print:border-0">
           <table className="register-grid w-full border-collapse text-xs">
             <caption className="sr-only">{t('attendance.register.caption')}</caption>
             <thead>

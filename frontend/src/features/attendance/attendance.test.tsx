@@ -235,8 +235,8 @@ describe('staff attendance', () => {
           data: {
             date: TODAY,
             staff: [
-              { staff_id: 'st1', name: 'Anita Verma', designation: 'Clerk', roles: ['clerk'], record: null },
-              { staff_id: 'st2', name: 'Ravi Kumar', designation: 'Teacher', roles: ['subject_teacher'], record: { id: 'r2', staff_id: 'st2', date: TODAY, status: 'P', in: '08:05', out: null, source: 'app', inside_area: true, late: false, entered_by: null, reason: null } },
+              { staff_id: 'st1', name: 'Anita Verma', designation: 'Clerk', roles: ['clerk'], can_enter: true, record: null },
+              { staff_id: 'st2', name: 'Ravi Kumar', designation: 'Teacher', roles: ['subject_teacher'], can_enter: false, record: { id: 'r2', staff_id: 'st2', date: TODAY, status: 'P', in: '08:05', out: null, source: 'app', inside_area: true, late: false, entered_by: null, reason: null } },
             ],
           },
         });
@@ -253,6 +253,7 @@ describe('staff attendance', () => {
     const list = await screen.findByRole('list', { name: 'Staff' });
     expect(within(list).getAllByRole('listitem')).toHaveLength(2);
 
+    expect(screen.queryByRole('button', { name: 'Enter manually: Ravi Kumar' })).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Enter manually: Anita Verma' }));
     const dialog = screen.getByRole('dialog', { name: 'Manual entry for Anita Verma' });
     await user.click(within(dialog).getByRole('button', { name: 'Save' }));

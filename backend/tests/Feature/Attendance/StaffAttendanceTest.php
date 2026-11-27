@@ -102,6 +102,18 @@ it('never lets anyone record their own attendance by hand, not even the Attendan
     $this->inSchool($this->tenant, fn () => expect(StaffAttendance::query()->count())->toBe(0));
 });
 
+it('tells the screen which rows the person may enter by hand: never their own, only people below them', function () {
+    $officer = member($this, Role::Clerk, ['attendance_officer']);
+    $staff = member($this, Role::Staff);
+    $principal = member($this, Role::Principal);
+
+    $rows = collect($this->actingWithToken($officer['user'])->getJson('/api/v1/attendance/staff')->assertOk()->json('data.staff'))->keyBy('staff_id');
+
+    expect($rows[(string) $staff['staff']->getKey()]['can_enter'])->toBeTrue()
+        ->and($rows[(string) $officer['staff']->getKey()]['can_enter'])->toBeFalse()
+        ->and($rows[(string) $principal['staff']->getKey()]['can_enter'])->toBeFalse();
+});
+
 it('needs a reason for a manual entry', function () {
     $this->actingWithToken(member($this, Role::Principal)['user'], steppedUp: true)
         ->postJson('/api/v1/attendance/staff/'.member($this, Role::Staff)['staff']->getKey().'/manual', ['date' => '2026-12-03', 'status' => 'P'])

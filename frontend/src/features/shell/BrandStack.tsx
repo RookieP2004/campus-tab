@@ -59,7 +59,7 @@ export function YearSwitcher({ compact = false }: { compact?: boolean }) {
   const value = list.some((y) => y.id === chosen) ? chosen : current?.id;
 
   return (
-    <div className={cn('relative flex items-center', compact ? 'min-w-0' : 'w-full')}>
+    <div className={cn('relative flex items-center', compact ? 'shrink-0' : 'w-full')}>
       <label htmlFor={id} className="sr-only">
         {t('school.year')}
       </label>
@@ -71,13 +71,13 @@ export function YearSwitcher({ compact = false }: { compact?: boolean }) {
         onChange={(e) => setYear(me.id, e.target.value)}
         className={cn(
           'h-11 rounded-input border border-border bg-bg ps-8 pe-3 text-[13px] font-medium text-fg focus-visible:outline-2 focus-visible:outline-ring disabled:text-muted',
-          compact ? 'max-w-40' : 'w-full',
+          compact ? '' : 'w-full',
         )}
       >
         {list.length === 0 ? <option value="">{t('school.yearPlaceholder')}</option> : null}
         {list.map((y) => (
           <option key={y.id} value={y.id}>
-            {y.status === 'current' ? t('school.yearCurrent', { name: y.name }) : y.name}
+            {y.status === 'current' && !compact ? t('school.yearCurrent', { name: y.name }) : y.name}
           </option>
         ))}
       </select>

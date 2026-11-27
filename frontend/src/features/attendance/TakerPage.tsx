@@ -70,7 +70,7 @@ export function AttendanceTakerPage() {
           <ArrowLeft aria-hidden="true" className="size-5 rtl:rotate-180" />
         </Link>
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold tracking-tight">{t('attendance.taker.title', { section: day.data?.section.label ?? '' })}</h1>
+          <h1 className="text-xl font-bold tracking-tight">{day.data ? t('attendance.taker.title', { section: day.data.section.label }) : t('nav.attendance')}</h1>
           {date ? <p className="text-sm text-muted">{formatLongDate(new Date(`${date}T12:00:00+05:30`), i18n.language)}</p> : null}
         </div>
       </div>
@@ -147,6 +147,8 @@ function Register({
   const [error, setError] = useState<string | null>(null);
   const [offlineTried, setOfflineTried] = useState(false);
   const [saving, setSaving] = useState(false);
+  // When this register was opened: enough to know whether today's window had already passed.
+  const [openedAt] = useState(() => Date.now());
   const showReason = editable && rules.needs_reason;
 
   const counts = useMemo(() => {
@@ -196,6 +198,8 @@ function Register({
 
   const refusal = rules.refusal ? t(`attendance.refusals.${rules.refusal}`, { defaultValue: rules.refusal_message ?? '', days: lateEntryDays }) : null;
   const todayWindow = editable && !rules.needs_reason && rules.window_closes_at;
+  // Marking a day for the first time after its edit window: allowed, but the next change goes through the office.
+  const windowPassed = todayWindow && new Date(rules.window_closes_at as string).getTime() <= openedAt;
 
   return (
     <div className="flex flex-col gap-3">
@@ -215,14 +219,20 @@ function Register({
       {!day.holiday && rules.reason_kind === 'late_entry' && !day.marked ? (
         <Alert tone="warning">
           <p className="font-semibold">{t('attendance.taker.lateEntryTitle')}</p>
-          <p>{t('attendance.taker.lateEntryBody', { date: day.date })}</p>
+          <p>{t('attendance.taker.lateEntryBody', { date: formatLongDate(new Date(`${day.date}T12:00:00+05:30`), i18n.language) })}</p>
           {rules.office_only && editable ? <p>{t('attendance.taker.lateEntryOffice', { days: lateEntryDays })}</p> : null}
         </Alert>
       ) : null}
 
       {!day.holiday && rules.reason_kind === 'late_edit' && editable ? <Alert tone="warning">{t('attendance.taker.lateEditOffice')}</Alert> : null}
 
-      {!editable && !day.holiday && refusal ? (
+      {justSaved && !editable ? (
+        <p role="status" className="flex min-h-11 items-center justify-center rounded-card bg-status-approved-bg px-3 text-center text-sm font-semibold text-status-approved-fg">
+          {t('attendance.taker.saved', { time: justSaved.at ? formatTime(justSaved.at, i18n.language) : '', count: justSaved.absent })}
+        </p>
+      ) : null}
+
+      {!editable && !day.holiday && refusal && !justSaved ? (
         <Alert tone="danger">
           <p>{refusal}</p>
           {rules.reason_kind === 'late_edit' || rules.office_only ? <p className="mt-1">{t('attendance.taker.askOffice')}</p> : null}
@@ -230,7 +240,7 @@ function Register({
       ) : null}
 
       {todayWindow ? (
-        <p className="text-sm text-muted">{t('attendance.taker.windowCloses', { time: formatTime(rules.window_closes_at, i18n.language) })}</p>
+        <p className="text-sm text-muted">{windowPassed ? t('attendance.taker.windowPassed') : t('attendance.taker.windowCloses', { time: formatTime(rules.window_closes_at, i18n.language) })}</p>
       ) : null}
 
       <div className="sticky top-[var(--shell-header,4.5rem)] z-10 -mx-1 flex flex-wrap gap-1.5 bg-bg px-1 py-1.5" aria-live="polite" data-testid="counts">

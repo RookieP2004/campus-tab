@@ -144,6 +144,7 @@
       "lateAfter": "{{time}} के बाद देर मानी जाएगी",
       "openRegister": "रजिस्टर खोलें",
       "changeAttendance": "उपस्थिति बदलें",
+      "viewAttendance": "उपस्थिति देखें",
       "takeAttendance": "उपस्थिति लें",
       "holiday": "छुट्टी: {{title}}",
       "marked_one": "भरी गई · {{count}} अनुपस्थित",
@@ -343,7 +344,8 @@
       "enteredBy": "{{name}} ने भरी, {{when}}",
       "byOffice": "कार्यालय द्वारा",
       "reason": "कारण",
-      "viewPhoto": "कागज़ी रजिस्टर की फ़ोटो देखें"
+      "viewPhoto": "कागज़ी रजिस्टर की फ़ोटो देखें",
+      "windowPassed": "आज बदलाव का समय निकल चुका है। आप अभी भी दिन भर सकते हैं; सहेजने के बाद कोई भी बदलाव क्लर्क या प्रधानाचार्य के ज़रिए होगा।"
     },
     "refusals": {
       "attendance_window_closed": "इस दिन को बदलने का समय निकल चुका है।",
@@ -951,7 +953,8 @@
     "staff": "स्टाफ़",
     "parent": "अभिभावक",
     "student": "विद्यार्थी",
-    "fee_collector": "फ़ीस संग्राहक"
+    "fee_collector": "फ़ीस संग्राहक",
+    "attendance_officer": "उपस्थिति अधिकारी"
   },
   "people": {
     "status": {
@@ -1422,6 +1425,50 @@
       "chooseTeacher": "अध्यापक चुनें",
       "assign": "सौंपें",
       "remove": "हटाएँ"
+    }
+  },
+  "auditLog": {
+    "actions": {
+      "sign_in": "साइन इन किया",
+      "sign_in__blocked": "साइन इन रोका गया",
+      "sign_in__otp_sent": "साइन-इन कोड भेजा गया",
+      "sign_out": "साइन आउट किया",
+      "sign_out__others": "दूसरे डिवाइस से साइन आउट किया",
+      "sign_out__remote": "एक डिवाइस से साइन आउट किया",
+      "mfa__enrolled": "दो-चरण साइन-इन चालू किया",
+      "mfa__reset": "दो-चरण साइन-इन रीसेट हुआ",
+      "step_up": "कोड से पुष्टि की",
+      "created": "बनाया",
+      "updated": "बदला",
+      "deleted": "हटाया",
+      "restored": "वापस लाया",
+      "user__created": "खाता बनाया",
+      "user__unlocked": "खाता खोला",
+      "user__roles_changed": "भूमिकाएँ बदलीं",
+      "user__deactivated": "खाता बंद किया",
+      "import__committed": "इम्पोर्ट पूरा हुआ",
+      "student_login__codes_issued": "विद्यार्थी सेटअप कोड छापे",
+      "parent_login__enabled": "अभिभावक साइन-इन चालू",
+      "parent_login__disabled": "अभिभावक साइन-इन बंद",
+      "staff__draft_approved": "स्टाफ़ ड्राफ़्ट स्वीकृत",
+      "staff__draft_rejected": "स्टाफ़ ड्राफ़्ट अस्वीकृत",
+      "chief__added": "चीफ़ एडमिन जोड़ा",
+      "chief__removed": "चीफ़ एडमिन हटाया",
+      "licence__activated": "लाइसेंस चालू हुआ",
+      "support__session_opened": "सपोर्ट सत्र खुला"
+    },
+    "entities": {
+      "users": "खाते",
+      "students": "विद्यार्थी",
+      "staff": "स्टाफ़",
+      "calendar_events": "अवकाश कैलेंडर",
+      "attendance_days": "कक्षा उपस्थिति",
+      "staff_attendance": "स्टाफ़ उपस्थिति",
+      "notices": "सूचनाएँ",
+      "school_configs": "स्कूल सेटिंग्स",
+      "sections": "सेक्शन",
+      "custom_fields": "कस्टम फ़ील्ड",
+      "imports": "इम्पोर्ट"
     }
   }
 }

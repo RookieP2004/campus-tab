@@ -45,7 +45,7 @@ export function PageHeader({ title, intro, actions }: { title: ReactNode; intro?
 /** A table that scrolls sideways inside its card on a phone. */
 export function TableFrame({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn('overflow-x-auto rounded-card border border-border bg-surface', className)}>
+    <div className={cn('relative overflow-x-auto rounded-card border border-border bg-surface', className)}>
       <table className="w-full min-w-max border-collapse text-sm">{children}</table>
     </div>
   );

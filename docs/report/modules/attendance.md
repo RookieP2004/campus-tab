@@ -85,7 +85,7 @@ All are in the `school` group.
 | `POST /attendance/staff/check-in` | method (app, qr), lat?, lng?, qr? | the day's record (201) | `staff_attendance.mark` |
 | `POST /attendance/staff/check-out` | as above | the record | `staff_attendance.mark` |
 | `GET /attendance/staff/me` | month? | is_staff, today, late_after, geofence (on or off), days | any staff-attendance ability |
-| `GET /attendance/staff` | date? | every active staff member with roles and the day's record | `staff_attendance.view`, `.manage` or `.enter` |
+| `GET /attendance/staff` | date? | every active staff member with roles, the day's record and `can_enter` (whether this person may enter that row by hand: never their own, only people below them) | `staff_attendance.view`, `.manage` or `.enter` |
 | `POST /attendance/staff/{staffId}/manual` | date, status (P, A, L, HD, LV), in?, out?, reason (5–300) | the record (201) | `staff_attendance.enter`, then the level check |
 | `GET /attendance/staff/qr` | — | token, expires_at | `staff_attendance.manage` |
 | `POST /attendance/staff/import` | file (CSV or .xlsx, up to 2 MB), commit? | rows, ok, errors, written | `staff_attendance.manage` |

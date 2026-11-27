@@ -123,7 +123,7 @@ export interface MyStaffAttendance {
 
 export interface StaffDay {
   date: string;
-  staff: { staff_id: string; name: string; designation: string | null; roles: string[]; record: StaffRecord | null }[];
+  staff: { staff_id: string; name: string; designation: string | null; roles: string[]; can_enter: boolean; record: StaffRecord | null }[];
 }
 
 export interface StaffImport {
