@@ -150,11 +150,11 @@ describe('a new account', function () {
 });
 
 describe('password rules', function () {
-    it('needs 10 characters and refuses common passwords from the bundled list', function (string $password) {
+    it('needs 12 characters and refuses common passwords from the bundled list', function (string $password) {
         newStaff($this, ['email' => 'weak@pass-bpl.test']);
 
         setPassword($this, linkSecret(lastMailedLink()), $password)->assertStatus(422)->assertJsonValidationErrors('password', 'error.details');
-    })->with(['short1234', '1234567890', 'password123', 'Password@123', 'qwertyuiop', 'iloveindia123', 'aaaaaaaaaaaa', 'cricket@2024']);
+    })->with(['short1234', 'quiet river', '1234567890', 'password123', 'Password@123', 'qwertyuiop', 'iloveindia123', 'aaaaaaaaaaaa', 'cricket@2024']);
 
     it('refuses the person\'s own login or name', function (string $password) {
         newStaff($this, ['name' => 'Kavya Ramesh', 'email' => 'kavyarao@pass-bpl.test', 'phone' => '+919822200077']);
@@ -251,6 +251,24 @@ describe('reset', function () {
         }
 
         Mail::assertSent(PasswordChangedMail::class);
+    });
+
+    it('refuses a new password under 12 characters in settings', function () {
+        $teacher = $this->schoolUser($this->tenant, Role::ClassTeacher, mfaEnabled: false);
+
+        $this->withToken($this->tokenFor($teacher))->putJson('/api/v1/me/password', [
+            'current_password' => TestData::PASSWORD, 'password' => 'quiet river', 'password_confirmation' => 'quiet river',
+        ])->assertStatus(422)->assertJsonValidationErrors('password', 'error.details');
+    });
+
+    it('still signs in an account whose password was set under the old 10-character minimum', function () {
+        $teacher = $this->schoolUser($this->tenant, Role::ClassTeacher, mfaEnabled: false);
+        $this->inSchool($this->tenant, fn () => $teacher->forceFill(['password' => 'tenletters'])->save());
+
+        $token = $this->postJson('/api/v1/auth/login', ['school_code' => 'PASS-BPL', 'login' => $teacher->email, 'password' => 'tenletters'])
+            ->assertOk()
+            ->json('data.token');
+        expect($token)->toBeString()->not->toBeEmpty();
     });
 
     it('audits every password event without any password, link or code', function () {

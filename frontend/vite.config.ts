@@ -41,5 +41,10 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // Fixed worker count and a longer timeout so the default run also passes on
+    // slower machines and CI runners (the default workers made a few UI tests
+    // pass the 5-second limit on a busy laptop).
+    maxWorkers: 2,
+    testTimeout: 15_000,
   },
 });

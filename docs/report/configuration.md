@@ -86,7 +86,7 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
 | `identity.php` | `sign_in.*` | 5 failures in a row lock an account for 15 minutes; per-IP limit from `SIGN_IN_IP_MAX_FAILURES` |
 | `identity.php` | `parent_otp.*` | Code lasts 5 minutes, 5 tries; 3 sends per phone per 10 minutes; 10 failures per phone per hour; per-IP limits from env |
 | `identity.php` | `sessions.*` | Sign in every time: idle limit 15 minutes at level 60 and up (`idle_minutes_mfa_roles`), 30 minutes otherwise (`idle_minutes`), 8 hours in total (`max_hours`) |
-| `identity.php` | `passwords.*` | At least 10 characters; set links 48 hours; reset links 30 minutes; 3 forgot-password requests per account per hour; the bundled common-password list |
+| `identity.php` | `passwords.*` | At least 12 characters; set links 48 hours; reset links 30 minutes; 3 forgot-password requests per account per hour; the bundled common-password list |
 | `identity.php` | `support.*` | Grants last 15 minutes to 72 hours; the areas a Chief can open and the abilities never given to support |
 | `permissions.php` | `abilities`, `scopes`, `roles`, `duties` | The permission catalogue, the default matrix, the duty allow-lists ([permissions.md](permissions.md)) |
 | `audit.php` | `purge_after_days`, `recyclable` | 30 days in the recycle bin before purge; models listed in the bin |

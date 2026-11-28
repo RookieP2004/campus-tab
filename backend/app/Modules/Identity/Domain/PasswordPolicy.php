@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 use SensitiveParameter;
 
 /**
- * Password rules for every school account: at least 10 characters, not the
+ * Password rules for every school account: at least 12 characters (ASVS 2.1.1), not the
  * person's login or name (assertNotPersonal), and not a common password. The common list is bundled with the app
  * (resources/security/common-passwords.txt); no outside service is called.
  *
@@ -37,7 +37,7 @@ final class PasswordPolicy implements ValidationRule
      */
     public static function rules(): array
     {
-        return ['required', 'string', 'confirmed', 'max:200', Password::min((int) config('identity.passwords.min_length', 10)), new self];
+        return ['required', 'string', 'confirmed', 'max:200', Password::min((int) config('identity.passwords.min_length', 12)), new self];
     }
 
     public function validate(string $attribute, #[SensitiveParameter] mixed $value, Closure $fail): void

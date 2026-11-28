@@ -30,7 +30,7 @@ Date: 2026-11-27 · Phase 1 · Status: accepted
    - **Resets:** "Forgot password" always gives the same reply. Its link lasts 30 minutes, with limits per account (3 an hour, silently) and per IP. The Principal or Chief can send a reset link to anyone below them, but never set the password.
    - **Storage:** links and codes are stored only as SHA-256 hashes.
    - **After any set, change or reset:** every session and token of the user ends (in settings, the current one too), MFA stays as it is, and the user is told by email or SMS.
-   - **Rules:** at least 10 characters, not the person's login or name, and not on the bundled common-password list (`resources/security/common-passwords.txt`), plus pattern checks. No outside service is called.
+   - **Rules:** at least 12 characters (raised from 10 in Phase 9, ASVS 2.1.1), not the person's login or name, and not on the bundled common-password list (`resources/security/common-passwords.txt`), plus pattern checks. No outside service is called.
 7. **Lost authenticator.**
    - **First choice:** a recovery code.
    - **Otherwise:** the Principal or Chief resets MFA for someone below their level, with step-up `mfa_reset`, and another Chief does it for a Chief. Nobody resets their own. The reset ends every session, and the person enrols again at the next sign-in.
