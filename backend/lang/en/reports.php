@@ -1,0 +1,31 @@
+<?php
+
+// Text printed on report cards. The card uses the school's default language.
+return [
+    'title' => 'Report card',
+    'year' => 'Academic year :year',
+    'student' => 'Student',
+    'admission_no' => 'Admission no.',
+    'class' => 'Class',
+    'roll_no' => 'Roll no.',
+    'dob' => 'Date of birth',
+    'subject' => 'Subject',
+    'total' => 'Total (%)',
+    'grade' => 'Grade',
+    'scholastic' => 'Scholastic areas',
+    'co_scholastic' => 'Co-scholastic areas',
+    'attendance' => 'Attendance',
+    'attendance_line' => ':present of :working working days',
+    'remarks' => 'Remarks',
+    'class_teacher_remark' => 'Class teacher',
+    'subject_remarks' => 'Subject remarks',
+    'descriptive' => 'Progress in words',
+    'result' => 'Result',
+    'overall' => 'Overall: :percent% · Grade :grade',
+    'results' => ['pass' => 'Passed', 'fail' => 'Needs improvement', 'incomplete' => 'Incomplete'],
+    'grace' => 'Grace applied',
+    'signatures' => ['class_teacher' => 'Class teacher', 'principal' => 'Principal', 'parent' => 'Parent or guardian'],
+    'version' => 'Version :version · issued :date',
+    'verify' => 'Scan to check this card is genuine',
+    'none' => '—',
+];

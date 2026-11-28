@@ -1,11 +1,13 @@
 import {
   Baby,
+  FileText,
   Bell,
   Building2,
   CalendarDays,
   ClipboardList,
   Clock,
   IdCard,
+  IndianRupee,
   ClipboardCheck,
   LayoutDashboard,
   type LucideIcon,
@@ -24,8 +26,10 @@ import type { Me } from '@/features/auth/api';
 import { holds, scopeOf } from '@/features/auth/permissions';
 
 /**
- * Shell navigation. An item shows when the person holds any permission that
- * starts with one of `permission` (for example "students.view"); hiding is
+ * Shell navigation. An item shows when the person holds one of `permission`:
+ * an ability in any scope ("students.view") or an exact ability:scope
+ * ("results.view:child"). A longer ability that merely starts the same
+ * (fees.receipt_cancel_request) does not count. Hiding is
  * only for tidiness, the server checks every request. Each phase adds its
  * screens here.
  */
@@ -50,13 +54,18 @@ export const navItems: NavItemDefinition[] = [
     icon: GraduationCap,
     permission: ['marks.enter', 'marks.verify', 'marks.lock', 'results.publish', 'exams.schedule', 'tests.create', 'assessment.scheme', 'marks.correction_request', 'marks.correction_approve'],
   },
+  { to: '/report-cards', label: 'nav.reportCards', icon: FileText, permission: ['results.publish', 'remarks.edit', 'report_templates.manage', 'year.promote'] },
   { to: '/results', label: 'nav.results', icon: Trophy, permission: ['results.view:child', 'results.view:own'] },
+  { to: '/fees', label: 'nav.fees', icon: IndianRupee, permission: ['fees.dues_view', 'fees.collect', 'fees.setup', 'fees.reports', 'fees.gateway_view', 'fees.gateway_edit', 'fees.closing_confirm'] },
   { to: '/leave', label: 'nav.leave', icon: Plane, permission: ['leave.apply', 'student_leave.apply', 'leave.manage_types'] },
   {
     to: '/approvals',
     label: 'nav.approvals',
     icon: ClipboardCheck,
-    permission: ['leave.verify', 'leave.decide', 'leave.decide_principal', 'leave.fast_track', 'student_leave.approve', 'marks.correction_approve'],
+    permission: [
+      'leave.verify', 'leave.decide', 'leave.decide_principal', 'leave.fast_track', 'student_leave.approve', 'marks.correction_approve',
+      'fees.adjust_approve', 'fees.adjust', 'fees.receipt_cancel_approve', 'fees.receipt_cancel_propose', 'fees.receipt_cancel', 'fees.closing_confirm',
+    ],
   },
   { to: '/notices', label: 'nav.notices', icon: Megaphone, permission: ['notices.view'] },
   { to: '/setup', label: 'nav.setup', icon: Settings2, permission: ['academic.manage'] },
@@ -73,7 +82,7 @@ export const accountItems: NavItemDefinition[] = [
 ];
 
 export function visibleNavItems(me: Pick<Me, 'permissions'>): NavItemDefinition[] {
-  return navItems.filter((item) => !item.permission || me.permissions.some((p) => item.permission?.some((needed) => p.startsWith(needed))));
+  return navItems.filter((item) => !item.permission || me.permissions.some((p) => item.permission?.some((needed) => p === needed || p.startsWith(`${needed}:`))));
 }
 
 /**

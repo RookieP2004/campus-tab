@@ -2,6 +2,70 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-28 · Browser review of Phases 7 and 8
+
+**What changed:** every new Phase 7 and 8 screen and the "Updated" tag were checked in Chrome, light and dark, at 360 and 1280 px, with axe-core (WCAG 2.1 A/AA plus best practice). Each "done when" was walked through with the demo accounts, including a fake-gateway payment as Suresh Patel. Fixes:
+
+- **Behaviour bugs:**
+  - The year-end promotion skipped a missing numbered class: 3-A was set to move to Class 6 because the school has no Class 4. A numbered class now moves to the next number; a class the school skipped is created as a draft on apply and listed in the preview (`roll_forward.new_classes`).
+  - A class teacher could not set co-scholastic grades: the areas came from `/report-templates/presets`, which needs `report_templates.manage`. The card now carries `co_scholastic_options` for whoever may set them.
+  - The **Approvals** menu entry showed for a fee collector, whose page then said "not allowed": menu permissions matched by plain prefix (`fees.receipt_cancel` matched `fees.receipt_cancel_request`). They now match the ability exactly, in any scope.
+  - Step-up: the "enter a code" request also showed as a red error, because of an out-of-date check. Fixed in fee approvals and in the report export.
+- **Clearer screens:**
+  - A replaced card links to the current version (`replaced_by_id`), and the re-issue message no longer disappears.
+  - A receipt with a cancellation waiting says so and stops offering "Ask to cancel" (`cancellation_pending`).
+  - Confirming a closing with no cash taken needs no count.
+  - The verify page has its own not-found text.
+  - The fee history names the fee head on each line and no longer shows internal codes such as `upi_counter` or a repeated receipt number.
+  - A run says "Starting…" instead of "0 of 0 done".
+  - Better wording: "1 receipt", the ₹ amount on the Collect button, and the messages after asking to cancel and after closing the day.
+- **Accessibility and layout:**
+  - Wide fee tables are keyboard-reachable regions (axe `scrollable-region-focusable`).
+  - Doubled icons in alerts are gone.
+  - At 360 px, labels no longer get crushed next to chips and amounts (subject rows, template blocks, instalments, receipts, approvals); the receipt date is no longer indented.
+  - Fee setup shows a spinner rather than "No plans yet" while plans load.
+
+**Why:** the browser review the previous session could not do (Chrome was not connected).
+
+**Files:**
+
+- **Back end:** `backend/app/Modules/Reports/Domain/{Promotion,CardAccess}.php`, `backend/app/Modules/Fees/Http/Controllers/StudentFeesController.php`, `backend/tests/Feature/Reports/ReportCardsTest.php`.
+- **Front end:** `frontend/src/features/reports/{ReportCardPages,TemplatesPage,PromotionPage,VerifyPage,FamilyCards,api}.tsx/ts`, `frontend/src/features/fees/{api.ts,useStepUp.ts,CounterPage,ClosingsPage,ReceiptPage,StudentFeesPage,MyFeesPage,ReportsPage,SetupPage,AdjustmentsPage,OnlinePage,FeeApprovalPanel}.tsx`, `frontend/src/features/fees/fees.test.tsx`, `frontend/src/features/shell/{navItems.ts,navItems.test.ts}`, `frontend/src/locales/{en,hi}/common.json`; `packages/api/{openapi.json,src/schema.ts}`.
+
+**Report pages updated:** `modules/{reports,fees,approvals}.md`, `frontend.md`.
+
+**How to test:** run `composer test` and the front-end checks as before. In the browser, the steps in `how-to/demo-school.md`; for the promotion, preview 2026-27 → 2027-28 as Dr. Meera Iyer: 3-A now moves to a new draft Class 4.
+
+## 2026-11-28 · Fixes, Phase 7 (report cards and year-end) and Phase 8 (fees)
+
+**What changed:**
+
+- **Fix 1:** `docs/BLUEPRINT.md` "Patterns we adopt" now says "Plan for poor internet … Campus TAB stays online-only, with a paper fallback that the teacher enters later."
+- **Fix 2:** every language, English included, loads on demand. Main bundle **585.61 kB → 526.82 kB** (gzip 184.48 → 164.76 kB).
+- **Fix 3:** a changed mark on an auto-published class test (before lock) is stamped `updated_at`; parents and students see an **Updated** tag on it.
+- **Fix 4 (flaky parallel tests), two causes found:**
+  - Overlapping runs shared databases: workers of a run that timed out or was stopped kept using `campus_tab_<n>_test` while the next run emptied the same collections. The parallel token is now `<n>_<run>` (run = the pest process's pid), so each run has its own databases, cache prefix and fake disks; databases are dropped when a process ends and dead runs' are cleaned up. Tests use the in-memory cache, so Redis was not the cause; `REDIS_PREFIX` is still set per run.
+  - The full-Aadhaar guard sometimes refused a request because a random 24-hex record id held a 12-digit run passing the Verhoeff check (both tests named send ids). Record ids and ULIDs are now skipped; real numbers are still caught.
+  - `composer test` no longer has Composer's 300-second limit (the suite now takes about five minutes).
+- **Phase 7:** grading engine with exact fractions and rounding once at the end (unit tests per preset); templates with presets and letterhead; background generation from **locked papers only**; Gotenberg PDFs with a QR code under the school's folder, served by 5-minute signed links after a permission check; public verification with identity facts only and an unguessable code; remarks, review, publish; Principal-only re-issue with a reason, old version kept, family told only that a new version exists; promotion wizard with full preview, digest, one transaction, audit, and a **read-only closed year** (`ClosedYears` on every school model).
+- **Phase 8:** the Fees module (see `modules/fees.md`): whole paise everywhere; dues raised from plans once; append-only ledger; counter payments with receipt numbers from an atomic counter inside the payment transaction (cancelled receipts keep their numbers); cheques; day-end closing; adjustments and receipt cancellations never approved by their proposer, with step-up (`fees_adjust_approve`, `receipt_cancel_approve`); server-set online amounts; signed, amount-checked, idempotent webhook with the school found from our order record (**decision 0015**); local fake gateway (local/testing only) sending a signed webhook from the queue worker; Razorpay test-mode keys entered by the Chief and stored encrypted; nightly reconciliation; reports with an audited step-up Excel export; notifications without amounts or names; class teachers see paid or pending only.
+- **Also:** new ability `fees.closing_confirm`; `policies.fees.chief_alert_paise`; receipt numbers keep the year exactly once even when the prefix holds it; fee approvals in the approvals inbox; demo seeders `DemoReportsSeeder`, `DemoFeesSeeder`; `gotenberg` service; the report checker maps `tests/Feature/Support` to `system.md`.
+- **Found and fixed while building:** nested ids in queries (`collector.id`) never matched, so the collector's id is stored at the top level; Eloquent `refresh()` skipped the tenant scope (replaced with scoped reads); the promotion now creates a missing next-class section (9-B → 10-B) as a draft instead of failing.
+
+**Why:** the session's three fixes plus the flaky-test fix, then Phase 7 and Phase 8 of `docs/BUILD-PROMPTS.md` with the owner's rules.
+
+**Files:**
+
+- **Back end:** `backend/app/Modules/Reports/**`, `backend/app/Modules/Fees/**` (new); `backend/app/Support/Models/{ClosedYears,GuardsClosedYear,SchoolModel}.php`; `backend/app/Support/Privacy/Aadhaar.php`; `backend/app/Modules/Assessment/{Domain/Markbook,Domain/Corrections,Domain/Assessments,Models/Paper,Http/Controllers/SchemeController}.php`; `backend/app/Modules/People/Domain/Families.php`; `backend/app/Modules/Tenancy/{Domain/DefaultConfig.php,Schemas/school-config.schema.json}`; `backend/config/{reports,fees,permissions,identity,communication,approvals}.php`; `backend/bootstrap/providers.php`; `backend/routes/console.php`; `backend/composer.json`; migrations `2026_12_01_000001`, `2026_12_02_000001`; seeders `DemoReportsSeeder`, `DemoFeesSeeder`, `DemoSchoolSeeder`; `backend/lang/{en,hi}/reports.php`.
+- **Tests:** `tests/Feature/Reports/ReportCardsTest.php`, `tests/Feature/Fees/FeesTest.php`, `tests/Unit/{Reports,Fees,Support}/*`, `tests/Feature/Support/ParallelIsolationTest.php`, `tests/TestCase.php`, `tests/Concerns/RefreshMongoDatabase.php`, `tests/Feature/Identity/{StepUpTest,RoutePermissionTest}.php`, `tests/Feature/Assessment/MarksTest.php`.
+- **Front end:** `frontend/src/features/{reports,fees}/**` (new), `features/assessment/{TestsPages,api}.ts(x)`, `features/approvals/ApprovalsPage.tsx`, `features/shell/navItems.ts`, `app/routes.tsx`, `i18n/index.ts`, `test/setup.ts`, `locales/{en,hi}/common.json`; `packages/api/{openapi.json,src/schema.ts}`.
+- **Infra and CI:** `infra/docker-compose.yml` (`gotenberg`, `GOTENBERG_URL`, `FAKE_GATEWAY_WEBHOOK_URL`), `.github/scripts/check-report.mjs`.
+
+**Report pages updated:** `modules/{reports,fees,assessment,academic-structure,leave,people,tenancy,identity-and-access,approvals,communication,system}.md`, `decisions/0015-payment-webhook-tenant-exception.md` (new), `decisions/0005…`, `permissions.md`, `configuration.md`, `operations.md`, `frontend.md`, `how-to/demo-school.md`, generated `api.md`, `data-dictionary.md`, `README.md`.
+
+**How to test:** `docker compose exec api composer test` and `composer lint`; `docker compose exec web npm test -w @campus-tab/frontend`, `run lint`, `run typecheck`, `run build`. In the browser: see "Done when" checks in `how-to/demo-school.md` (Report cards, Fees).
+
+
 ## 2026-11-27 · Phase 6 · Tests and marks (items 1–6)
 
 **What changed:**

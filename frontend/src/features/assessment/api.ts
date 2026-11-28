@@ -136,7 +136,7 @@ export interface Preset {
 
 export interface StudentResults {
   student: { id: string; name: string };
-  results: { paper_id: string; assessment: string | null; type: string | null; term: string | null; subject: string; max_marks: number; value: number | null; code: string | null; date: string | null; published_at: string | null }[];
+  results: { paper_id: string; assessment: string | null; type: string | null; term: string | null; subject: string; max_marks: number; value: number | null; code: string | null; updated_at: string | null; date: string | null; published_at: string | null }[];
 }
 
 /** What a cell holds: a number, AB or ML, or empty. */

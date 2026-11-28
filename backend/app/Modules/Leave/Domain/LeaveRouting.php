@@ -273,7 +273,7 @@ class LeaveRouting
      */
     private function wingDeputies(string $wing): Collection
     {
-        $users = User::query()->where('roles', Role::VicePrincipal->value)->where('status', User::STATUS_ACTIVE)->pluck('_id')->map(fn ($id) => (string) $id)->all();
+        $users = User::query()->where('roles', Role::VicePrincipal->value)->where('status', User::STATUS_ACTIVE)->get()->map(fn (User $u) => (string) $u->getKey())->all();
 
         return Staff::query()->whereIn('user_id', $users)->where('status', Staff::STATUS_ACTIVE)->where('wings', $wing)->get();
     }

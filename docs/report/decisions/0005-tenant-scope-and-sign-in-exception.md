@@ -17,3 +17,5 @@ Date: 2026-11-27 · Phase 1 · Status: accepted
    - **Password sign-in is not part of the exception.** It finds the school from its code first and looks the user up inside that school (`Identity\Domain\SchoolUserLocator`). `retrieveByCredentials` without a school throws.
 
 **Consequences.** New code that forgets the tenant fails loudly in tests. Adding a bypass anywhere else needs a new decision record. Queued jobs must call `TenantContext::run()` with the school they work for (the context is a scoped binding, empty at the start of each job).
+
+**Later:** a second exception, the payment webhook finding its school from our own order record, is [decision 0015](0015-payment-webhook-tenant-exception.md).

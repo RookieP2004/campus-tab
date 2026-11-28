@@ -127,3 +127,4 @@ The health endpoint is public on purpose and leaks no internal detail (a test ch
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Module created: health check, error shape, report generator | Phase 0 foundations |
 | 2026-11-27 | Session 2 | Report generator links Identity to `identity-and-access.md` (`PAGE_ALIASES`); the error renderer turns a policy's "deny as not found" into a 404 `not_found` | The README linked a page that does not exist; parents asking for a whole class register must get 404, not 403 |
+| 2026-11-28 | 7–8 | Parallel test runs: each process of each run has its own database, cache prefix and fake disks (token `<n>_<run>`); a run drops its databases at the end and those of dead runs. `composer test` has no Composer time limit | Overlapping runs (and timed-out runs' workers) emptied each other's collections, so tests failed now and then |

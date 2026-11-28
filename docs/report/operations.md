@@ -27,6 +27,7 @@ docker compose down -v      # stop and delete all volumes: database, vendor, nod
 | `api` | Laravel API (`php artisan serve`); installs Composer packages on first start | http://127.0.0.1:8000 |
 | `horizon` | Queue workers; starts after `api` is healthy | dashboard at http://127.0.0.1:8000/horizon (local only) |
 | `reverb` | WebSocket server | `127.0.0.1:8080` |
+| `gotenberg` | Chromium with Noto fonts: renders report card PDFs (Phase 7); reached only from the API containers | not published |
 | `web` | Vite dev server; installs npm packages on first start | http://127.0.0.1:5173 |
 
 **Always use `127.0.0.1`, not `localhost`.** Sign-in cookies (Phase 1) belong to one host name, and on this machine `localhost` also resolves to `::1`, where another Windows program (a `DllHost.exe` process) listens on port 8000.
@@ -64,7 +65,7 @@ When `composer.lock` or `package-lock.json` changes (for example after a `git pu
 
 ## Tests run in parallel
 
-`composer test` runs `pest --parallel`: one process per CPU, each with its own database `campus_tab_<n>_test` (the name still ends in `_test`). Each process migrates once, then empties the collections between tests. A full run takes about a minute. To run one file: `docker compose exec api php vendor/bin/pest tests/Feature/Platform`.
+`composer test` runs `pest --parallel`: one process per CPU. Each process **of each run** has its own database `campus_tab_<n>_<run>_test` (`<run>` is the pid of the pest process that started the workers; the name still ends in `_test`), and Laravel builds the cache prefix and `Storage::fake()` folders from the same token. Two runs at once, or workers left behind by a run that was stopped, therefore never empty each other's collections. Each process migrates once, empties the collections between tests, and drops its database when it ends; the first migrate also drops databases of runs that are no longer alive. A full run takes about four to six minutes; Composer's 300-second process limit is switched off for `composer test` (CI has its own job timeout). To run one file: `docker compose exec api php vendor/bin/pest tests/Feature/Platform`.
 
 ## The API client and the OpenAPI spec
 

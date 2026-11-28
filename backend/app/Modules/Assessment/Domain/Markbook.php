@@ -8,6 +8,7 @@ use App\Modules\Attendance\Domain\AttendanceRegister;
 use App\Modules\Audit\Domain\AuditRecorder;
 use App\Modules\Identity\Models\User;
 use App\Support\Http\ApiException;
+use App\Support\Models\ClosedYears;
 
 /**
  * The markbook for one paper: the section's roll with each student's mark,
@@ -23,6 +24,8 @@ use App\Support\Http\ApiException;
  *    code (AB absent, ML medical), or empty. Anything else is refused.
  *  - Each changed mark is written to the audit log as its own entry with
  *    the old and new value (marks.changed).
+ *  - On a published paper (an auto-published class test before lock) a
+ *    changed mark is stamped updated_at; families see an "Updated" tag.
  *  - Locked papers refuse every edit: a locked mark changes only through a
  *    correction the Principal approves.
  */
@@ -86,6 +89,7 @@ class Markbook
         }
 
         $roll = array_column($this->roll($paper), 'id');
+        /** @var array<string, array<string, mixed>> $current */
         $current = $paper->marksByStudent();
         $changed = [];
 
@@ -94,11 +98,23 @@ class Markbook
                 throw new ApiException('student_not_in_section', 'One of the students is not in this section.', 422, ['student_id' => $studentId]);
             }
 
+            /** @var array<string, mixed> $new the cell, plus updated_at once families have seen it */
             $new = self::cell($cell, $paper->max_marks, (string) $studentId);
             $old = $current[$studentId] ?? ['student_id' => (string) $studentId, 'value' => null, 'code' => null, 'remark' => null];
 
             if (self::same($old, $new)) {
                 continue;
+            }
+
+            // Once families can see the paper (an auto-published class test
+            // before lock), a changed mark carries "updated" so a mark they
+            // have seen never changes silently. A remark-only change keeps
+            // the earlier stamp, if any.
+            $markChanged = self::plain($old)['value'] !== $new['value'] || self::plain($old)['code'] !== $new['code'];
+            if ($paper->published_at !== null && $markChanged) {
+                $new['updated_at'] = now()->toIso8601String();
+            } elseif (isset($old['updated_at'])) {
+                $new['updated_at'] = $old['updated_at'];
             }
 
             $current[$studentId] = $new;
@@ -114,6 +130,7 @@ class Markbook
         }
 
         $marks = array_values($current);
+        app(ClosedYears::class)->assertOpen($paper->year_id);
 
         // Written only if nobody saved in between (the version still matches).
         $updated = Paper::query()->where('_id', $paper->getKey())->where('version', $expectedVersion)->whereIn('status', [Paper::OPEN, Paper::SUBMITTED])

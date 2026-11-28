@@ -11,7 +11,8 @@ use MongoDB\Laravel\Eloquent\SoftDeletes;
 /**
  * Base for a school record: tenant-scoped (BelongsToTenant), every write in
  * the audit log (Auditable), soft deletes to the recycle bin. Every school
- * collection's indexes start with tenant_id.
+ * collection's indexes start with tenant_id. Records of a closed academic
+ * year are read-only (ClosedYears).
  *
  * @property string $id
  * @property string $tenant_id
@@ -21,7 +22,7 @@ use MongoDB\Laravel\Eloquent\SoftDeletes;
  */
 abstract class SchoolModel extends Model
 {
-    use Auditable, BelongsToTenant, SoftDeletes;
+    use Auditable, BelongsToTenant, GuardsClosedYear, SoftDeletes;
 
     protected $connection = 'mongodb';
 

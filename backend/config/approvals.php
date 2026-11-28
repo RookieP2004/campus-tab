@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Assessment\Domain\CorrectionApprovals;
+use App\Modules\Fees\Domain\FeeApprovals;
 use App\Modules\Leave\Domain\LeaveApprovals;
 
 /*
@@ -13,6 +14,7 @@ return [
     'sources' => [
         LeaveApprovals::class,
         CorrectionApprovals::class,
+        FeeApprovals::class,
     ],
 
 ];

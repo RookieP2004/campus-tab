@@ -101,3 +101,4 @@ None yet.
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 2 | Module built | Phase 2 item 1 |
+| 2026-11-28 | 7 | Sections and teaching assignments carry `draft` (rolled forward by the year-end wizard); a closed year's records are read-only (`ClosedYears`) | Year-end promotion |

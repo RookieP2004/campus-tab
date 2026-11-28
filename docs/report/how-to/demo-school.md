@@ -63,3 +63,20 @@ A school made before Phase 5 needs `php artisan identity:sync-roles --with-new-p
 - **Unit Test 1:** 7-B Mathematics (Anjali Verma) and 7-B Science (Rakesh Sharma) are entered, verified, locked and published. Suresh Patel sees Aarav's marks under **Results**.
 - **A correction is waiting:** Rakesh Sharma asked to change the first 7-B student's Science mark by 4. Dr. Meera Iyer approves it in `/approvals` with a fresh authenticator code and a typed reason.
 - **Unit Test 2:** 8-A Science is open with 9 of 12 marks in (the markbook design), and 8-A English is open and empty. Rakesh Sharma enters the rest at `/tests`.
+
+## Report cards (Phase 7)
+
+`DemoReportsSeeder` (run by `DemoSchoolSeeder`, or `php artisan db:seed --class=DemoReportsSeeder`; start `docker compose up -d gotenberg` first for the PDF):
+
+- An active CBSE-style scheme for Classes 6 to 8 and a **Half-yearly exam** (Term 1) for 7-B Mathematics and Science, locked.
+- A template from the CBSE I–VIII preset, and 7-B's cards made. Anjali Verma wrote the class remark on the first two; the first card is **published** with its PDF and QR code.
+- Dr. Meera Iyer reviews and publishes the rest at `/report-cards`, and can re-issue the published one with a reason. Suresh Patel sees Aarav's card under **Results → Report cards** if Aarav's is the published one.
+
+## Fees (Phase 8)
+
+`DemoFeesSeeder` (run by `DemoSchoolSeeder`, or `php artisan db:seed --class=DemoFeesSeeder`):
+
+- Heads Tuition, Annual charges, Transport, Exam; one plan for every class with four quarters, a ₹50 late fine after 5 days and a 10% sibling discount on tuition (Aarav and Riya are siblings). Dues raised up to today.
+- **Kamla Devi** has the Fee Collector duty and one cash payment today; **Ramesh Kumar** took two counter UPI payments for Aarav. Both can close their day at `/fees/closings`; Ramesh's own closing is confirmed by Dr. Meera Iyer.
+- A **waiver** Ramesh proposed waits for Dr. Meera Iyer in `/approvals` (step-up).
+- The **local test gateway** is on: Suresh Patel presses **Pay now** at `/fees`, chooses **Pay** in the test checkout, and the dues turn Paid when the signed webhook arrives (the `horizon` container sends it).

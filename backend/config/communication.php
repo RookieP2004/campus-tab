@@ -38,10 +38,17 @@ return [
         // Marks (owner's rule): only that results are out, never the marks.
         'results.published' => 'Results are out at :school. Open Campus TAB to see them.',
         'marks.correction' => 'A mark correction has an update. Open Campus TAB to see it.',
+        // Report cards (owner's rule 5): only that a card or a new version is ready.
+        'report_card.published' => 'A report card is ready at :school. Open Campus TAB to see it.',
+        'report_card.new_version' => 'A new version of a report card is available at :school. Open Campus TAB to see it.',
+        // Fees (owner's rule 7): never an amount or a name.
+        'fees.payment_received' => 'A payment was received at :school. Open Campus TAB for the receipt.',
+        'fees.waiver_alert' => 'A large fee waiver was approved at :school. Open Campus TAB to see it.',
+        'fees.reconciliation' => 'Online fee payments need checking at :school. Open Campus TAB to see them.',
         'default' => 'There is something new for you from :school. Open Campus TAB to see it.',
     ],
 
     // Types a person can mute in their preferences.
-    'types' => ['notice', 'attendance.absent', 'leave.updated', 'leave.waiting', 'results.published', 'marks.correction'],
+    'types' => ['notice', 'attendance.absent', 'leave.updated', 'leave.waiting', 'results.published', 'marks.correction', 'report_card.published', 'report_card.new_version', 'fees.payment_received', 'fees.waiver_alert', 'fees.reconciliation'],
 
 ];

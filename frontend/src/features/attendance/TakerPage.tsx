@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Camera, FileSpreadsheet, Image, MoreHorizontal, WifiOff } from 'lucide-react';
+import { ArrowLeft, Camera, FileSpreadsheet, Image, MoreHorizontal } from 'lucide-react';
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router';
@@ -204,12 +204,7 @@ function Register({
   return (
     <div className="flex flex-col gap-3">
       {!online || offlineTried ? (
-        <Alert tone="warning">
-          <span className="flex items-start gap-2">
-            <WifiOff aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-            {t('attendance.taker.offline', { days: lateEntryDays })}
-          </span>
-        </Alert>
+        <Alert tone="warning">{t('attendance.taker.offline', { days: lateEntryDays })}</Alert>
       ) : null}
 
       {day.holiday ? <Alert tone="info">{t('attendance.taker.holiday', { title: day.holiday.title })}</Alert> : null}

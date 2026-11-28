@@ -213,6 +213,8 @@ class DemoSchoolSeeder extends Seeder
 
         $this->leave($staff);
         (new DemoMarksSeeder)->setContainer(app())->run();
+        (new DemoReportsSeeder)->setContainer(app())->run();
+        (new DemoFeesSeeder)->setContainer(app())->run();
     }
 
     /**

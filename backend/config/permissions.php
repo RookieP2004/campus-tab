@@ -116,6 +116,11 @@ return [
         'results.publish' => ['school', 'wing'],
         'results.view' => ['school', 'own', 'child'],
         'remarks.edit' => ['school', 'wing', 'class', 'subject'],
+        // Report cards (Phase 7): the template designer, re-issue (the Principal
+        // only, with a reason) and the year-end promotion wizard.
+        'report_templates.manage' => ['school'],
+        'report_cards.reissue' => ['school'],
+        'year.promote' => ['school'],
 
         // Customisation and notices (Phases 2 and 3)
         'custom_fields.manage' => ['school', 'wing', 'class', 'subject'],
@@ -138,6 +143,8 @@ return [
         'fees.dues_view' => ['school', 'class', 'own', 'child'],
         'fees.pay_online' => ['child'],
         'fees.reports' => ['school', 'own'],
+        // Confirming someone else's day-end cash closing (never your own; a Clerk's only by the Principal or Chief).
+        'fees.closing_confirm' => ['school'],
     ],
 
     /*
@@ -167,9 +174,10 @@ return [
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
                 'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.correction_request:school',
                 'results.publish:school', 'results.view:school', 'remarks.edit:school',
+                'report_templates.manage:school', 'year.promote:school',
                 'custom_fields.manage:school', 'notices.send:school', 'notices.view:school',
                 'fees.gateway_view:school', 'fees.gateway_edit:school', 'fees.setup:school', 'fees.collect:school',
-                'fees.adjust:school', 'fees.receipt_cancel:school', 'fees.dues_view:school', 'fees.reports:school',
+                'fees.adjust:school', 'fees.receipt_cancel:school', 'fees.dues_view:school', 'fees.reports:school', 'fees.closing_confirm:school',
             ],
         ],
         'principal' => [
@@ -190,9 +198,10 @@ return [
                 'assessment.scheme:school', 'exams.schedule:school', 'tests.create:school',
                 'marks.enter:school', 'marks.verify:school', 'marks.lock:school', 'marks.correction_request:school', 'marks.correction_approve:school',
                 'results.publish:school', 'results.view:school', 'remarks.edit:school',
+                'report_templates.manage:school', 'report_cards.reissue:school', 'year.promote:school',
                 'custom_fields.manage:school', 'notices.send:school', 'notices.view:school',
                 'fees.gateway_view:school', 'fees.setup:school', 'fees.collect:school', 'fees.adjust_approve:school',
-                'fees.receipt_cancel_approve:school', 'fees.dues_view:school', 'fees.reports:school',
+                'fees.receipt_cancel_approve:school', 'fees.dues_view:school', 'fees.reports:school', 'fees.closing_confirm:school',
             ],
         ],
         'vice_principal' => [
@@ -223,7 +232,7 @@ return [
                 'marks.enter:school', 'marks.lock:school', 'marks.correction_request:school',
                 'custom_fields.clerical:school', 'notices.send:school', 'notices.view:school',
                 'fees.setup:school', 'fees.collect:school', 'fees.adjust_propose:school', 'fees.receipt_cancel_propose:school',
-                'fees.dues_view:school', 'fees.reports:school',
+                'fees.dues_view:school', 'fees.reports:school', 'fees.closing_confirm:school',
             ],
         ],
         'class_teacher' => [

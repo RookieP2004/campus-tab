@@ -110,7 +110,16 @@ The full table is in [modules/assessment.md](modules/assessment.md), section 9.
 | `export` | (Phase 2 and later exports) | 10 minutes |
 | `marks_correction_approve` | `POST /corrections/{id}/approve` (the Principal; a self-raised correction needs a code newer than the request) | 10 minutes |
 
-`marks_unlock` was removed in Phase 6 (owner's decision: there is no unlock). Phase 8 adds fee rebates and waivers to this list.
+| `fees_adjust_approve` | `POST /fees/adjustments/{id}/approve` (rebate, waiver, fine waiver, refund, scholarship, carry-forward; never the proposer) | 10 minutes |
+| `receipt_cancel_approve` | `POST /fees/cancellations/{id}/approve` (never whoever requested or proposed it) | 10 minutes |
+
+`export` now also guards `GET /fees/reports/{type}/export` (audited as `fees.report_exported`). `marks_unlock` was removed in Phase 6 (owner's decision: there is no unlock).
+
+## Phase 7 and 8 abilities
+
+- **Report cards:** `report_templates.manage` (Chief, Principal), `report_cards.reissue` (Principal; the code also requires the Principal role), `year.promote` (Chief, Principal).
+- **Fees:** the blueprint's "Who can do what" table, as listed in [modules/fees.md](modules/fees.md) section 9, plus **`fees.closing_confirm`** (Chief, Principal, Clerk), new because the matrix names who confirms a day-end closing but had no right for it. Separation of duty is checked in code: no one approves their own adjustment or cancellation, no collector confirms their own closing, and a Clerk's closing is confirmed only by the Principal or the Chief.
+- Existing schools: `php artisan identity:sync-roles --with-new-permissions`.
 
 ## Default roles as coded
 

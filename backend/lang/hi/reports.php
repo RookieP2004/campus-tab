@@ -1,0 +1,31 @@
+<?php
+
+// रिपोर्ट कार्ड पर छपने वाला पाठ। कार्ड स्कूल की मुख्य भाषा में बनता है।
+return [
+    'title' => 'रिपोर्ट कार्ड',
+    'year' => 'शैक्षणिक वर्ष :year',
+    'student' => 'विद्यार्थी',
+    'admission_no' => 'प्रवेश संख्या',
+    'class' => 'कक्षा',
+    'roll_no' => 'अनुक्रमांक',
+    'dob' => 'जन्म तिथि',
+    'subject' => 'विषय',
+    'total' => 'कुल (%)',
+    'grade' => 'ग्रेड',
+    'scholastic' => 'शैक्षिक क्षेत्र',
+    'co_scholastic' => 'सह-शैक्षिक क्षेत्र',
+    'attendance' => 'उपस्थिति',
+    'attendance_line' => ':working कार्य दिवसों में से :present',
+    'remarks' => 'टिप्पणियाँ',
+    'class_teacher_remark' => 'कक्षा शिक्षक',
+    'subject_remarks' => 'विषय टिप्पणियाँ',
+    'descriptive' => 'प्रगति शब्दों में',
+    'result' => 'परिणाम',
+    'overall' => 'कुल: :percent% · ग्रेड :grade',
+    'results' => ['pass' => 'उत्तीर्ण', 'fail' => 'सुधार की आवश्यकता', 'incomplete' => 'अपूर्ण'],
+    'grace' => 'कृपांक दिए गए',
+    'signatures' => ['class_teacher' => 'कक्षा शिक्षक', 'principal' => 'प्रधानाचार्य', 'parent' => 'अभिभावक'],
+    'version' => 'संस्करण :version · जारी :date',
+    'verify' => 'यह कार्ड असली है, जाँचने के लिए स्कैन करें',
+    'none' => '—',
+];

@@ -230,3 +230,4 @@ Fixed rules, not settings: nobody decides their own leave; a delegate never deci
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 5 | Leave module built: staff and student leave, ledger, routing, privacy, reminders, cover, screens | Phase 5 of `docs/BUILD-PROMPTS.md` with the owner's rules |
+| 2026-11-28 | 7 | Vice Principal routing reads user ids with `getKey()` instead of `pluck('_id')` | ObjectId values compared as strings |

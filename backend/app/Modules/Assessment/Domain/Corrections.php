@@ -132,7 +132,7 @@ class Corrections
                 throw new ApiException('correction_stale', 'The mark has changed since this correction was raised. Ask for a new correction.', 409);
             }
 
-            $marks[$fresh->student_id] = array_merge($current, ['value' => $fresh->new['value'], 'code' => $fresh->new['code']]);
+            $marks[$fresh->student_id] = array_merge($current, ['value' => $fresh->new['value'], 'code' => $fresh->new['code']], $paper->published_at !== null ? ['updated_at' => now()->toIso8601String()] : []);
             $paper->fill([
                 'marks' => array_values($marks),
                 'version' => $paper->version + 1,

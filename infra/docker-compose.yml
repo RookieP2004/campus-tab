@@ -39,6 +39,9 @@ x-api-base: &api-base
     MAIL_MAILER: smtp
     MAIL_HOST: mailpit
     MAIL_PORT: 1025
+    GOTENBERG_URL: http://gotenberg:3000
+    # The fake payment gateway (local only) sends its signed webhook here, from the queue worker.
+    FAKE_GATEWAY_WEBHOOK_URL: http://api:8000/api/v1/webhooks/payments/fake
 
 services:
   mongo:
@@ -74,6 +77,12 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+
+  # Report card PDFs (Phase 7): Chromium with the Noto fonts, reached only
+  # from the API containers. Not published on the host.
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    command: ["gotenberg", "--chromium-disable-javascript=true", "--chromium-allow-list=file:///tmp/.*"]
 
   mailpit:
     image: axllent/mailpit:latest

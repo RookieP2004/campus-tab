@@ -10,6 +10,7 @@ use App\Support\Models\SchoolModel;
  * "wing" scope.
  *
  * @property string $year_id
+ * @property bool|null $draft rolled forward by the year-end wizard, not yet confirmed
  * @property string $class_id
  * @property string $name e.g. "B"
  * @property string $label e.g. "7-B"
@@ -22,7 +23,7 @@ class Section extends SchoolModel
     protected $table = 'sections';
 
     /** @var list<string> */
-    protected $fillable = ['tenant_id', 'year_id', 'class_id', 'name', 'label', 'wing', 'class_teacher_id', 'room'];
+    protected $fillable = ['tenant_id', 'year_id', 'class_id', 'name', 'label', 'wing', 'class_teacher_id', 'room', 'draft'];
 
     /** @var array<string, mixed> */
     protected $attributes = ['wing' => null, 'class_teacher_id' => null, 'room' => null];

@@ -55,6 +55,12 @@ const OPEN_ROUTES = [
     'GET api/v1/files/attendance/{tenant}/{day}',
     // A leave document, decrypted, only through a short-lived signed link
     'GET api/v1/files/leave/{tenant}/{request}/{doc}',
+    // A report card PDF, only through a short-lived signed link (Phase 7)
+    'GET api/v1/files/report-cards/{tenant}/{card}',
+    // The public page a report card's QR code opens: identity facts only, no marks (Phase 7)
+    'GET api/v1/public/verify/{school}/{code}',
+    // The payment gateway's callback: no signed-in user; the signature on the raw body is the check (Phase 8, decision 0015)
+    'POST api/v1/webhooks/payments/{gateway}',
     // Platform accounts only (auth:platform); the school side is checked per grant
     'POST api/v1/platform/support/sessions',
 ];

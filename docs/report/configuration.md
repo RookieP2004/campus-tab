@@ -164,6 +164,10 @@ Defined in [`infra/.env.example`](../../infra/.env.example): `API_PORT` 8000, `W
 - **`config/identity.php`:** step-up action `marks_correction_approve` replaces `marks_unlock`.
 - **`config/approvals.php`:** `CorrectionApprovals` added. **`config/communication.php`:** `results.published`, `marks.correction`. **`config/dashboard.php`:** `AssessmentCards`.
 
+- **Phase 7, `config/reports.php`:** blocks, template presets (starting points only), co-scholastic areas and grades, letterhead (PNG/JPG, 1 MB), `remark_max` 400, `reissue_reason_min` 10, `link_minutes` 5, `pdf.driver` (`gotenberg`; `fake` in tests only, `REPORTS_PDF_DRIVER`), `pdf.gotenberg_url` (`GOTENBERG_URL`), `verification.code_bytes` 32 and `per_minute` 30.
+- **Phase 8, `config/fees.php`:** `modes`, `clearance_modes` (cheque, dd), `adjustment_kinds`, `raise_days_before` 30, `bounce_fine_paise` (`FEES_BOUNCE_FINE_PAISE`, 0), `reason_min` 10, `gateway` (drivers razorpay and fake, `fake_environments` local and testing, `razorpay_api` (`RAZORPAY_API_URL`), `order_minutes` 30, `fake_webhook_url` (`FAKE_GATEWAY_WEBHOOK_URL`; `http://api:8000/…` in Docker)), `reports.types`.
+- **School config, Phase 8:** `policies.fees.chief_alert_paise` (integer paise, default 500000): an approved waiver, rebate, fine waiver or scholarship above it alerts the Chief.
+
 ## School config keys
 
 Each school's versioned config, validated by [`school-config.schema.json`](../../backend/app/Modules/Tenancy/Schemas/school-config.schema.json). Every object forbids unknown keys. "Edits" says who may change the key (Tenancy page, section 9).

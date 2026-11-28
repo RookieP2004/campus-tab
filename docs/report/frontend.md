@@ -234,3 +234,15 @@ Screens are in [`features/assessment/`](../../frontend/src/features/assessment/)
 - Open the app at **http://127.0.0.1:5173**, never `localhost`: sign-in cookies (Phase 1) are tied to one host name.
 - The dev server runs in the `web` container, binds to `0.0.0.0` and watches files by polling, because Docker on Windows does not pass file-change events from the D: drive.
 - `node_modules` folders live in Docker volumes; run npm through `docker compose run --rm web …` (see [operations.md](operations.md)).
+
+## Languages load on demand (2026-11-28)
+
+Every language, English included, is its own chunk (`src/i18n/index.ts`, `i18next-resources-to-backend`). `main.tsx` waits for `i18nReady` before the first render, so no text flashes. The main bundle went from **585.61 kB (184.48 kB gzip)** to **526.82 kB (164.76 kB gzip)**; English is a 59.5 kB chunk and no longer grows the main bundle with each phase. Tests wait for `i18nReady` once in `src/test/setup.ts`.
+
+## Phase 7 and 8 screens
+
+Report cards (`features/reports/`), the public verification page `/verify/:school/:code` (outside the session guard), and fees (`features/fees/`): see [modules/reports.md](modules/reports.md) and [modules/fees.md](modules/fees.md). Money is shown from whole paise with `rupees()`, built from integers only.
+
+## Navigation rule
+
+A menu entry (`features/shell/navItems.ts`) shows when the person holds one of its abilities in any scope, or an exact `ability:scope`. A longer ability that only starts the same (`fees.receipt_cancel_request` against `fees.receipt_cancel`) does not count. Hiding is for tidiness only; the server checks every request. Tested in `navItems.test.ts`.

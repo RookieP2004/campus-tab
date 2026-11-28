@@ -234,7 +234,9 @@ it('shows parents and students only published marks, and tells them only that re
         ->assertJsonPath('data.results.0.subject', 'Science')->assertJsonPath('data.results.0.value', 32);
 
     $note = $this->inSchool($this->tenant, fn () => Notification::query()->where('user_id', (string) $parent->getKey())->where('type', 'results.published')->firstOrFail());
-    expect($note->title)->toBe('Results are out')->and(json_encode($note->toArray()))->not->toContain('32')->not->toContain('Science');
+    // Only the words a family reads: the record's ids are random hex and may contain "32" by chance.
+    $text = json_encode([$note->title, $note->body, $note->data]);
+    expect($note->title)->toBe('Results are out')->and($text)->not->toContain('32')->not->toContain('Science');
 });
 
 it('locks and publishes every eligible paper of an assessment together', function () {
@@ -297,6 +299,32 @@ it('publishes an auto-publish class test at submit and keeps it editable until i
     $this->actingWithToken($this->classTeacher['user'])->postJson("/api/v1/papers/{$paper}/verify")->assertOk();
     $this->actingWithToken($this->clerk['user'])->postJson("/api/v1/papers/{$paper}/lock")->assertOk();
     saveMarks($this, $this->teacher, $paper, paperRecord($this, $paper)->version, [(string) $this->a->getKey() => ['value' => 9]])->assertStatus(409);
+});
+
+it('tags a mark that changed after an auto-published class test was published, so families see it was updated', function () {
+    $guardian = $this->guardianOf($this->tenant, $this->a);
+    $parent = $this->inSchool($this->tenant, fn () => app(ParentLogins::class)->enable($this->chief, $guardian));
+    $paper = $this->actingWithToken($this->teacher['user'])->postJson('/api/v1/assessments', [
+        'kind' => 'class_test', 'type' => 'weekly', 'name' => 'Quiz 5', 'from' => '2026-12-02', 'to' => '2026-12-02',
+        'papers' => [['section_id' => (string) $this->section->getKey(), 'subject_id' => (string) $this->science->getKey(), 'max_marks' => 10]],
+    ])->assertCreated()->json('data.papers.0.id');
+    $a = (string) $this->a->getKey();
+    $b = (string) $this->b->getKey();
+
+    // Changes before publishing carry no tag.
+    saveMarks($this, $this->teacher, $paper, 1, [$a => ['value' => 6], $b => ['value' => 9]])->assertOk();
+    saveMarks($this, $this->teacher, $paper, 2, [$a => ['value' => 8]])->assertOk();
+    $this->actingWithToken($this->teacher['user'])->postJson("/api/v1/papers/{$paper}/submit")->assertOk()->assertJsonPath('data.published', true);
+    $this->actingWithToken($parent)->getJson("/api/v1/results/students/{$a}")->assertOk()
+        ->assertJsonPath('data.results.0.value', 8)->assertJsonPath('data.results.0.updated_at', null);
+
+    // After publishing, a changed mark is tagged; a remark-only change is not a new mark.
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-12-03 11:00', 'Asia/Kolkata'));
+    saveMarks($this, $this->teacher, $paper, paperRecord($this, $paper)->version, [$a => ['value' => 7.5], $b => ['value' => 9, 'remark' => 'Neat work']])->assertOk();
+    $this->actingWithToken($parent)->getJson("/api/v1/results/students/{$a}")->assertOk()
+        ->assertJsonPath('data.results.0.value', 7.5)->assertJsonPath('data.results.0.updated_at', fn ($at) => is_string($at) && str_starts_with($at, '2026-12-03'));
+    $marks = paperRecord($this, $paper)->marksByStudent();
+    expect($marks[$b])->not->toHaveKey('updated_at');
 });
 
 it('lets a class teacher type marks only when the school switches it on', function () {
