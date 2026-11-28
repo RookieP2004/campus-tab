@@ -658,11 +658,11 @@
     "password": {
       "setTitle": "Choose your password",
       "resetTitle": "Choose a new password",
-      "rules": "At least 10 characters. Not your name, email or phone, and not a common password.",
+      "rules": "At least 12 characters. Not your name, email or phone, and not a common password.",
       "new": "New password",
       "confirm": "Type it again",
       "save": "Save password",
-      "tooShort": "Use at least 10 characters.",
+      "tooShort": "Use at least 12 characters.",
       "mismatch": "The two passwords are not the same.",
       "done": "Your password is saved. Sign in with it now."
     },

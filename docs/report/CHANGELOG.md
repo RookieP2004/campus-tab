@@ -2,6 +2,37 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-28 · Phase 9 · Final fixes: 12-character passwords, load test before the pilot, steadier Vitest
+
+**What changed:**
+
+- **Password minimum is now 12 characters** (OWASP ASVS 2.1.1, the owner's decision):
+  - `identity.passwords.min_length` is 12, and so is the fallback in `PasswordPolicy`.
+  - The browser checks 12 before sending, on the set/reset password pages and on the Chief's step in licence activation.
+  - The rule hint and the "too short" message say 12, in English and Hindi.
+  - It applies when a password is set, reset or changed, including the console admin's own. Sign-in does not check length, so existing accounts keep their password until they next change it.
+  - ASVS 2.1.1 is now **Met** in `security.md`. The other "at least 10 characters" hints are for typed reasons, not passwords, and are unchanged.
+- **Pilot pack:** `before-going-live.md` has a new **Performance** section. It says to rerun the k6 load test against staging before the pilot (seed a `_load` database there, never production), with the exact commands:
+  - `docker compose --profile loadtest run --rm --no-deps -e SMOKE=1 -e BASE_URL=https://api.<your-domain>/api/v1 k6`
+  - the same command without `SMOKE=1`
+  The "Password minimum" line is ticked as decided.
+- **Vitest:** `vite.config.ts` fixes `maxWorkers: 2` and `testTimeout: 15_000`, so the default `npm test` passes on slower machines and in CI, not only with `--maxWorkers=2`.
+
+**Why:** The owner's final-fixes list: ASVS level 2 asks for 12 characters; the laptop load-test numbers are only indicative; with the default workers, five UI tests went past the 5-second timeout on a busy machine.
+
+**Files:** `backend/app/Modules/Identity/Domain/PasswordPolicy.php`, `backend/config/identity.php`, `backend/resources/security/common-passwords.txt` (comment), `backend/tests/Feature/Identity/PasswordsAndSessionsTest.php`, `frontend/src/features/auth/{ActivatePage,PasswordPages}.tsx`, `frontend/src/locales/{en,hi}/common.json`, `frontend/vite.config.ts`.
+
+**Report pages updated:** `security.md`, `configuration.md`, `decisions/0006-sign-in-mfa-and-sessions.md`, `modules/identity-and-access.md`, `pilot/before-going-live.md`.
+
+**How to test:**
+- `docker compose exec api php vendor/bin/pest tests/Feature/Identity`. The password-rules test now refuses an 11-character password. New tests: a settings change to an 11-character password is refused, and an account with an older 10-character password still signs in.
+- `docker compose exec web npm test -w @campus-tab/frontend` with no flags.
+
+**Checks run (28 November 2026):**
+- Identity, Licensing and Platform tests: 216 passed.
+- Front end: Vitest 81 passed with the default command, while the back-end suite was running at the same time; typecheck clean; lint 0 errors (3 earlier warnings).
+- Full back end: `composer test` passed 550 with 5,611 assertions. 1 test was skipped: the real-ClamAV test, because `CLAMAV_TEST_HOST` was not set for this run. Pint and PHPStan level 6 clean.
+
 ## 2026-11-28 · Phase 9 · Apps, security pass, exports, DPDP, load test, pilot pack
 
 **What changed:**

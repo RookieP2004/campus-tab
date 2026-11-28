@@ -93,7 +93,7 @@ function ChiefStep({ keyValue, school, sentTo }: { keyValue: string; school: { c
       name: z.string().trim().min(2, t('auth.activate.nameRequired')),
       email: z.email(t('auth.activate.emailInvalid')),
       phone: z.string().regex(/^\+?\d{10,15}$/, t('auth.otp.phoneInvalid')),
-      password: z.string().min(10, t('auth.password.tooShort')),
+      password: z.string().min(12, t('auth.password.tooShort')),
       password_confirmation: z.string(),
     })
     .refine((v) => v.password === v.password_confirmation, { message: t('auth.password.mismatch'), path: ['password_confirmation'] });

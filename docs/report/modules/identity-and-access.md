@@ -14,6 +14,7 @@
 - **Nobody else ever types or sees them:** a new account gets a one-time link (or, without email or phone, a setup code for the Principal to hand over), and the person chooses their own.
 - **Forgot password** sends a reset link.
 - **Any password change** signs the person out everywhere and tells them.
+- **At least 12 characters** (OWASP ASVS 2.1.1; raised from 10 on 28 November 2026). The rule applies when a password is set, reset or changed. An account with an older, shorter password keeps it and still signs in until the person next changes it.
 
 **Roles and permissions.**
 - **Permissions** are strings like `marks.enter:subject`, and roles bundle them.

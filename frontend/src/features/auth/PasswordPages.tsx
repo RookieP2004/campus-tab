@@ -129,7 +129,7 @@ export function NewPasswordForm({
   const { t } = useTranslation();
   const schema = z
     .object({
-      password: z.string().min(10, t('auth.password.tooShort')),
+      password: z.string().min(12, t('auth.password.tooShort')),
       password_confirmation: z.string(),
     })
     .refine((v) => v.password === v.password_confirmation, { message: t('auth.password.mismatch'), path: ['password_confirmation'] });

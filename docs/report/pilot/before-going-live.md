@@ -28,7 +28,13 @@ Everything that must be in place before the first real school uses Campus TAB wi
 | ☐ | Backups | Atlas point-in-time restore on; a restore drill done once before launch and each term |
 | ☐ | Monitoring | Error tracking without personal data, uptime checks, Atlas alerts, log retention |
 | ☐ | ClamAV | Running next to the API with automatic definition updates; alert when it is down (uploads are refused then) |
-| ☐ | Password minimum | Decide 10 or 12 characters (ASVS asks for 12) |
+| ☑ | Password minimum | Decided: 12 characters (ASVS 2.1.1), in code since 28 November 2026. Accounts with an older 10-character password keep it until they next change it |
+
+## Performance
+
+| Done | Item | Notes |
+| --- | --- | --- |
+| ☐ | **Load test on the real server** | The laptop numbers in [performance.md](../performance.md) are only indicative. Before the pilot, rerun the k6 test against **staging** (same size and settings as production), never against production or a database holding real data. On staging, point a second API at a database whose name ends in `_load` and seed it with `php artisan loadtest:seed --schools=50 --students=1000 --fee-schools=5`. Copy the `fixtures.json` it writes into `infra/loadtest/` on the machine that runs k6. Then, from `infra/`, run the 20-second check, then the full test (about 3 minutes):<br>`docker compose --profile loadtest run --rm --no-deps -e SMOKE=1 -e BASE_URL=https://api.<your-domain>/api/v1 k6`<br>`docker compose --profile loadtest run --rm --no-deps -e BASE_URL=https://api.<your-domain>/api/v1 k6`<br>All five p95 targets and under 1 % failed requests must pass. Results go to `infra/loadtest/results/summary.json`; add them to `performance.md`. Afterwards, drop the `_load` database and delete `fixtures.json`, which holds the shared load-test password |
 
 ## Legal and privacy
 

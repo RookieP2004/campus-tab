@@ -93,7 +93,7 @@ Status: **Met**, **Partly** (what is missing is said), **N/A** (does not apply),
 
 | ID | Requirement | Status | Where |
 | --- | --- | --- | --- |
-| 2.1.1 | Passwords at least 12 characters | **Partly** | Minimum is **10** (`identity.passwords.min_length`, Phase 1). Raising it to 12 is a one-line change: owner's decision |
+| 2.1.1 | Passwords at least 12 characters | Met | `identity.passwords.min_length` 12 (raised from 10 by the owner, 28 November 2026), checked again in the browser before sending |
 | 2.1.2 | 64+ characters allowed | Met | Up to 200 |
 | 2.1.3 | No truncation | Met | bcrypt pre-check: 200 max; no trimming |
 | 2.1.4 | Any Unicode allowed | Met | No character rules |

@@ -87,7 +87,7 @@ return [
     ],
 
     'passwords' => [
-        'min_length' => 10,
+        'min_length' => 12, // OWASP ASVS 2.1.1 (owner's decision, 28 November 2026)
         // New accounts: a one-time set-password link (or setup code).
         'set_link_hours' => 48,
         // Reset links: forgot password, or sent by the Principal or Chief.
