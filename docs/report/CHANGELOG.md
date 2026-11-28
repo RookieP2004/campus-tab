@@ -2,6 +2,98 @@
 
 Every session adds an entry at the top: date, phase, what changed, why, files touched, report pages updated and how to test it.
 
+## 2026-11-28 · Phase 9 · Apps, security pass, exports, DPDP, load test, pilot pack
+
+**What changed:**
+
+- **Apps (items 1–2, decision 0016):**
+  - `apps/mobile` (Capacitor 8.6.2, Android and iOS) and `apps/desktop` (Tauri 2, Windows and macOS) wrap the same React build.
+  - **Sign-in rule:** the token is kept in JavaScript memory only (`stores/appToken.ts`), never on the device; closing the app signs out (the desktop window also ends the sign-in on the server); no biometric or PIN unlock. The blueprint's Delivery table now says so.
+  - School-code onboarding, as on the web.
+  - Deep links (`campustab://` always, `https://<web>/verify/…` and `/password/…` once the domain exists), allow-listed in `deepLinkPath`.
+  - **Push:** FCM (Android, HTTP v1 with the service account) and APNs (iOS, HTTP/2 with an ES256 key) behind the existing `PushSender` (`PUSH_DRIVER=native`), with the same generic texts. Owner's choice: a phone stays registered after the app closes; it stops on a sign-out on purpose, a remote sign-out, an account reset, a "token gone" answer, or 30 days without a sign-in (`push:forget-stale`).
+  - The app origins may call the API with a bearer token but never with cookies (`AppOriginCors`).
+  - The API address is set at build time. Plain HTTP is allowed only in builds made for an `http://` address (the Wi-Fi test).
+  - `.github/workflows/apps.yml` builds the APK on Linux, the Windows installer on Windows, and unsigned iOS and macOS builds on macOS.
+  - The Android release key comes from GitHub secrets; `apps/mobile/scripts/new-release-key.ps1` makes it once, outside the repository.
+  - Signing steps for iOS, macOS and Windows are written in the app READMEs.
+  - The Tauri updater is compiled in only with an update host and key.
+- **Security pass (item 3):**
+  - Security headers: CSP with no inline scripts or styles, frame-ancestors none, `no-referrer`, HSTS in production only, `no-store` on the API.
+  - An nginx `edge` service serves the production build for scanning.
+  - ZAP baseline (Docker) on the web app and the API: 0 high, 0 medium. The one low finding (COEP) was fixed.
+  - ClamAV (`clamav` container) scans every upload in the `school` middleware group, before any controller. Infected files are refused and audited by hash; uploads are refused while the scanner is down. A structural test covers every upload route.
+  - CI job **Security**: `composer audit` and `npm audit` (web, phone and desktop apps) fail on high or critical advisories; gitleaks scans the whole history. It found `sharp` 0.34.5 (high), now upgraded to 0.35.5.
+  - CI step `no-trackers.mjs` fails if any tracking or analytics package is added.
+  - The OWASP ASVS 4.0.3 level 2 checklist is complete in `security.md`. Gaps are listed: the 12-character password minimum is your call; hosting items are marked **Launch**.
+- **Exports (item 4):**
+  - Every Excel export (fee reports, the attendance paper-register template, the import template and the import check report) and the new fee-report PDF carry who, when and which school, in three places: the first row or a faint diagonal, the printed footer, and the file properties.
+  - Every export is audited (`export.made`). One with 1,000 rows or more (`EXPORT_LARGE_ROWS`, or the school's `policies.exports.chief_alert_rows`) alerts the Chief.
+  - A watermarked template still imports.
+- **DPDP (item 5, decision 0017):** the new **Privacy** module:
+  - versioned notices;
+  - consent per purpose, from the parent's own account only; the office can no longer record it, and PEN/APAAR are stored only after it;
+  - the data-requests inbox with due dates, a watermarked access copy, and erasure that keeps the audit log and fee ledger;
+  - retention per data type, with a nightly dry run and the Chief's step-up confirmation;
+  - the grievance contact on the school profile;
+  - the incident log with the 72-hour Board deadline, and `how-to/breach-runbook.md`.
+- **Load test (item 6):** `php artisan loadtest:seed` (50 schools × 1,000 students, only in a `_load` database), `api-load` (production-like: cached config, OPcache, debug off) and `k6` services (profile `loadtest`), `infra/loadtest/campus.js`. Full size on the laptop, 20 teachers and 3 counters: p95 sign-in 1,025 ms, dashboard 1,001 ms, attendance save 939 ms, markbook save 1,308 ms, counter payment 862 ms; 4,794 requests, 0 failed. Under light load every action is 200 to 420 ms. Laptop numbers are only indicative (`performance.md`).
+- **Pilot pack (item 7):** `pilot/pilot-checklist.md`, `pilot/admin-training-guide.md` (screenshots from Chrome), `pilot/before-going-live.md`.
+- **Also:**
+  - The compose file caps every container log at 3 × 10 MB.
+  - The edge address is a stateful domain (`.env.example`).
+  - Report-card printing of setup codes no longer needs inline styles.
+  - Files removed under retention answer `410 removed_under_retention`.
+  - `DemoPrivacySeeder` adds demo privacy data.
+- **Found in the Chrome review (fixed):**
+  - **Web sign-in broke behind the edge.** With `Referrer-Policy: no-referrer`, the app's own GET requests carried neither Origin nor Referer, so Sanctum did not recognise the signed-in browser and `/me` answered 401. The web app now sends `same-origin` (nothing goes to other sites), and the password pages take the one-time token out of the address as soon as they open (new test). The API keeps `no-referrer`. The ZAP baseline was run again: still 0 high, medium or low.
+  - A student profile's tab strip showed a stray scrollbar (1 px of vertical overflow).
+  - Unused import (`Checkbox`) in the student profile.
+- **Load-test fixes:** `api-load` now starts `php -S` from `public/` (Laravel's `server.php` needs that); it mounts `infra/loadtest` so the seeder can write `fixtures.json`; the seeded teachers are also subject teachers so they may enter marks; k6 spreads its virtual teachers over the seats and has a 20-second `SMOKE=1` mode.
+
+**Why:** Phase 9 of `docs/BUILD-PROMPTS.md` (items 1–5) with the owner's rules for this session.
+
+**Files:** see the module pages; new: `apps/mobile/**`, `apps/desktop/**`, `.github/workflows/apps.yml`, `.github/scripts/{app-env,audit-gate,no-trackers}.mjs`, `.gitleaks.toml`, `backend/app/Modules/Privacy/**`, `backend/app/Support/{Push,Uploads,Exports}/*`, `backend/app/Support/Http/{SecurityHeaders,AppOriginCors}.php`, `backend/app/Modules/System/Console/LoadTestSeedCommand.php`, `backend/database/seeders/DemoPrivacySeeder.php`, migration `2026_12_03_000003`, `backend/config/{privacy,uploads,exports}.php`, `frontend/src/features/privacy/**`, `frontend/src/lib/native.ts`, `frontend/src/stores/appToken.ts`, `infra/docker/edge/*`, `infra/loadtest/*`.
+
+**Report pages updated:** `apps.md`, `security.md`, `performance.md`, `pilot/*` (new), `modules/{privacy (new),system,communication,identity-and-access,people,attendance,leave,tenancy,fees,reports}.md`, `decisions/0016`, `decisions/0017` (new), `decisions/0003`, `permissions.md`, `configuration.md`, `operations.md`, `integrations.md`, `links-and-events.md`, `frontend.md`, `README.md`, `how-to/{breach-runbook (new),demo-school}.md`, generated `api.md` and `data-dictionary.md`.
+
+**Checks run (28 November 2026):** back end `composer test` in one run: 548 passed (5,603 assertions), including the real ClamAV test; Pint and PHPStan level 6 clean. Front end: typecheck clean, lint 0 errors, Vitest 81 passed (with `--maxWorkers=2`; with the default workers five tests hit the 5-second timeout on the busy laptop and pass alone), production build. `npm audit`, `composer audit` and gitleaks clean. ZAP baseline 0 high, 0 medium, 0 low. Chrome review with axe-core on every new screen (year-end dues step, privacy page, privacy office's four tabs, school settings, fee reports, admission form, student IDs tab) in light and dark at 1,280 and 360 px: no violations.
+
+**How to test:** the apps with `apps/mobile/README.md` (phone over Wi-Fi) and `apps/desktop/README.md` (Windows installer); security with `security.md` (commands for ZAP and the audits); the load test with `performance.md`; privacy and the virus scan with `php artisan test --filter='Privacy|VirusScan'`; the screens with `pilot/admin-training-guide.md` (screenshots in `pilot/img/`).
+## 2026-11-28 · Session 5 fixes · Year-end dues and the webhook index
+
+**What changed:**
+
+- **Fix 1: unpaid dues at year end.**
+  - The promotion preview now lists every student with an unpaid balance (name, section, amount), with the total and how many are still undecided.
+  - A new step 3 in the wizard: each balance is **carried forward** (the default) or **left in the closed year**. The Principal approves the whole list once, with step-up (`fees_carry_forward`).
+  - A carried balance leaves the old year's ledger and opens in the new year as one "Carried forward from 2026-27" instalment. Each student gets their own audit entry (`fees.carried_forward` or `fees.dues_left_in_closed_year`), plus one for the whole step (`fees.year_end_dues_settled`).
+  - If the wizard names a new year, the step creates it (as planned) so the dues have somewhere to open.
+  - **The year cannot close** (`422 dues_unresolved`) until every balance is decided. A balance that changes after "leave" was confirmed (a late payment) must be decided again.
+  - Leaving a balance shows a warning: the closed year is read-only, so Campus TAB can no longer collect it.
+- **Fix 2: webhook lookup index.** `gateway_orders` gets one unique index on `(provider, order_id)`, so the payment webhook's school lookup is an index read, not a collection scan. Decision 0015 and the database convention say this is the only index that does not start with `tenant_id`.
+- **Also:** a carry-forward instalment's key now includes the adjustment id, so a student can be carried forward more than once.
+- **Found while testing:** the running containers were older than `infra/docker-compose.yml` (no `GOTENBERG_URL`, no `gotenberg` service), so report-card tests failed locally. Fixed with `docker compose up -d`; no code changed.
+
+**Why:** the owner's two fixes before Phase 9.
+
+**Files:**
+
+- **Back end:** `backend/app/Modules/Fees/Domain/{YearEndDues,Adjustments}.php`, `backend/app/Modules/Fees/Models/{FeeYearEndDecision,FeeAdjustment}.php`, `backend/app/Modules/Reports/Domain/Promotion.php`, `backend/app/Modules/Reports/Http/Controllers/PromotionController.php`, `backend/app/Modules/Reports/routes.php`, `backend/config/identity.php`, migrations `2026_12_03_000001`, `2026_12_03_000002`.
+- **Tests:** `backend/tests/Feature/Fees/{YearEndDuesTest,WebhookLookupIndexTest}.php`, `backend/tests/Feature/Identity/StepUpTest.php`, `frontend/src/features/reports/reports.test.tsx`.
+- **Front end:** `frontend/src/features/reports/{DuesStep.tsx,PromotionPage.tsx,api.ts}`, `frontend/src/locales/{en,hi}/common.json`; `packages/api/{openapi.json,src/schema.ts}`.
+- **Docs:** `docs/CONVENTIONS.md`.
+
+**Report pages updated:** `modules/{reports,fees}.md`, `decisions/0015-payment-webhook-tenant-exception.md`, `permissions.md`, generated `api.md` and `data-dictionary.md`.
+
+**How to test:**
+
+- Back end: `docker compose exec api php vendor/bin/pest tests/Feature/Fees` and `… tests/Feature/Reports`.
+- In the browser as Dr. Meera Iyer, open **Report cards → Year-end promotion** and preview 2026-27 → 2027-28:
+  - step 3 lists the demo students who owe fees, and **Apply** stays off;
+  - set one student to "Leave in 2026-27" and approve with a code;
+  - the message says how many balances opened in 2027-28, and **Apply** turns on.
+
 ## 2026-11-28 · Browser review of Phases 7 and 8
 
 **What changed:** every new Phase 7 and 8 screen and the "Updated" tag were checked in Chrome, light and dark, at 360 and 1280 px, with axe-core (WCAG 2.1 A/AA plus best practice). Each "done when" was walked through with the demo accounts, including a fake-gateway payment as Suresh Patel. Fixes:

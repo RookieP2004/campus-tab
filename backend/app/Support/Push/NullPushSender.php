@@ -3,10 +3,13 @@
 namespace App\Support\Push;
 
 /**
- * Push switched off (PUSH_DRIVER=none): the default until the apps and an
- * FCM project exist (Phase 9). In-app and email notifications still work.
+ * Push switched off (PUSH_DRIVER=none): the default until a Firebase project
+ * and an APNs key exist. In-app and email notifications still work.
  */
 class NullPushSender implements PushSender
 {
-    public function send(array $tokens, string $title, string $body): void {}
+    public function send(array $devices, string $title, string $body): array
+    {
+        return [];
+    }
 }

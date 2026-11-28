@@ -242,8 +242,10 @@ class Importer
             }
 
             foreach (['pen', 'apaar'] as $kind) {
-                if (($raw[$kind] ?? '') !== '' && ! in_array(mb_strtolower($raw['consent_'.$kind] ?? ''), ['yes', 'y', '1', 'true'], true)) {
-                    $messages[] = strtoupper($kind).' is kept only with consent: put yes in consent_'.$kind.'.';
+                // Phase 9: only the parent consents, from their own account, so an
+                // import never brings PEN or APAAR in.
+                if (($raw[$kind] ?? '') !== '') {
+                    $messages[] = 'Leave '.$kind.' empty: '.strtoupper($kind).' is added only after a parent consents from their own Campus TAB account.';
                 }
             }
 
@@ -301,8 +303,7 @@ class Importer
                     'section_id' => (string) $section->getKey(),
                     'roll_no' => ($raw['roll_no'] ?? '') !== '' ? (int) $raw['roll_no'] : null,
                     'guardians' => $guardians,
-                    'ids' => array_filter(['pen' => $raw['pen'] ?? '', 'apaar' => $raw['apaar'] ?? '', 'aadhaar_last4' => $raw['aadhaar_last4'] ?? ''], fn ($v) => $v !== ''),
-                    'consents' => array_filter(['pen' => ($raw['pen'] ?? '') !== '' ? true : null, 'apaar' => ($raw['apaar'] ?? '') !== '' ? true : null], fn ($v) => $v !== null),
+                    'ids' => array_filter(['aadhaar_last4' => $raw['aadhaar_last4'] ?? ''], fn ($v) => $v !== ''),
                     'custom' => $customValues,
                     'confirm_not_duplicate' => true,
                 ];

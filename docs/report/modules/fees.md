@@ -114,15 +114,15 @@ sequenceDiagram
 
 ## 6. Data it reads and writes
 
-`fee_heads`, `fee_categories`, `fee_plans`, `student_fees`, `fee_demands` (unique per student plan instalment), `fee_ledger` (append-only), `payments`, `receipts` (unique `tenant_id, year_id, seq` and `tenant_id, number`), `fee_counters`, `fee_adjustments`, `receipt_cancellations`, `cash_closings`, `gateway_accounts` (one per school, secrets encrypted), `gateway_orders`, `gateway_events` (unique per payment and outcome), `fee_reconciliations`. Every index starts with `tenant_id`. The collector's id is stored at the top level (`collector_id`) because MongoDB ids nested in an object cannot be queried by the driver's id conversion.
+`fee_heads`, `fee_categories`, `fee_plans`, `student_fees`, `fee_demands` (unique per student plan instalment), `fee_ledger` (append-only), `payments`, `receipts` (unique `tenant_id, year_id, seq` and `tenant_id, number`), `fee_counters`, `fee_adjustments`, `receipt_cancellations`, `cash_closings`, `gateway_accounts` (one per school, secrets encrypted), `gateway_orders` (also unique `provider, order_id`, decision 0015), `gateway_events` (unique per payment and outcome), `fee_reconciliations`, `fee_year_end_decisions` (`tenant_id, year_id, student_id`). Every index starts with `tenant_id`. The collector's id is stored at the top level (`collector_id`) because MongoDB ids nested in an object cannot be queried by the driver's id conversion.
 
 ## 7. Links to other modules
 
 - **People:** students, guardians (sibling discount, family notifications), enrolments.
 - **Approvals:** `FeeApprovals` adds adjustments, cancellations and closings to the inbox.
 - **Communication:** `fees.payment_received`, `fees.waiver_alert`, `fees.reconciliation` (generic texts only).
-- **Identity:** step-up actions `fees_adjust_approve`, `receipt_cancel_approve`, `export`.
-- **Reports:** a closed year is read-only, fees included; carry forward before closing.
+- **Identity:** step-up actions `fees_adjust_approve`, `receipt_cancel_approve`, `fees_carry_forward`, `export`.
+- **Reports:** a closed year is read-only, fees included. The promotion wizard's dues step (`YearEndDues`) carries each unpaid balance forward or leaves it, and the year cannot close before that.
 
 ## 8. Settings that change its behaviour
 
@@ -140,12 +140,16 @@ From the blueprint's "Who can do what": Chief `fees.adjust`, `fees.receipt_cance
 ## 11. Tests that cover it
 
 - `backend/tests/Feature/Fees/FeesTest.php` — raising dues (paise, overrides, sibling, joiners, plan changes); counter payment and its reversal with who and why; append-only ledger and no lost receipt numbers; late fine; waiver needs the Principal and never the proposer, Chief alert, `waiver_by`; closings; cheques; the fake webhook marks the due paid and a replay changes nothing; amount mismatch; decision 0015 (another school's secret, unknown order); Razorpay test-mode only and no fake driver in production; class teacher paid/pending only; reports and the audited step-up export; reconciliation; licence.
+- `backend/tests/Feature/Fees/YearEndDuesTest.php` — the year-end dues step (see reports.md).
+- `backend/tests/Feature/Fees/WebhookLookupIndexTest.php` — the webhook lookup uses the unique `(provider, order_id)` index (`IXSCAN`, never `COLLSCAN`).
 - `backend/tests/Unit/Fees/MoneyTest.php` — parsing, formatting, percentages, receipt numbers.
 - `frontend/src/features/fees/fees.test.tsx` — money formatting, a parent's test checkout, class teacher view without amounts.
 
 ## 12. Decisions and limits
 
-- [0015](../decisions/0015-payment-webhook-tenant-exception.md): the webhook finds the school from our order record.
+- [0015](../decisions/0015-payment-webhook-tenant-exception.md): the webhook finds the school from our order record, through the unique `(provider, order_id)` index (the one index that does not start with `tenant_id`).
+- A carry-forward's new-year instalment key is `carry:<year>:<adjustment>`, so a student can be carried forward more than once (part during the year, the rest at year end).
+- Year-end carry-forwards are approved adjustments with `source: year_end`, proposed and decided by the Principal in one step (the owner's rule for this step only).
 - The late fine accrues by the plan's rule until it is posted (at the first payment on the instalment, or a fine waiver), then stays fixed.
 - Students imported mid-year are charged from their joining month unless the office sets their joining date.
 - A closed year's fee records are read-only like everything else in it.
@@ -156,4 +160,5 @@ From the blueprint's "Who can do what": Chief `fees.adjust`, `fees.receipt_cance
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-28 | 8 | Module built | Phase 8 of BUILD-PROMPTS with the owner's seven rules |
+| 2026-11-28 | 9 (fixes) | Year-end dues step (`YearEndDues`, `fee_year_end_decisions`, `Adjustments::carryInto`); unique `(provider, order_id)` index on `gateway_orders` | Owner's fixes 1 and 2 |
 | 2026-11-28 | 8 (review) | Receipts say `cancellation_pending`; closings with no cash need no count; the fee history names the head on each line; scrollable tables are focusable regions; step-up asks for a code without a red error | Browser review with axe-core |

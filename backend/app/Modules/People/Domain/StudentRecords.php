@@ -74,10 +74,11 @@ class StudentRecords
             }
         }
 
-        $ids = $this->checkIds($input['ids'] ?? [], $input['consents'] ?? []);
+        self::refuseOfficeConsent($input);
+        $ids = $this->checkIds($input['ids'] ?? [], []);
         [$studentCustom, $enrolmentCustom] = $this->splitCustom($actor, $input['custom'] ?? [], (string) $section->getKey());
 
-        return DB::connection('mongodb')->transaction(function () use ($actor, $input, $year, $section, $guardians, $ids, $studentCustom, $enrolmentCustom): Student {
+        return DB::connection('mongodb')->transaction(function () use ($input, $year, $section, $guardians, $ids, $studentCustom, $enrolmentCustom): Student {
             $student = Student::create([
                 'admission_no' => $input['admission_no'],
                 'name' => $input['name'],
@@ -103,7 +104,6 @@ class StudentRecords
             }
 
             $student->forceFill(['guardian_ids' => $guardianIds])->save();
-            $this->recordConsents($actor, $student, $input['consents'] ?? [], $guardianIds[0] ?? null);
 
             return $student;
         });
@@ -126,12 +126,12 @@ class StudentRecords
             throw new ApiException('field_not_editable', 'A class teacher can change only the roll number and the section\'s own columns.', 403);
         }
 
-        if (array_key_exists('ids', $changes) || array_key_exists('consents', $changes)) {
+        self::refuseOfficeConsent($changes);
+        if (array_key_exists('ids', $changes)) {
             if (! $full) {
                 throw new ApiException('field_not_editable', 'Only the office can change ID numbers.', 403);
             }
-            $this->recordConsents($actor, $student, $changes['consents'] ?? [], $student->guardian_ids[0] ?? null);
-            $basic['ids'] = array_merge($student->ids ?? [], $this->checkIds($changes['ids'] ?? [], [], (string) $student->getKey()));
+            $basic['ids'] = array_merge($student->ids ?? [], $this->checkIds($changes['ids'], [], (string) $student->getKey()));
         }
 
         DB::connection('mongodb')->transaction(function () use ($actor, $student, $changes, $basic): void {
@@ -438,10 +438,10 @@ class StudentRecords
                 continue;
             }
 
-            $given = ($consents[$kind] ?? null) === true || ($studentId !== null && ! array_key_exists($kind, $consents) && Consent::latestGiven($studentId, $kind));
-
-            if (! $given) {
-                throw new ApiException('consent_required', strtoupper($kind).' is kept only with the guardian\'s consent. Record the consent first.', 422, ['id' => $kind]);
+            // Only a consent the parent gave from their own account counts
+            // (owner's rule, Phase 9): a new admission has none yet.
+            if ($studentId === null || ! Consent::latestGiven($studentId, $kind)) {
+                throw new ApiException('consent_required', strtoupper($kind).' is kept only after a parent consents from their own Campus TAB account (Privacy → Consents). Save the student without it, then ask the parent.', 422, ['id' => $kind]);
             }
 
             if (preg_match('/^[A-Za-z0-9]{6,20}$/', (string) $value) !== 1) {
@@ -465,24 +465,16 @@ class StudentRecords
     }
 
     /**
-     * @param  array<string, mixed>  $consents
+     * The office cannot record a consent for a parent any more (owner's rule,
+     * Phase 9): the parent gives it from their own account, which is the
+     * verified parental consent for a child's data.
+     *
+     * @param  array<string, mixed>  $input
      */
-    private function recordConsents(User $actor, Student $student, array $consents, ?string $guardianId): void
+    private static function refuseOfficeConsent(array $input): void
     {
-        foreach ($consents as $purpose => $given) {
-            if (! in_array($purpose, Consent::PURPOSES, true) || ! is_bool($given)) {
-                continue;
-            }
-
-            Consent::create([
-                'student_id' => (string) $student->getKey(),
-                'guardian_id' => $guardianId,
-                'purpose' => $purpose,
-                'notice_version' => (string) config('people.consent_notice_version', '2026-1'),
-                'given' => $given,
-                'at' => now()->toIso8601String(),
-                'recorded_by' => ['id' => (string) $actor->getKey(), 'name' => $actor->name],
-            ]);
+        if (! empty($input['consents'])) {
+            throw new ApiException('consent_parent_only', 'Consent is given by the parent from their own Campus TAB account (Privacy → Consents), not recorded by the office.', 422);
         }
     }
 

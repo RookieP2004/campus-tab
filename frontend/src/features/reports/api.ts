@@ -132,6 +132,16 @@ export interface PromotionPreview {
     next_class: string | null;
     students: { id: string; name: string; roll_no: number | null; action: PromotionAction; suggested: PromotionAction; result: string | null; to_section: string | null }[];
   }[];
+  dues: PromotionDues;
+  digest: string;
+}
+
+export type DuesChoice = 'carry' | 'leave';
+
+export interface PromotionDues {
+  students: { id: string; name: string; section: string | null; balance_paise: number; status: 'open' | 'left' }[];
+  total_paise: number;
+  unresolved: number;
   digest: string;
 }
 
@@ -165,6 +175,11 @@ export const reports = {
   },
   removeLetterhead: (id: string) => send<Template>('DELETE', '/report-templates/{id}/letterhead', { path: { id } }),
   previewPromotion: (to: PromotionTarget, exceptions: Record<string, PromotionAction>) => send<PromotionPreview>('POST', '/promotions/preview', { body: { to, exceptions } }),
+  carryForward: (to: PromotionTarget, decisions: Record<string, DuesChoice>, duesDigest: string) =>
+    send<{ to: { id: string; name: string }; carried: number; left: number; carried_paise: number; left_paise: number }>('POST', '/promotions/carry-forward', {
+      body: { to, decisions, dues_digest: duesDigest },
+      headers: key(),
+    }),
   applyPromotion: (to: PromotionTarget, exceptions: Record<string, PromotionAction>, digest: string) =>
     send<{ from: { name: string }; to: { name: string }; counts: Record<PromotionAction, number> }>('POST', '/promotions/apply', { body: { to, exceptions, digest }, headers: key() }),
 };

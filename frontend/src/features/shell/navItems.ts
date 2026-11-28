@@ -17,6 +17,7 @@ import {
   Trophy,
   MonitorSmartphone,
   Settings2,
+  ShieldCheck,
   SlidersHorizontal,
   UserPlus,
   UserRound,
@@ -72,6 +73,7 @@ export const navItems: NavItemDefinition[] = [
   { to: '/students', label: 'nav.students', icon: Users, permission: ['students.view'] },
   { to: '/staff', label: 'nav.staff', icon: UserRound, permission: ['staff.view'] },
   { to: '/settings/school', label: 'nav.schoolSettings', icon: Building2, permission: ['config.view', 'config.edit'] },
+  { to: '/privacy/office', label: 'nav.privacyOffice', icon: ShieldCheck, permission: ['privacy.notices', 'privacy.requests', 'privacy.retention', 'privacy.incidents'] },
   { to: '/settings/custom-fields', label: 'nav.customFields', icon: SlidersHorizontal, permission: ['custom_fields.manage', 'custom_fields.clerical'] },
 ];
 
@@ -79,6 +81,7 @@ export const navItems: NavItemDefinition[] = [
 export const accountItems: NavItemDefinition[] = [
   { to: '/account/notifications', label: 'nav.notificationSettings', icon: Bell },
   { to: '/account/sessions', label: 'nav.devices', icon: MonitorSmartphone },
+  { to: '/privacy', label: 'nav.privacy', icon: ShieldCheck, end: true },
 ];
 
 export function visibleNavItems(me: Pick<Me, 'permissions'>): NavItemDefinition[] {

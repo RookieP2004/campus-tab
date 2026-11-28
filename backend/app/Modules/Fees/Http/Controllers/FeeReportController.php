@@ -7,18 +7,22 @@ use App\Modules\Fees\Domain\FeeReports;
 use App\Modules\Fees\Domain\Money;
 use App\Modules\Identity\Domain\AccessControl;
 use App\Modules\People\Domain\Import\Spreadsheet;
+use App\Modules\Reports\Domain\Pdf\PdfRenderer;
+use App\Support\Exports\ExportGuard;
+use App\Support\Exports\PdfTable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Fee reports (fees.reports: school, or own collections for a Fee Collector).
  *
  *   GET /fees/reports/{type}?from=&to=&section_id=
- *   GET /fees/reports/{type}/export   Excel; step-up "export", audited (owner's rule 6)
+ *   GET /fees/reports/{type}/export?format=xlsx|pdf   step-up "export", audited (owner's rule 6);
+ *        watermarked with who, when and which school; a large one alerts the Chief
  */
 class FeeReportController
 {
@@ -31,20 +35,36 @@ class FeeReportController
         return response()->json(['data' => ['type' => $type] + $this->build($request, $type)]);
     }
 
-    public function export(Request $request, string $type, AuditRecorder $audit): BinaryFileResponse
+    public function export(Request $request, string $type, AuditRecorder $audit, ExportGuard $exports, PdfRenderer $pdf): Response
     {
         Gate::authorize('fees.reports');
+        $request->validate(['format' => ['sometimes', Rule::in(['xlsx', 'pdf'])]]);
+        $format = $request->query('format') === 'pdf' ? 'pdf' : 'xlsx';
         $report = $this->build($request, $type);
         $columns = array_column($report['columns'], 'key');
         $money = array_column(array_filter($report['columns'], fn ($c) => $c['money'] ?? false), 'key');
         $headers = array_map(fn (string $k) => Str::of($k)->replace('_paise', '')->replace('_', ' ')->ucfirst()->toString().(in_array($k, $money, true) ? ' (Rs)' : ''), $columns);
         $rows = array_map(fn (array $row) => array_map(fn (string $k) => in_array($k, $money, true) ? Money::format((int) $row[$k]) : (is_scalar($row[$k] ?? null) ? (string) $row[$k] : null), $columns), $report['rows']);
 
-        $path = tempnam(sys_get_temp_dir(), 'ctab-fees-').'.xlsx';
-        Spreadsheet::write($path, $headers, $rows);
-        $audit->record('fees.report_exported', 'fees', 'fee_report', $type, null, null, ['rows' => count($rows), 'filters' => $request->only(['from', 'to', 'section_id'])]);
+        $user = StudentFeesController::user($request);
+        $mark = $exports->watermark($user);
+        $name = 'fees-'.$type.'-'.now('Asia/Kolkata')->format('Y-m-d').'.'.$format;
+        $audit->record('fees.report_exported', 'fees', 'fee_report', $type, null, null, ['rows' => count($rows), 'format' => $format, 'filters' => $request->only(['from', 'to', 'section_id'])]);
+        $exports->record($user, "fees_{$type}", $format, count($rows), ['filters' => $request->only(['from', 'to', 'section_id'])]);
 
-        return response()->download($path, 'fees-'.$type.'-'.now('Asia/Kolkata')->format('Y-m-d').'.xlsx')->deleteFileAfterSend();
+        if ($format === 'pdf') {
+            $title = 'Fee report: '.Str::of($type)->replace('_', ' ')->ucfirst();
+
+            return response($pdf->render(PdfTable::html($title, $headers, $rows, $mark)), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="'.$name.'"',
+            ]);
+        }
+
+        $path = tempnam(sys_get_temp_dir(), 'ctab-fees-').'.xlsx';
+        Spreadsheet::write($path, $headers, $rows, $mark);
+
+        return response()->download($path, $name)->deleteFileAfterSend();
     }
 
     /**

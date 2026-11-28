@@ -39,7 +39,15 @@ Defined in [`backend/.env.example`](../../backend/.env.example). In Docker, [`in
 | `PARENT_OTP_IP_MAX_SENDS` | `60` | Parent OTP sends per IP per 10 minutes |
 | `PARENT_OTP_IP_MAX_FAILURES` | `100` | Wrong parent OTPs per IP per 15 minutes |
 | `PASSWORD_RESET_IP_MAX` | `100` | Forgot-password requests per IP per 15 minutes |
-| `PUSH_DRIVER` | not set: `log` in local and testing, `none` elsewhere | Push notifications: `log` writes them to the log (device count, title and the generic text; never the device tokens); `array` keeps them in memory (tests, forced in `phpunit.xml`); `none` sends nothing. `log` and `array` are allowed **only** when `APP_ENV` is `local` or `testing`; anywhere else the app refuses to start with them. A real driver comes with the apps (Phase 9) |
+| `PUSH_DRIVER` | not set: `log` in local and testing, `none` elsewhere | Push notifications: `log` writes them to the log (device count, title and the generic text; never the device tokens); `array` keeps them in memory (tests, forced in `phpunit.xml`); `none` sends nothing; `native` (Phase 9) sends Android push through FCM and iPhone push through APNs. `log` and `array` are allowed **only** when `APP_ENV` is `local` or `testing`; anywhere else the app refuses to start with them |
+| `FCM_CREDENTIALS` | not set | The Firebase service account JSON (or that JSON in base64). Without it, `native` skips Android |
+| `APNS_KEY`, `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_BUNDLE_ID`, `APNS_SANDBOX` | not set; bundle `in.campustab.app`; sandbox `false` | The APNs `.p8` key (or base64) and its ids. Without the key, `native` skips iPhones |
+| `APP_ORIGINS` | `https://localhost,capacitor://localhost,http://tauri.localhost,tauri://localhost` | The apps' web-view origins, allowed by CORS **without credentials** (decision 0016) |
+| `VIRUS_SCAN_DRIVER` | `clamav` (`fake` in tests only) | Upload virus scanning; `fake` refuses to start outside tests |
+| `CLAMAV_HOST`, `CLAMAV_PORT`, `CLAMAV_TIMEOUT` | `clamav`, `3310`, `5` | Where clamd listens |
+| `EXPORT_LARGE_ROWS` | `1000` | An export with at least this many rows alerts the Chief (a school can set `policies.exports.chief_alert_rows`) |
+| `LOADTEST_FIXTURES` | `infra/loadtest/fixtures.json` (set to `/loadtest/fixtures.json` in the `api-load` container) | Where `php artisan loadtest:seed` writes the accounts and ids k6 uses (git-ignored; holds the shared load-test password) |
+| `PRIVACY_REQUEST_DUE_DAYS` | `30` | Days a DPDP data request has before it shows as late |
 | `ATTENDANCE_QR_MINUTES` | `5` | How often the office QR code for staff check-in changes (`config/attendance.php` `qr_minutes`); the code just before is still accepted |
 | `SESSION_LIFETIME` | `30` | Outer bound for the browser cookie, in minutes; the real idle and total limits are in `config/identity.php`. The cookie always ends when the browser closes |
 
@@ -52,6 +60,11 @@ Defined in [`frontend/.env.example`](../../frontend/.env.example). Only `VITE_*`
 | `VITE_API_BASE_URL` | `/api/v1` | Where the app sends API calls (same origin through the Vite proxy in dev) |
 | `VITE_REVERB_APP_KEY` | `campus-tab-local-key` | Public Reverb key |
 | `VITE_REVERB_HOST`, `VITE_REVERB_PORT`, `VITE_REVERB_SCHEME` | `127.0.0.1`, `8080`, `http` | Reverb address as the browser sees it |
+| `VITE_APP_SHELL` | `web` | `mobile` or `desktop` for app builds: bearer token in memory, deep links, push (decision 0016) |
+| `VITE_PUBLIC_WEB_URL` | empty | The web address whose `/verify/…` and `/password/…` links open in the apps |
+| `VITE_PUSH_ENABLED` | `false` | Phone push on (only in builds that include the Firebase/APNs setup) |
+
+App builds get these from `.github/scripts/app-env.mjs`, which works them out from the API address given to the **Apps** workflow.
 
 Set on the `web` container only: `VITE_USE_POLLING=true` (watch files by polling) and `VITE_API_PROXY_TARGET=http://api:8000` (proxy target).
 
@@ -215,5 +228,9 @@ What the attendance keys do:
 | `policies.fees.gateway` | none, razorpay (none) | Chief, Principal |
 | `policies.fees.waiver_by` | principal, chief (principal) | Chief, Principal |
 | `policies.fees.receipt_prefix` | text or null (null) | Chief, Principal |
+| `school.grievance` | `{name, role, email, phone, address}` or null | Chief (School settings); shown on the public profile and Privacy page |
+| `policies.exports.chief_alert_rows` | integer (not set: `EXPORT_LARGE_ROWS`, 1,000) | Chief, Principal |
+
+Code settings added in Phase 9: [`config/privacy.php`](../../backend/config/privacy.php) (consent purposes, request due days, retention days per kind, breach hours), [`config/uploads.php`](../../backend/config/uploads.php), [`config/exports.php`](../../backend/config/exports.php), `config/communication.php` `push.*`, `config/cors.php` `app_origins`.
 
 There is deliberately no setting that lets a clerk change locked marks: that rule is fixed in code.

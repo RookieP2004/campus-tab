@@ -215,6 +215,7 @@ class DemoSchoolSeeder extends Seeder
         (new DemoMarksSeeder)->setContainer(app())->run();
         (new DemoReportsSeeder)->setContainer(app())->run();
         (new DemoFeesSeeder)->setContainer(app())->run();
+        (new DemoPrivacySeeder)->setContainer(app())->run();
     }
 
     /**

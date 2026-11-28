@@ -176,3 +176,4 @@ Part B maps these checks onto the RBAC permission strings without changing the s
 | 2026-11-27 | 5 | `policies.leave.chain` may include `vice_principal` and must include `principal`; new `policies.leave.student_principal_after_days` (3); `ConfigSections::CHIEF_ONLY` keeps `policies.leave.clerk_can_reject` the Chief's | Phase 5 leave and the blueprint's "the Chief switches on clerk_can_reject" |
 | 2026-11-27 | 6 | New `policies.marks.class_teacher_can_enter` (false): class teachers type marks only when the school switches it on | The matrix's "Enter marks: Class (if enabled)" |
 | 2026-11-28 | 8 | `policies.fees.chief_alert_paise` (default 500000) | Waivers above it alert the Chief |
+| 2026-11-28 | 9 | Config: `school.grievance` (DPDP grievance contact, also on the public profile) and `policies.exports.chief_alert_rows` | Phase 9 DPDP and exports |

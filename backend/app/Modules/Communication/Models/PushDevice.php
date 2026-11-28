@@ -3,6 +3,7 @@
 namespace App\Modules\Communication\Models;
 
 use App\Support\Tenancy\BelongsToTenant;
+use Illuminate\Support\Carbon;
 use MongoDB\Laravel\Eloquent\Model;
 
 /**
@@ -15,6 +16,8 @@ use MongoDB\Laravel\Eloquent\Model;
  * @property string $token encrypted
  * @property string $token_hash
  * @property string $platform android | ios | web | desktop
+ * @property string|null $device_session_id the sign-in that registered it (ending that sign-in on purpose stops its push)
+ * @property Carbon|null $last_seen_at the last sign-in on this device; forgotten after 30 days
  */
 class PushDevice extends Model
 {
@@ -25,7 +28,7 @@ class PushDevice extends Model
     protected $table = 'push_devices';
 
     /** @var list<string> */
-    protected $fillable = ['tenant_id', 'user_id', 'token', 'token_hash', 'platform'];
+    protected $fillable = ['tenant_id', 'user_id', 'token', 'token_hash', 'platform', 'device_session_id', 'last_seen_at'];
 
     /** @var list<string> */
     protected $hidden = ['token', 'token_hash'];
@@ -35,7 +38,7 @@ class PushDevice extends Model
      */
     protected function casts(): array
     {
-        return ['token' => 'encrypted'];
+        return ['token' => 'encrypted', 'last_seen_at' => 'datetime'];
     }
 
     public static function hashToken(string $token): string

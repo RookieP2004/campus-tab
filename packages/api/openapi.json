@@ -13612,6 +13612,17 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "xlsx",
+                                "pdf"
+                            ]
+                        }
                     }
                 ],
                 "responses": {
@@ -13623,20 +13634,26 @@
                                     "type": "string",
                                     "format": "binary"
                                 }
+                            },
+                            "application/pdf": {
+                                "schema": {
+                                    "type": "string"
+                                }
                             }
                         },
                         "headers": {
                             "Content-Disposition": {
-                                "required": true,
                                 "schema": {
                                     "type": "string"
-                                },
-                                "example": "attachment; filename=.xlsx"
+                                }
                             }
                         }
                     },
                     "403": {
                         "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             }
@@ -26327,6 +26344,2246 @@
                 }
             }
         },
+        "/privacy": {
+            "get": {
+                "operationId": "privacy.mine",
+                "tags": [
+                    "Privacy"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "notice": {
+                                                    "type": [
+                                                        "object",
+                                                        "null"
+                                                    ],
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string"
+                                                        },
+                                                        "version": {
+                                                            "type": [
+                                                                "integer",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "status": {
+                                                            "type": "string"
+                                                        },
+                                                        "title": {
+                                                            "type": "string"
+                                                        },
+                                                        "body": {
+                                                            "type": "string"
+                                                        },
+                                                        "summary_of_changes": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "published_at": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        },
+                                                        "published_by": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "id",
+                                                        "version",
+                                                        "status",
+                                                        "title",
+                                                        "body",
+                                                        "summary_of_changes",
+                                                        "published_at",
+                                                        "published_by"
+                                                    ]
+                                                },
+                                                "grievance": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "consents": {
+                                                    "type": [
+                                                        "object",
+                                                        "null"
+                                                    ],
+                                                    "properties": {
+                                                        "notice": {
+                                                            "type": [
+                                                                "object",
+                                                                "null"
+                                                            ],
+                                                            "properties": {
+                                                                "version": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "title": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "version",
+                                                                "title"
+                                                            ]
+                                                        },
+                                                        "purposes": {
+                                                            "type": "string"
+                                                        },
+                                                        "children": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "consents": {
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "id",
+                                                                    "name",
+                                                                    "consents"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "notice",
+                                                        "purposes",
+                                                        "children"
+                                                    ]
+                                                },
+                                                "requests": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            },
+                                                            "status": {
+                                                                "type": "string"
+                                                            },
+                                                            "subject_type": {
+                                                                "type": "string"
+                                                            },
+                                                            "student_id": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "subject_name": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "details": {
+                                                                "type": "string"
+                                                            },
+                                                            "due_on": {
+                                                                "type": "string"
+                                                            },
+                                                            "late": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "outcome": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "completed_at": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "created_at": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "requested_by": {
+                                                                "type": "null"
+                                                            },
+                                                            "handled_by": {
+                                                                "type": "null"
+                                                            },
+                                                            "history": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                },
+                                                                "minItems": 0,
+                                                                "maxItems": 0
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "id",
+                                                            "type",
+                                                            "status",
+                                                            "subject_type",
+                                                            "student_id",
+                                                            "subject_name",
+                                                            "details",
+                                                            "due_on",
+                                                            "late",
+                                                            "outcome",
+                                                            "completed_at",
+                                                            "created_at",
+                                                            "requested_by",
+                                                            "handled_by",
+                                                            "history"
+                                                        ]
+                                                    }
+                                                },
+                                                "can": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "notices": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "requests": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "retention": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "incidents": {
+                                                            "type": "boolean"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "notices",
+                                                        "requests",
+                                                        "retention",
+                                                        "incidents"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "notice",
+                                                "grievance",
+                                                "consents",
+                                                "requests",
+                                                "can"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/privacy/consents": {
+            "post": {
+                "operationId": "privacy.consents.answer",
+                "tags": [
+                    "Privacy"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "student_id": {
+                                        "type": "string",
+                                        "maxLength": 30
+                                    },
+                                    "purpose": {
+                                        "type": "string",
+                                        "maxLength": 40
+                                    },
+                                    "given": {
+                                        "type": "boolean"
+                                    },
+                                    "notice_version": {
+                                        "type": "integer",
+                                        "minimum": 1
+                                    }
+                                },
+                                "required": [
+                                    "student_id",
+                                    "purpose",
+                                    "given",
+                                    "notice_version"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "notice": {
+                                                    "type": [
+                                                        "object",
+                                                        "null"
+                                                    ],
+                                                    "properties": {
+                                                        "version": {
+                                                            "type": "integer"
+                                                        },
+                                                        "title": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "version",
+                                                        "title"
+                                                    ]
+                                                },
+                                                "purposes": {
+                                                    "type": "string"
+                                                },
+                                                "children": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "consents": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "id",
+                                                            "name",
+                                                            "consents"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "notice",
+                                                "purposes",
+                                                "children"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/privacy/requests": {
+            "post": {
+                "operationId": "privacy.requests.store",
+                "tags": [
+                    "Privacy"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "access",
+                                            "correction",
+                                            "erasure"
+                                        ]
+                                    },
+                                    "student_id": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "maxLength": 30
+                                    },
+                                    "details": {
+                                        "type": "string",
+                                        "minLength": 10,
+                                        "maxLength": 2000
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "details"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "subject_type": {
+                                                    "type": "string"
+                                                },
+                                                "student_id": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "subject_name": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "details": {
+                                                    "type": "string"
+                                                },
+                                                "due_on": {
+                                                    "type": "string"
+                                                },
+                                                "late": {
+                                                    "type": "boolean"
+                                                },
+                                                "outcome": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "completed_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "created_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "requested_by": {
+                                                    "type": "null"
+                                                },
+                                                "handled_by": {
+                                                    "type": "null"
+                                                },
+                                                "history": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "minItems": 0,
+                                                    "maxItems": 0
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "type",
+                                                "status",
+                                                "subject_type",
+                                                "student_id",
+                                                "subject_name",
+                                                "details",
+                                                "due_on",
+                                                "late",
+                                                "outcome",
+                                                "completed_at",
+                                                "created_at",
+                                                "requested_by",
+                                                "handled_by",
+                                                "history"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            },
+            "get": {
+                "operationId": "privacy.requests.index",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "subject_type": {
+                                                        "type": "string"
+                                                    },
+                                                    "student_id": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "subject_name": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "details": {
+                                                        "type": "string"
+                                                    },
+                                                    "due_on": {
+                                                        "type": "string"
+                                                    },
+                                                    "late": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "outcome": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "completed_at": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "created_at": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "requested_by": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "role": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "id",
+                                                            "name",
+                                                            "role"
+                                                        ]
+                                                    },
+                                                    "handled_by": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "history": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "at": {
+                                                                    "type": "string"
+                                                                },
+                                                                "by": {
+                                                                    "type": "string"
+                                                                },
+                                                                "note": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "at",
+                                                                "by",
+                                                                "note"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "type",
+                                                    "status",
+                                                    "subject_type",
+                                                    "student_id",
+                                                    "subject_name",
+                                                    "details",
+                                                    "due_on",
+                                                    "late",
+                                                    "outcome",
+                                                    "completed_at",
+                                                    "created_at",
+                                                    "requested_by",
+                                                    "handled_by",
+                                                    "history"
+                                                ]
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "open": {
+                                                    "type": "integer",
+                                                    "minimum": 0
+                                                },
+                                                "late": {
+                                                    "type": "integer",
+                                                    "minimum": 0
+                                                }
+                                            },
+                                            "required": [
+                                                "open",
+                                                "late"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/privacy/notices": {
+            "get": {
+                "operationId": "privacy.notices.index",
+                "tags": [
+                    "Privacy"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "version": {
+                                                        "type": [
+                                                            "integer",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "body": {
+                                                        "type": "string"
+                                                    },
+                                                    "summary_of_changes": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "published_at": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "published_by": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "version",
+                                                    "status",
+                                                    "title",
+                                                    "body",
+                                                    "summary_of_changes",
+                                                    "published_at",
+                                                    "published_by"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/privacy/notices/draft": {
+            "put": {
+                "operationId": "privacy.notices.draft",
+                "tags": [
+                    "Privacy"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "maxLength": 150
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "minLength": 50,
+                                        "maxLength": 30000
+                                    },
+                                    "summary_of_changes": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "maxLength": 500
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "body"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "version": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "title": {
+                                                    "type": "string"
+                                                },
+                                                "body": {
+                                                    "type": "string"
+                                                },
+                                                "summary_of_changes": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "published_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "published_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "version",
+                                                "status",
+                                                "title",
+                                                "body",
+                                                "summary_of_changes",
+                                                "published_at",
+                                                "published_by"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/privacy/notices/publish": {
+            "post": {
+                "operationId": "privacy.notices.publish",
+                "tags": [
+                    "Privacy"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "version": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "title": {
+                                                    "type": "string"
+                                                },
+                                                "body": {
+                                                    "type": "string"
+                                                },
+                                                "summary_of_changes": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "published_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "published_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "version",
+                                                "status",
+                                                "title",
+                                                "body",
+                                                "summary_of_changes",
+                                                "published_at",
+                                                "published_by"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/privacy/requests/{id}/move": {
+            "post": {
+                "operationId": "privacy.requests.move",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "in_progress",
+                                            "completed",
+                                            "rejected"
+                                        ]
+                                    },
+                                    "outcome": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "maxLength": 2000
+                                    }
+                                },
+                                "required": [
+                                    "status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "subject_type": {
+                                                    "type": "string"
+                                                },
+                                                "student_id": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "subject_name": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "details": {
+                                                    "type": "string"
+                                                },
+                                                "due_on": {
+                                                    "type": "string"
+                                                },
+                                                "late": {
+                                                    "type": "boolean"
+                                                },
+                                                "outcome": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "completed_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "created_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "requested_by": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "role": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "id",
+                                                        "name",
+                                                        "role"
+                                                    ]
+                                                },
+                                                "handled_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "history": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "at": {
+                                                                "type": "string"
+                                                            },
+                                                            "by": {
+                                                                "type": "string"
+                                                            },
+                                                            "note": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "at",
+                                                            "by",
+                                                            "note"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "type",
+                                                "status",
+                                                "subject_type",
+                                                "student_id",
+                                                "subject_name",
+                                                "details",
+                                                "due_on",
+                                                "late",
+                                                "outcome",
+                                                "completed_at",
+                                                "created_at",
+                                                "requested_by",
+                                                "handled_by",
+                                                "history"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    }
+                }
+            }
+        },
+        "/privacy/requests/{id}/copy": {
+            "get": {
+                "operationId": "privacy.requests.copy",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    }
+                }
+            }
+        },
+        "/privacy/requests/{id}/erase": {
+            "post": {
+                "operationId": "privacy.requests.erase",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "confirm": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "confirm"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "subject_type": {
+                                                    "type": "string"
+                                                },
+                                                "student_id": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "subject_name": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "details": {
+                                                    "type": "string"
+                                                },
+                                                "due_on": {
+                                                    "type": "string"
+                                                },
+                                                "late": {
+                                                    "type": "boolean"
+                                                },
+                                                "outcome": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "completed_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "created_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "requested_by": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "role": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "id",
+                                                        "name",
+                                                        "role"
+                                                    ]
+                                                },
+                                                "handled_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "history": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "at": {
+                                                                "type": "string"
+                                                            },
+                                                            "by": {
+                                                                "type": "string"
+                                                            },
+                                                            "note": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "at",
+                                                            "by",
+                                                            "note"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "type",
+                                                "status",
+                                                "subject_type",
+                                                "student_id",
+                                                "subject_name",
+                                                "details",
+                                                "due_on",
+                                                "late",
+                                                "outcome",
+                                                "completed_at",
+                                                "created_at",
+                                                "requested_by",
+                                                "handled_by",
+                                                "history"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    }
+                }
+            }
+        },
+        "/privacy/retention": {
+            "get": {
+                "operationId": "privacy.retention.index",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "rules": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "kind": {
+                                                                "type": "string"
+                                                            },
+                                                            "label": {
+                                                                "type": "string"
+                                                            },
+                                                            "days": {
+                                                                "type": "integer"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "kind",
+                                                            "label",
+                                                            "days"
+                                                        ]
+                                                    }
+                                                },
+                                                "runs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string"
+                                                            },
+                                                            "kind": {
+                                                                "type": "string"
+                                                            },
+                                                            "label": {
+                                                                "type": "string"
+                                                            },
+                                                            "status": {
+                                                                "type": "string"
+                                                            },
+                                                            "days": {
+                                                                "type": "integer"
+                                                            },
+                                                            "cutoff": {
+                                                                "type": "string"
+                                                            },
+                                                            "count": {
+                                                                "type": "integer"
+                                                            },
+                                                            "oldest": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "newest": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "made_by": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "made_at": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "confirmed_by": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "confirmed_at": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "deleted": {
+                                                                "type": [
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "id",
+                                                            "kind",
+                                                            "label",
+                                                            "status",
+                                                            "days",
+                                                            "cutoff",
+                                                            "count",
+                                                            "oldest",
+                                                            "newest",
+                                                            "made_by",
+                                                            "made_at",
+                                                            "confirmed_by",
+                                                            "confirmed_at",
+                                                            "deleted"
+                                                        ]
+                                                    }
+                                                },
+                                                "never": {
+                                                    "type": "array",
+                                                    "prefixItems": [
+                                                        {
+                                                            "type": "string",
+                                                            "const": "audit log"
+                                                        },
+                                                        {
+                                                            "type": "string",
+                                                            "const": "fee ledger"
+                                                        }
+                                                    ],
+                                                    "minItems": 2,
+                                                    "maxItems": 2
+                                                }
+                                            },
+                                            "required": [
+                                                "rules",
+                                                "runs",
+                                                "never"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/privacy/retention/{kind}/dry-run": {
+            "post": {
+                "operationId": "privacy.retention.dry-run",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "parameters": [
+                    {
+                        "name": "kind",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "kind": {
+                                                    "type": "string"
+                                                },
+                                                "label": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "days": {
+                                                    "type": "integer"
+                                                },
+                                                "cutoff": {
+                                                    "type": "string"
+                                                },
+                                                "count": {
+                                                    "type": "integer"
+                                                },
+                                                "oldest": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "newest": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "made_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "made_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "confirmed_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "confirmed_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "deleted": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "kind",
+                                                "label",
+                                                "status",
+                                                "days",
+                                                "cutoff",
+                                                "count",
+                                                "oldest",
+                                                "newest",
+                                                "made_by",
+                                                "made_at",
+                                                "confirmed_by",
+                                                "confirmed_at",
+                                                "deleted"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/privacy/retention/runs/{id}/confirm": {
+            "post": {
+                "operationId": "privacy.retention.confirm",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "kind": {
+                                                    "type": "string"
+                                                },
+                                                "label": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "days": {
+                                                    "type": "integer"
+                                                },
+                                                "cutoff": {
+                                                    "type": "string"
+                                                },
+                                                "count": {
+                                                    "type": "integer"
+                                                },
+                                                "oldest": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "newest": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "made_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "made_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "confirmed_by": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "confirmed_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "deleted": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "kind",
+                                                "label",
+                                                "status",
+                                                "days",
+                                                "cutoff",
+                                                "count",
+                                                "oldest",
+                                                "newest",
+                                                "made_by",
+                                                "made_at",
+                                                "confirmed_by",
+                                                "confirmed_at",
+                                                "deleted"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    }
+                }
+            }
+        },
+        "/privacy/incidents": {
+            "get": {
+                "operationId": "privacy.incidents.index",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "detected_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "severity": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "data_affected": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "people_affected": {
+                                                        "type": [
+                                                            "integer",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "board_notified_at": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "people_notified_at": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "board_deadline": {
+                                                        "type": "string"
+                                                    },
+                                                    "board_overdue": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "reported_by": {
+                                                        "type": "string"
+                                                    },
+                                                    "timeline": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "at": {
+                                                                    "type": "string"
+                                                                },
+                                                                "by": {
+                                                                    "type": "string"
+                                                                },
+                                                                "note": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "at",
+                                                                "by",
+                                                                "note"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "title",
+                                                    "detected_at",
+                                                    "severity",
+                                                    "status",
+                                                    "description",
+                                                    "data_affected",
+                                                    "people_affected",
+                                                    "board_notified_at",
+                                                    "people_notified_at",
+                                                    "board_deadline",
+                                                    "board_overdue",
+                                                    "reported_by",
+                                                    "timeline"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "operationId": "privacy.incidents.store",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "minLength": 5,
+                                        "maxLength": 150
+                                    },
+                                    "detected_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "severity": {
+                                        "type": "string",
+                                        "enum": [
+                                            "low",
+                                            "medium",
+                                            "high"
+                                        ]
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "minLength": 10,
+                                        "maxLength": 5000
+                                    },
+                                    "data_affected": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "maxLength": 60
+                                        },
+                                        "maxItems": 20
+                                    },
+                                    "people_affected": {
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "minimum": 0
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "detected_at",
+                                    "severity",
+                                    "description"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "title": {
+                                                    "type": "string"
+                                                },
+                                                "detected_at": {
+                                                    "type": "string"
+                                                },
+                                                "severity": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                },
+                                                "data_affected": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "people_affected": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "board_notified_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "people_notified_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "board_deadline": {
+                                                    "type": "string"
+                                                },
+                                                "board_overdue": {
+                                                    "type": "boolean"
+                                                },
+                                                "reported_by": {
+                                                    "type": "string"
+                                                },
+                                                "timeline": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "at": {
+                                                                "type": "string"
+                                                            },
+                                                            "by": {
+                                                                "type": "string"
+                                                            },
+                                                            "note": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "at",
+                                                            "by",
+                                                            "note"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "title",
+                                                "detected_at",
+                                                "severity",
+                                                "status",
+                                                "description",
+                                                "data_affected",
+                                                "people_affected",
+                                                "board_notified_at",
+                                                "people_notified_at",
+                                                "board_deadline",
+                                                "board_overdue",
+                                                "reported_by",
+                                                "timeline"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/privacy/incidents/{id}/entries": {
+            "post": {
+                "operationId": "privacy.incidents.entries",
+                "tags": [
+                    "PrivacyOffice"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "note": {
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "maxLength": 2000
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "contained",
+                                            "closed"
+                                        ]
+                                    },
+                                    "board_notified": {
+                                        "type": "boolean"
+                                    },
+                                    "people_notified": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": [
+                                    "note"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "title": {
+                                                    "type": "string"
+                                                },
+                                                "detected_at": {
+                                                    "type": "string"
+                                                },
+                                                "severity": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                },
+                                                "data_affected": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "people_affected": {
+                                                    "type": [
+                                                        "integer",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "board_notified_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "people_notified_at": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "board_deadline": {
+                                                    "type": "string"
+                                                },
+                                                "board_overdue": {
+                                                    "type": "boolean"
+                                                },
+                                                "reported_by": {
+                                                    "type": "string"
+                                                },
+                                                "timeline": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "at": {
+                                                                "type": "string"
+                                                            },
+                                                            "by": {
+                                                                "type": "string"
+                                                            },
+                                                            "note": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "at",
+                                                            "by",
+                                                            "note"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "title",
+                                                "detected_at",
+                                                "severity",
+                                                "status",
+                                                "description",
+                                                "data_affected",
+                                                "people_affected",
+                                                "board_notified_at",
+                                                "people_notified_at",
+                                                "board_deadline",
+                                                "board_overdue",
+                                                "reported_by",
+                                                "timeline"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    }
+                }
+            }
+        },
         "/promotions/preview": {
             "post": {
                 "operationId": "promotions.preview",
@@ -26352,6 +28609,103 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/promotions/carry-forward": {
+            "post": {
+                "operationId": "promotions.carry-forward",
+                "tags": [
+                    "Promotion"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "to": {
+                                        "type": "object",
+                                        "properties": {
+                                            "to_year_id": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ],
+                                                "maxLength": 30
+                                            },
+                                            "name": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ],
+                                                "maxLength": 20
+                                            },
+                                            "starts_on": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ],
+                                                "format": "date"
+                                            },
+                                            "ends_on": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ],
+                                                "format": "date"
+                                            }
+                                        }
+                                    },
+                                    "decisions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "carry",
+                                                "leave"
+                                            ]
+                                        },
+                                        "maxItems": 5000
+                                    },
+                                    "dues_digest": {
+                                        "type": "string",
+                                        "minLength": 64,
+                                        "maxLength": 64
+                                    }
+                                },
+                                "required": [
+                                    "to",
+                                    "dues_digest"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             }
@@ -26455,6 +28809,13 @@
                                                 "login_methods": {
                                                     "type": "array",
                                                     "items": {}
+                                                },
+                                                "grievance": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ],
+                                                    "description": "DPDP: whom to contact about personal data (null until the school sets it)."
                                                 }
                                             },
                                             "required": [
@@ -26464,7 +28825,8 @@
                                                 "logo_url",
                                                 "accent",
                                                 "languages",
-                                                "login_methods"
+                                                "login_methods",
+                                                "grievance"
                                             ]
                                         }
                                     },

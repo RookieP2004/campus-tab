@@ -37,7 +37,9 @@
     "tests": "Tests and marks",
     "results": "Results",
     "reportCards": "Report cards",
-    "fees": "Fees"
+    "fees": "Fees",
+    "privacy": "Privacy",
+    "privacyOffice": "Privacy office"
   },
   "more": {
     "screens": "Screens",
@@ -561,7 +563,10 @@
         "body": "People will no longer see this module's screens. Its records are kept and come back when you switch it on again.",
         "type": "Type {{word}} to confirm",
         "confirm": "Switch off"
-      }
+      },
+      "grievance": "Grievance contact (personal data)",
+      "grievanceHint": "Whom parents, students and staff contact with questions or complaints about personal data. Shown on the school profile and on everyone's Privacy page.",
+      "grievanceRole": "Role (for example Grievance officer)"
     }
   },
   "theme": {
@@ -1112,7 +1117,7 @@
       "aadhaarLast4": "Aadhaar: last 4 digits only",
       "aadhaarHint": "Full Aadhaar numbers are never stored. Enter only the last four digits.",
       "aadhaarInvalid": "Enter exactly four digits, or leave it empty.",
-      "consentIntro": "PEN and APAAR are kept only with the guardian's consent. Tick the consent first, then enter the number.",
+      "consentIntro": "PEN and APAAR are kept only after a parent consents from their own Campus TAB account (Privacy). Once they say yes, enter the number here. The office cannot record consent for them.",
       "otherConsents": "Other consents",
       "consent": {
         "pen": "The guardian consents to keeping the PEN",
@@ -1124,7 +1129,9 @@
       "given": "given",
       "withdrawn": "withdrawn",
       "noConsents": "No consents recorded yet.",
-      "officeOnly": "Only the office can see and change ID numbers."
+      "officeOnly": "Only the office can see and change ID numbers.",
+      "waitingForParent": "Waiting for the parent's consent in their own account.",
+      "needsParent": "{{purpose}}: ticked by the office before; needs the parent's own answer in their account"
     }
   },
   "staff": {
@@ -2126,7 +2133,27 @@
       "confirmTitle": "Apply the promotion?",
       "confirmBody": "Everything in the preview happens at once: {{to}} becomes the current year and {{from}} closes.",
       "confirm": "Apply now",
-      "done": "Done. {{to}} is now the current year and {{from}} is closed."
+      "done": "Done. {{to}} is now the current year and {{from}} is closed.",
+      "planned": "Moving into {{name}}, made in the unpaid-dues step.",
+      "step4": "4. Close the year",
+      "dues": {
+        "title": "3. Unpaid fees",
+        "none": "Nobody owes fees for this year. Nothing to carry forward.",
+        "intro": "{{count}} students still owe {{total}} for {{year}}. Decide each balance before the year closes: carry it forward into the new year, or leave it in {{year}}.",
+        "choiceFor": "What happens to the balance of {{name}}",
+        "carry": "Carry to {{year}}",
+        "leave": "Leave in {{year}}",
+        "leftDone": "Left in {{year}}",
+        "leaveWarning_one": "1 balance stays in {{year}}. After the year closes it can only be viewed: Campus TAB can no longer collect it.",
+        "leaveWarning_other": "{{count}} balances stay in {{year}}. After the year closes they can only be viewed: Campus TAB can no longer collect them.",
+        "approve_one": "Approve the decision for 1 balance",
+        "approve_other": "Approve the decisions for {{count}} balances",
+        "confirmApprove": "Confirm and approve",
+        "allDecided": "Every unpaid balance is decided.",
+        "done": "{{carried}} balances ({{carriedAmount}}) now open in {{to}}; {{left}} left in the closing year.",
+        "blocking_one": "1 unpaid balance is not decided yet (step 3).",
+        "blocking_other": "{{count}} unpaid balances are not decided yet (step 3)."
+      }
     },
     "family": {
       "none": "No report card published yet.",
@@ -2390,7 +2417,7 @@
       "to": "To",
       "show": "Show",
       "export": "Export to Excel",
-      "exportNote": "Exporting asks for a code from your authenticator app and is recorded in the audit log.",
+      "exportNote": "Exporting asks for a code from your authenticator app, is recorded in the audit log, and every file shows who exported it, when, and for which school. A large export alerts the Chief.",
       "empty": "Nothing for these dates.",
       "yes": "Yes",
       "no": "No",
@@ -2419,7 +2446,8 @@
         "reference": "Reference",
         "bank": "Bank",
         "status": "Status"
-      }
+      },
+      "exportPdf": "Export to PDF"
     },
     "setup": {
       "title": "Fee setup",
@@ -2504,6 +2532,162 @@
         "missing_there": "Here, not at the gateway",
         "amount": "Amounts differ"
       }
+    }
+  },
+  "privacy": {
+    "title": "Privacy",
+    "intro": "How the school uses personal data, whom to contact, your consents and your requests.",
+    "noTracking": "Campus TAB has no advertising, tracking or outside analytics. Your activity is never profiled.",
+    "notice": {
+      "title": "Privacy notice",
+      "version": "Version {{version}}, published {{date}}",
+      "read": "Read the notice",
+      "hide": "Hide the notice",
+      "none": "The school has not published its privacy notice yet."
+    },
+    "grievance": {
+      "title": "Questions or complaints about personal data",
+      "name": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "none": "The school has not named a contact yet. Ask the school office."
+    },
+    "consents": {
+      "title": "Your consents",
+      "intro": "Each yes or no is for one child and one purpose. You can change it at any time; the school sees only your latest answer. Saying no to PEN or APAAR removes that number from the record.",
+      "noNotice": "You can answer once the school publishes its privacy notice.",
+      "noChildren": "No children are linked to your account.",
+      "answered": "Answered on {{date}} (notice version {{version}})",
+      "answerFor": "{{purpose}}, for {{name}}",
+      "notAnswered": "Not answered",
+      "yes": "Yes, I agree",
+      "no": "No"
+    },
+    "purposes": {
+      "pen": "Keep the PEN (Permanent Education Number) on the record",
+      "apaar": "Keep the APAAR ID on the record",
+      "photo_public": "Use photos on the school website, notice boards or social media",
+      "third_party_sharing": "Share details with outside partners (trips, competitions, insurance)"
+    },
+    "requests": {
+      "title": "Your data requests",
+      "intro": "Ask for a copy of what the school holds, a correction, or for details to be erased. The school answers by the due date shown.",
+      "type": "What do you want?",
+      "types": {
+        "access": "A copy of my data",
+        "correction": "Correct my data",
+        "erasure": "Erase my data"
+      },
+      "about": "About",
+      "me": "Me",
+      "details": "Details",
+      "detailsHint": "What should the school do? At least 10 characters.",
+      "send": "Send the request",
+      "sent": "Sent. The school will answer by {{date}}.",
+      "due": "due {{date}}",
+      "status": {
+        "received": "Received",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "rejected": "Refused"
+      }
+    },
+    "retention": {
+      "notifications": "Read notifications",
+      "device_sessions": "Ended sign-ins on devices",
+      "register_photos": "Photos of paper attendance registers",
+      "leave_documents": "Documents on decided leave requests",
+      "import_batches": "Import files and their check reports",
+      "notice_reads": "Notice read receipts"
+    },
+    "office": {
+      "link": "Open the privacy office",
+      "back": "Back to privacy",
+      "title": "Privacy office",
+      "nothing": "You have no privacy office tasks.",
+      "tabs": {
+        "requests": "Requests",
+        "notices": "Privacy notice",
+        "retention": "Retention",
+        "incidents": "Incidents"
+      },
+      "inbox": "Requests: {{open}} open, {{late}} late",
+      "noRequests": "No requests yet.",
+      "late": "Late: was due {{date}}",
+      "from": "From {{name}} ({{role}})",
+      "outcome": "What was done, or why it is refused",
+      "outcomeHint": "The person sees this. At least 10 characters.",
+      "start": "Start working on it",
+      "copy": "Download a copy of the data",
+      "erase": "Erase the child’s details",
+      "complete": "Mark completed",
+      "reject": "Refuse",
+      "eraseTitle": "Erase this child’s personal details?",
+      "eraseBody": "The name, date of birth, ID numbers, the school’s own fields, sign-ins and the contact details of guardians with no other child here are removed for good for {{name}}. Attendance, marks, report cards, fees and the audit log are kept as school records. This cannot be undone.",
+      "eraseConfirm": "Type the admission number to confirm",
+      "eraseNow": "Erase now",
+      "noticeTitle": "Privacy notice",
+      "currentVersion": "Version {{version}} is in use since {{date}}.",
+      "legalReview": "Have a lawyer check the notice before the school goes live. A published version can never be changed: publish a new version instead.",
+      "noticeName": "Title",
+      "noticeBody": "Text",
+      "noticeBodyHint": "Plain text. Leave an empty line between paragraphs.",
+      "changes": "What changed (shown in the history)",
+      "saveDraft": "Save the draft",
+      "publish": "Publish as the next version",
+      "publishTitle": "Publish this version?",
+      "publishBody": "Everyone sees the new version, and everyone is told it changed. Parents answer consents again against the new version.",
+      "draftSaved": "Draft saved.",
+      "published": "Version {{version}} is published.",
+      "versions": "Versions",
+      "versionN": "Version {{version}}",
+      "draft": "Draft",
+      "noticeStatus": {
+        "draft": "draft",
+        "published": "in use",
+        "replaced": "replaced"
+      },
+      "retentionTitle": "Retention",
+      "retentionIntro": "Each kind of data is kept for a set time. A dry run lists what is past its time and deletes nothing. Delete only after reading it; that asks for a code from your authenticator app. Every night a dry run is made and you are told.",
+      "never": "Never deleted here: the audit log and the fee ledger (school records).",
+      "keptFor_one": "kept {{count}} day",
+      "keptFor_other": "kept {{count}} days",
+      "dryRun": "Make a dry run",
+      "dryRunResult": "Dry run on {{date}}: {{count}} past their time (from {{oldest}} to {{newest}}).",
+      "dryRunEmpty": "Dry run: nothing is past its time.",
+      "confirmDelete_one": "Delete this 1 record",
+      "confirmDelete_other": "Delete these {{count}} records",
+      "listed_one": "1 record is past its time. Nothing was deleted.",
+      "listed_other": "{{count}} records are past their time. Nothing was deleted.",
+      "deleted_one": "1 record was deleted for good.",
+      "deleted_other": "{{count}} records were deleted for good.",
+      "history": "Done",
+      "deletedBy": "{{count}} deleted by {{name}} on {{date}}",
+      "incidentsTitle": "Incident log",
+      "incidentsIntro": "Record every suspected personal data breach at once and add each step. Tell the Data Protection Board within 72 hours, and the people affected. Follow the breach runbook.",
+      "incidentName": "What happened (short)",
+      "detectedAt": "Noticed at",
+      "severity": "Severity",
+      "severities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "peopleAffected": "People affected (about)",
+      "whatHappened": "Details",
+      "record": "Record the incident",
+      "incidentStatus": {
+        "open": "open",
+        "contained": "contained",
+        "closed": "closed"
+      },
+      "boardTold": "Data Protection Board told on {{date}}",
+      "boardDeadline": "Tell the Data Protection Board by {{date}}",
+      "nextStep": "Next step taken",
+      "addStep": "Add the step",
+      "markBoard": "Add: Board told",
+      "markPeople": "Add: people told",
+      "close": "Add and close"
     }
   }
 }

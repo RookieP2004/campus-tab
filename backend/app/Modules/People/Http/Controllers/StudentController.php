@@ -239,7 +239,15 @@ class StudentController
         $consents = [];
         foreach (Consent::PURPOSES as $purpose) {
             $latest = Consent::query()->where('student_id', (string) $student->getKey())->where('purpose', $purpose)->orderBy('created_at', 'desc')->first();
-            $consents[$purpose] = $latest instanceof Consent ? ['given' => $latest->given, 'at' => $latest->at, 'recorded_by' => $latest->recorded_by['name'] ?? null] : null;
+            // Only the parent's own answer counts; an office tick from before
+            // Phase 9 shows as needing the parent's confirmation.
+            $consents[$purpose] = $latest instanceof Consent ? [
+                'given' => $latest->given && $latest->method === Consent::PARENT_ACCOUNT,
+                'at' => $latest->at,
+                'recorded_by' => $latest->recorded_by['name'] ?? null,
+                'by_parent' => $latest->method === Consent::PARENT_ACCOUNT,
+                'needs_parent' => Consent::needsParent((string) $student->getKey(), $purpose),
+            ] : null;
         }
 
         $canSeeIds = Gate::allows('update', $student);

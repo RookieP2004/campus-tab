@@ -6,6 +6,10 @@
 
 - **Health check.** Anyone (a person, a monitor, Docker) can ask the API "are you working?" at `/api/v1/health`. The API checks that it can reach the database (MongoDB) and the job queue (Redis) and answers `ok` or `fail` for each.
 - **One error shape.** Whenever something goes wrong on any request, the API answers the same way: an `error` object with a short code (`not_found`, `validation_failed`, `module_disabled`, …), a plain message and any details. Screens can therefore show errors the same way everywhere.
+- **Security on every answer (Phase 9).** The API adds the security headers (CSP `default-src 'none'`, frame-ancestors none, no-referrer, no-store, HSTS in production) and lets the apps' web views call it with a token only, never cookies (see [security.md](../security.md), [apps.md](../apps.md)).
+- **Virus scan of every upload (Phase 9).** Every file sent to a school route is checked by ClamAV before anything sees it; an infected file is refused and logged, and uploads stop when the scanner is down.
+- **Export watermark and alert (Phase 9).** Every Excel or PDF export carries who made it, when and for which school; a large one alerts the Chief.
+- **Load-test data (Phase 9).** `php artisan loadtest:seed` fills a separate database with 50 schools × 1,000 students for the k6 test ([performance.md](../performance.md)).
 - **Report generator.** The command `php artisan report:generate` rewrites the parts of this report that can be read straight from the code (the list of modules, every API route, every collection), so those parts never go out of date.
 
 ## 2. Who uses it and from which screens
@@ -53,7 +57,13 @@ Every other request in the API uses the error shape this module defines:
 | [`backend/routes/api.php`](../../../backend/routes/api.php) | Loads every `app/Modules/*/routes.php` |
 | [`backend/bootstrap/app.php`](../../../backend/bootstrap/app.php) | Sets the `/api/v1` prefix, loads module console commands, registers the error renderer |
 | [`backend/config/report.php`](../../../backend/config/report.php) | Where the report folder is (`REPORT_PATH`) |
-| [`frontend/src/lib/api.ts`](../../../frontend/src/lib/api.ts) | Front-end fetch helper that reads the error shape; `getHealth()` |
+| [`frontend/src/lib/api.ts`](../../../frontend/src/lib/api.ts) | Front-end fetch helper that reads the error shape; `getHealth()`; the apps' bearer token |
+| [`backend/app/Support/Http/SecurityHeaders.php`](../../../backend/app/Support/Http/SecurityHeaders.php) | Security headers on every API answer |
+| [`backend/app/Support/Http/AppOriginCors.php`](../../../backend/app/Support/Http/AppOriginCors.php) | CORS for the apps' origins, without credentials |
+| [`backend/app/Support/Uploads/*`](../../../backend/app/Support/Uploads/) | `ScanUploadedFiles` (school routes), `ClamAvScanner` (INSTREAM), `FakeVirusScanner` (tests only) |
+| [`backend/app/Support/Exports/ExportGuard.php`](../../../backend/app/Support/Exports/ExportGuard.php), [`PdfTable.php`](../../../backend/app/Support/Exports/PdfTable.php) | Watermark, audit `export.made`, the Chief's large-export alert; a watermarked PDF table |
+| [`backend/app/Modules/System/Console/LoadTestSeedCommand.php`](../../../backend/app/Modules/System/Console/LoadTestSeedCommand.php) | `loadtest:seed` (only a database whose name ends in `_load`, never production) |
+| [`backend/config/uploads.php`](../../../backend/config/uploads.php), [`backend/config/exports.php`](../../../backend/config/exports.php) | Scanner driver and host; large-export rows |
 
 ## 5. How the code works, step by step
 
@@ -114,6 +124,9 @@ The health endpoint is public on purpose and leaks no internal detail (a test ch
 | [`backend/tests/Feature/Support/RefreshMongoDatabaseTest.php`](../../../backend/tests/Feature/Support/RefreshMongoDatabaseTest.php) | The test-database reset helper empties the database between tests and only touches a `_test` database |
 | [`frontend/src/features/shell/AppShell.test.tsx`](../../../frontend/src/features/shell/AppShell.test.tsx) | The sidebar shows "Connected" when health is ok |
 | CI step "Generated report sections are up to date" | `report:generate --check` |
+| [`backend/tests/Feature/Support/VirusScanTest.php`](../../../backend/tests/Feature/Support/VirusScanTest.php) | The four named uploads refused when infected, audited by hash; clean files stored; scanner down → 503; every route reading a file is behind the scanner; the real clamd protocol (with `CLAMAV_TEST_HOST`) |
+| [`backend/tests/Feature/Fees/FeesTest.php`](../../../backend/tests/Feature/Fees/FeesTest.php) "watermarks Excel and PDF exports" | Watermark in the first row, printed footer and file properties; a watermarked template still imports; PDF watermark; large-export alert |
+| [`backend/tests/Feature/Communication/AppPushTest.php`](../../../backend/tests/Feature/Communication/AppPushTest.php) | App origins allowed without credentials |
 
 ## 12. Decisions and limits
 
@@ -127,4 +140,5 @@ The health endpoint is public on purpose and leaks no internal detail (a test ch
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Module created: health check, error shape, report generator | Phase 0 foundations |
 | 2026-11-27 | Session 2 | Report generator links Identity to `identity-and-access.md` (`PAGE_ALIASES`); the error renderer turns a policy's "deny as not found" into a 404 `not_found` | The README linked a page that does not exist; parents asking for a whole class register must get 404, not 403 |
+| 2026-11-28 | 9 | Security headers, app CORS, upload virus scan, export watermark and alert, load-test seeder | Phase 9 security pass, exports and load test |
 | 2026-11-28 | 7–8 | Parallel test runs: each process of each run has its own database, cache prefix and fake disks (token `<n>_<run>`); a run drops its databases at the end and those of dead runs. `composer test` has no Composer time limit | Overlapping runs (and timed-out runs' workers) emptied each other's collections, so tests failed now and then |

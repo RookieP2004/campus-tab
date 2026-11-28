@@ -29,6 +29,11 @@ docker compose down -v      # stop and delete all volumes: database, vendor, nod
 | `reverb` | WebSocket server | `127.0.0.1:8080` |
 | `gotenberg` | Chromium with Noto fonts: renders report card PDFs (Phase 7); reached only from the API containers | not published |
 | `web` | Vite dev server; installs npm packages on first start | http://127.0.0.1:5173 |
+| `clamav` | ClamAV (Phase 9): scans every upload. First start downloads the virus definitions (a few minutes, needs internet); uploads are refused until it is healthy | not published |
+| `edge` (profile `edge`) | nginx serving the **production build** with the security headers and `/api` proxied; the ZAP scan targets it. Build first (`npm run build`), then `docker compose --profile edge up -d edge` | http://127.0.0.1:8088 |
+| `api-load`, `k6` (profile `loadtest`) | A second API on the `campus_tab_load` database and the k6 load test ([performance.md](performance.md)) | API on http://127.0.0.1:8001 |
+
+Every service's container log is capped at three files of 10 MB (`x-logging` in the compose file).
 
 **Always use `127.0.0.1`, not `localhost`.** Sign-in cookies (Phase 1) belong to one host name, and on this machine `localhost` also resolves to `::1`, where another Windows program (a `DllHost.exe` process) listens on port 8000.
 
@@ -105,7 +110,14 @@ The `scheduler` container runs `php artisan schedule:work`. It works out the con
 | --- | --- |
 | Backend | Starts MongoDB 8 with `docker run … --replSet rs0`, runs `rs.initiate` and waits until it is primary (service containers cannot pass `--replSet`); Redis as a service; PHP 8.4 with the same extensions as the container (mongodb 2.5.9, redis, pcntl, intl, bcmath, sockets, zip); Pint, PHPStan level 6, Pest, `report:generate --check` |
 | Frontend | Node 22, `npm ci`, ESLint, `tsc`, Vitest, build |
+| Security | `composer audit` and `npm audit` (web, phone app, desktop app) fail on high or critical advisories (`.github/scripts/audit-gate.mjs`); gitleaks scans the whole history (`.gitleaks.toml`). The Frontend job also runs `no-trackers.mjs` (no tracking or third-party analytics) |
 | Application Report | Pull requests only: [`.github/scripts/check-report.mjs`](../../.github/scripts/check-report.mjs) fails if code changed without a `CHANGELOG.md` entry, a changed module without its `modules/<module>.md`, or front-end code without `frontend.md` or a module page |
+
+[`.github/workflows/apps.yml`](../../.github/workflows/apps.yml) builds the apps (manual run, `v*` tags, and pull requests touching `apps/`): the Android APK on Linux, the Windows installer on Windows, unsigned iOS and macOS builds on macOS. Each run leaves the files under **Artifacts**. See [apps.md](apps.md) and the READMEs in `apps/mobile` and `apps/desktop` (signing keys, the phone test on Wi-Fi).
+
+## Security checks
+
+See [security.md](security.md): the ZAP baseline scan (how to run it again), the headers, the virus scan and the ASVS level 2 checklist. Incidents: [how-to/breach-runbook.md](how-to/breach-runbook.md).
 
 ## Troubleshooting
 
@@ -120,3 +132,6 @@ The `scheduler` container runs `php artisan schedule:work`. It works out the con
 | The page does not reload after a change | The `web` service needs `VITE_USE_POLLING=true` (set in compose); restart it |
 | Port already in use | Change it in `infra/.env` |
 | Start completely fresh | `docker compose down -v`, then `docker compose up -d` |
+| Report-card or upload tests fail after a `git pull` (no `GOTENBERG_URL`, `virus_scan_unavailable`) | The containers are older than the compose file: `docker compose up -d` recreates them with the new settings and services |
+| A setting in the compose file seems ignored by the API | `php artisan serve` lets `backend/.env` win over the container's environment: change it in `backend/.env` too (e.g. `SANCTUM_STATEFUL_DOMAINS`), then `docker compose restart api` |
+| Windows Defender removes a file | Never write the EICAR antivirus test string to the Windows disk; tests build it inside the container |

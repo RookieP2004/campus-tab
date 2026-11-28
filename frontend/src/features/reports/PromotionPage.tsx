@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Alert, Card, Dialog, Field, Input, Select } from '@/components/ui/form';
 import { errorText } from '@/features/auth/errors';
 import { type PromotionAction, type PromotionPreview, type PromotionTarget, reports } from './api';
+import { DuesStep } from './DuesStep';
 
 /**
  * The year-end promotion wizard. Step 1 names the new year; step 2 is the
  * full preview (every student and what happens to them, with what rolls
- * forward); the Principal changes any student, the preview refreshes, and
- * only then applies it, in one go. After that the old year is read-only.
+ * forward); the Principal changes any student, the preview refreshes. Step 3
+ * decides every unpaid fee balance (one approval, step-up); only then does
+ * the Principal apply it, in one go. After that the old year is read-only.
  */
 export function PromotionPage() {
   const { t } = useTranslation();
@@ -24,11 +26,11 @@ export function PromotionPage() {
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState(false);
 
-  const load = async (next: Record<string, PromotionAction> = exceptions) => {
+  const load = async (next: Record<string, PromotionAction> = exceptions, to: PromotionTarget = target) => {
     setBusy(true);
     setError(null);
     try {
-      setPreview(await reports.previewPromotion(target, next));
+      setPreview(await reports.previewPromotion(to, next));
     } catch (e) {
       setError(errorText(t, e));
     } finally {
@@ -60,6 +62,15 @@ export function PromotionPage() {
     }
   };
 
+  // The dues step made the new year (planned): later previews move into it.
+  const settled = (yearId: string, message: string) => {
+    const to = { to_year_id: yearId };
+    setTarget(to);
+    setDone(message);
+    void load(exceptions, to);
+  };
+  const undecided = preview?.dues.unresolved ?? 0;
+
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-4">
       <Link to="/report-cards" className="text-sm font-medium text-primary hover:underline">
@@ -70,15 +81,19 @@ export function PromotionPage() {
       {done ? <Alert tone="success">{done}</Alert> : null}
       <Card className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">{t('reports.promotion.step1')}</h2>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Field label={t('reports.promotion.name')} hint={t('reports.promotion.nameHint')}>
-            {(f) => <Input {...f} value={target.name ?? ''} maxLength={20} onChange={(e) => setTarget({ ...target, name: e.target.value })} />}
-          </Field>
-          <Field label={t('reports.promotion.starts')}>{(f) => <Input {...f} type="date" value={target.starts_on ?? ''} onChange={(e) => setTarget({ ...target, starts_on: e.target.value })} />}</Field>
-          <Field label={t('reports.promotion.ends')}>{(f) => <Input {...f} type="date" value={target.ends_on ?? ''} onChange={(e) => setTarget({ ...target, ends_on: e.target.value })} />}</Field>
-        </div>
+        {target.to_year_id ? (
+          <p className="text-sm">{t('reports.promotion.planned', { name: preview?.to.name ?? '' })}</p>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Field label={t('reports.promotion.name')} hint={t('reports.promotion.nameHint')}>
+              {(f) => <Input {...f} value={target.name ?? ''} maxLength={20} onChange={(e) => setTarget({ ...target, name: e.target.value })} />}
+            </Field>
+            <Field label={t('reports.promotion.starts')}>{(f) => <Input {...f} type="date" value={target.starts_on ?? ''} onChange={(e) => setTarget({ ...target, starts_on: e.target.value })} />}</Field>
+            <Field label={t('reports.promotion.ends')}>{(f) => <Input {...f} type="date" value={target.ends_on ?? ''} onChange={(e) => setTarget({ ...target, ends_on: e.target.value })} />}</Field>
+          </div>
+        )}
         <div>
-          <Button className="h-11" disabled={busy || !target.name || !target.starts_on || !target.ends_on} onClick={() => void load()}>
+          <Button className="h-11" disabled={busy || (!target.to_year_id && (!target.name || !target.starts_on || !target.ends_on))} onClick={() => void load()}>
             {t('reports.promotion.preview')}
           </Button>
         </div>
@@ -99,9 +114,14 @@ export function PromotionPage() {
             <p className="text-sm">{t('reports.promotion.rollForward', preview.roll_forward)}</p>
             {preview.roll_forward.new_classes?.length ? <p className="text-sm">{t('reports.promotion.newClasses', { list: preview.roll_forward.new_classes.map((g) => t('reports.promotion.classN', { grade: g })).join(', ') })}</p> : null}
             {preview.roll_forward.new_sections.length ? <p className="text-sm">{t('reports.promotion.newSections', { list: preview.roll_forward.new_sections.join(', ') })}</p> : null}
+          </Card>
+          <DuesStep key={preview.dues.digest} preview={preview} target={target} onSettled={settled} />
+          <Card className="flex flex-col gap-3">
+            <h2 className="text-lg font-semibold">{t('reports.promotion.step4')}</h2>
             <Alert tone="warning">{t('reports.promotion.warning', { year: preview.from.name })}</Alert>
+            {undecided > 0 ? <p className="text-sm text-status-rejected-fg">{t('reports.promotion.dues.blocking', { count: undecided })}</p> : null}
             <div>
-              <Button className="h-11" disabled={busy} onClick={() => setConfirm(true)}>
+              <Button className="h-11" disabled={busy || undecided > 0} onClick={() => setConfirm(true)}>
                 {t('reports.promotion.apply')}
               </Button>
             </div>

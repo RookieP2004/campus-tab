@@ -272,6 +272,7 @@ The matrix as coded and the fixed rules are in [permissions.md](../permissions.m
 | Date | Phase | What changed | Why |
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
+| 2026-11-28 | 9 | `DeviceSessionEnded` event on every ended sign-in; `POST /auth/logout {closing}` (reason `app_closed`); step-up action `fees_carry_forward`; app origins allowed without credentials (`AppOriginCors`) | Phase 9 apps (decision 0016) and fix 1 |
 | 2026-11-27 | 1A | User and platform-admin models, MongoDB tokens, sign-in lookup exception, MFA gate | Phase 1 items 1, 2 and 5, and the owner's request to make sign-in lookup a documented exception |
 | 2026-11-27 | 1B | Sign-in, MFA, step-up, parent OTP, passwords (invited accounts, links, setup codes, resets), device sessions with idle and total limits, roles and permissions with scopes and guard rules, two duties, support grants | Phase 1 items 6, 7 and 9, with the owner's changes for part B |
 | 2026-11-27 | 1C | Sign-in, OTP, MFA enrolment, activation, password and device screens; background requests do not extend the idle time; idle warning and sign-in over the page; MFA code shared with platform admins; test that a passwordless account never signs in | Phase 1 items 11 and 12 with the owner's rules for part C |

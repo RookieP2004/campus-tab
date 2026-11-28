@@ -17,3 +17,10 @@ Schedule::command('leave:remind')->hourly()->name('leave:remind')->withoutOverla
 // and match yesterday's gateway settlements against our online payments.
 Schedule::command('fees:raise-demands')->dailyAt('01:30')->timezone('Asia/Kolkata')->name('fees:raise-demands')->withoutOverlapping();
 Schedule::command('fees:reconcile')->dailyAt('03:00')->timezone('Asia/Kolkata')->name('fees:reconcile')->withoutOverlapping();
+
+// Push: devices with no sign-in for 30 days stop getting push (Phase 9).
+Schedule::command('push:forget-stale')->dailyAt('02:15')->timezone('Asia/Kolkata')->name('push:forget-stale')->withoutOverlapping();
+
+// Privacy (Phase 9): a dry-run retention report every night. It deletes
+// nothing; the Chief confirms each report on the Privacy screen.
+Schedule::command('privacy:retention-report')->dailyAt('02:45')->timezone('Asia/Kolkata')->name('privacy:retention-report')->withoutOverlapping();

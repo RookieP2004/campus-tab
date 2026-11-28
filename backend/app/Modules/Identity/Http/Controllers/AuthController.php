@@ -110,7 +110,10 @@ class AuthController
 
     public function logout(Request $request, SessionIssuer $sessions): JsonResponse
     {
-        $sessions->endCurrent($request);
+        // The apps send closing=true when their window closes: the token in
+        // memory is gone anyway, this ends it on the server at once. It is
+        // not a sign-out on purpose, so the device keeps its push.
+        $sessions->endCurrent($request, $request->boolean('closing') ? 'app_closed' : 'signed_out');
 
         return response()->json(['data' => ['signed_out' => true]]);
     }

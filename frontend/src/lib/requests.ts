@@ -1,6 +1,6 @@
 import { toApiError } from '@campus-tab/api';
 import type { QueryFunctionContext } from '@tanstack/react-query';
-import { api, apiErrorFrom, queryHeaders, unwrap } from './api';
+import { api, apiErrorFrom, authHeaders, queryHeaders, unwrap } from './api';
 import { env } from './env';
 
 type Query = Record<string, string | number | boolean | undefined>;
@@ -55,7 +55,7 @@ export function send<T = unknown>(method: Method, path: string, options: SendOpt
  */
 export async function downloadFile(path: string, fileName: string): Promise<void> {
   const base = typeof location !== 'undefined' ? location.origin : 'http://127.0.0.1';
-  const response = await fetch(new URL(`${env.apiBaseUrl}${path}`, base).toString(), { credentials: 'include' });
+  const response = await fetch(new URL(`${env.apiBaseUrl}${path}`, base).toString(), env.shell === 'web' ? { credentials: 'include' } : { credentials: 'omit', headers: authHeaders() });
   if (!response.ok) throw await toApiError(response);
   const blob = await response.blob();
   const header = response.headers.get('Content-Disposition') ?? '';

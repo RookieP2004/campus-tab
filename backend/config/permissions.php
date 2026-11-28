@@ -145,6 +145,16 @@ return [
         'fees.reports' => ['school', 'own'],
         // Confirming someone else's day-end cash closing (never your own; a Clerk's only by the Principal or Chief).
         'fees.closing_confirm' => ['school'],
+
+        // Privacy, DPDP (Phase 9): everyone's own page (own; a parent also for
+        // their children), the notice editor, the requests inbox, erasing a
+        // child's details, retention runs and the incident log.
+        'privacy.self' => ['own', 'child'],
+        'privacy.notices' => ['school'],
+        'privacy.requests' => ['school'],
+        'privacy.erase' => ['school'],
+        'privacy.retention' => ['school'],
+        'privacy.incidents' => ['school'],
     ],
 
     /*
@@ -157,7 +167,7 @@ return [
         'chief' => [
             'label' => 'Chief Admin',
             'level' => 90,
-            'permissions' => [
+            'permissions' => ['privacy.self:own', 'privacy.notices:school', 'privacy.requests:school', 'privacy.erase:school', 'privacy.retention:school', 'privacy.incidents:school',
                 'config.view:school', 'config.edit:school', 'config.edit_policies:school',
                 'roles.view:school', 'roles.edit:school',
                 'users.view:school', 'users.create:school', 'users.edit_roles:school', 'users.deactivate:school',
@@ -183,7 +193,7 @@ return [
         'principal' => [
             'label' => 'Principal',
             'level' => 80,
-            'permissions' => [
+            'permissions' => ['privacy.self:own', 'privacy.requests:school', 'privacy.incidents:school',
                 'config.view:school', 'config.edit_policies:school', 'roles.view:school',
                 'users.view:school', 'users.create:school', 'users.edit_roles:school', 'users.deactivate:school',
                 'users.unlock:school', 'users.send_password_link:school', 'users.reset_mfa:school', 'records.restore:school',
@@ -207,7 +217,7 @@ return [
         'vice_principal' => [
             'label' => 'Vice Principal',
             'level' => 70,
-            'permissions' => [
+            'permissions' => ['privacy.self:own',
                 'users.view:school', 'audit.view:own',
                 'students.view:wing', 'students.edit:wing', 'students.login_codes:wing', 'academic.view:school', 'staff.view:school',
                 'attendance.view:wing', 'attendance.mark:wing', 'attendance.edit_after_window:wing',
@@ -221,7 +231,7 @@ return [
         'clerk' => [
             'label' => 'Clerk',
             'level' => 60,
-            'permissions' => [
+            'permissions' => ['privacy.self:own',
                 'users.view:school', 'users.draft:school', 'audit.view:own', 'export.lists:school',
                 'students.view:school', 'students.edit:school', 'students.admit:school', 'guardians.manage:school',
                 'academic.view:school', 'staff.view:school', 'staff.draft:school', 'imports.students:school',
@@ -238,7 +248,7 @@ return [
         'class_teacher' => [
             'label' => 'Class Teacher',
             'level' => 50,
-            'permissions' => [
+            'permissions' => ['privacy.self:own',
                 'students.view:class', 'students.edit:class', 'students.login_codes:class', 'academic.view:school',
                 'attendance.view:class', 'attendance.mark:class', 'attendance.request_edit:class', 'staff_attendance.mark:own', 'calendar.view:school',
                 'leave.apply:own', 'leave.view:school', 'student_leave.approve:class',
@@ -250,7 +260,7 @@ return [
         'subject_teacher' => [
             'label' => 'Subject Teacher',
             'level' => 40,
-            'permissions' => [
+            'permissions' => ['privacy.self:own',
                 'students.view:subject', 'academic.view:school',
                 'attendance.view:subject', 'attendance.mark:subject', 'attendance.request_edit:subject', 'staff_attendance.mark:own', 'calendar.view:school',
                 'leave.apply:own', 'leave.view:school', 'tests.create:subject', 'marks.enter:subject', 'marks.correction_request:subject',
@@ -260,12 +270,12 @@ return [
         'staff' => [
             'label' => 'Staff',
             'level' => 30,
-            'permissions' => ['staff_attendance.mark:own', 'leave.apply:own', 'leave.view:school', 'notices.view:own', 'calendar.view:school'],
+            'permissions' => ['privacy.self:own', 'staff_attendance.mark:own', 'leave.apply:own', 'leave.view:school', 'notices.view:own', 'calendar.view:school'],
         ],
         'parent' => [
             'label' => 'Parent / Guardian',
             'level' => 20,
-            'permissions' => [
+            'permissions' => ['privacy.self:child',
                 'students.view:child', 'students.request_edit:child', 'attendance.view:child', 'student_leave.apply:child',
                 'results.view:child', 'notices.view:own', 'export.own_data:child', 'calendar.view:school', 'fees.dues_view:child', 'fees.pay_online:child',
             ],
@@ -273,7 +283,7 @@ return [
         'student' => [
             'label' => 'Student',
             'level' => 10,
-            'permissions' => ['students.view:own', 'attendance.view:own', 'results.view:own', 'notices.view:own', 'export.own_data:own', 'calendar.view:school'],
+            'permissions' => ['privacy.self:own', 'students.view:own', 'attendance.view:own', 'results.view:own', 'notices.view:own', 'export.own_data:own', 'calendar.view:school'],
         ],
         'fee_collector' => [
             'label' => 'Fee Collector',

@@ -43,6 +43,7 @@ Route::middleware(['school', 'module:reports'])->group(function () use ($id, $ca
     Route::post('report-cards/{id}/link', [ReportCardController::class, 'link'])->where('id', $id)->middleware($cards)->name('report-cards.link');
 
     Route::post('promotions/preview', [PromotionController::class, 'preview'])->middleware('permission:year.promote')->name('promotions.preview');
+    Route::post('promotions/carry-forward', [PromotionController::class, 'carryForward'])->middleware(['permission:year.promote', 'step-up:fees_carry_forward', 'idempotent'])->name('promotions.carry-forward');
     Route::post('promotions/apply', [PromotionController::class, 'apply'])->middleware(['permission:year.promote', 'idempotent'])->name('promotions.apply');
 });
 

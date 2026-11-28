@@ -1,0 +1,4 @@
+/target/
+/gen/schemas
+# Generated in CI from packages/ui/assets/logo-mark.svg (npm run icons)
+/icons/

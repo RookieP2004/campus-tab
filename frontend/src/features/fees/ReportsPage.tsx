@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FileSpreadsheet } from 'lucide-react';
+import { FileSpreadsheet, FileText } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
@@ -16,7 +16,7 @@ import { isStepUpRequest, useStepUp } from './useStepUp';
 
 /**
  * Fee reports for the office (a Fee Collector sees their own daily
- * collections only). The Excel export asks for a fresh authenticator code
+ * collections only). The Excel and PDF exports ask for a fresh authenticator code
  * and is written to the audit log.
  */
 export function ReportsPage() {
@@ -34,12 +34,12 @@ export function ReportsPage() {
   const [busy, setBusy] = useState(false);
   const types = own ? (['daily'] as ReportType[]) : reportTypes;
 
-  const exportFile = async () => {
+  const exportFile = async (format: 'xlsx' | 'pdf') => {
     setBusy(true);
     setError(null);
-    const qs = new URLSearchParams(Object.entries(query).filter(([, v]) => v) as [string, string][]).toString();
+    const qs = new URLSearchParams([...(Object.entries(query).filter(([, v]) => v) as [string, string][]), ...(format === 'pdf' ? [['format', 'pdf'] as [string, string]] : [])]).toString();
     try {
-      await stepUp.run(() => downloadFile(`/fees/reports/${type}/export${qs ? `?${qs}` : ''}`, `fees-${type}.xlsx`));
+      await stepUp.run(() => downloadFile(`/fees/reports/${type}/export${qs ? `?${qs}` : ''}`, `fees-${type}.${format}`));
     } catch (e) {
       if (!isStepUpRequest(e)) setError(errorText(t, e));
     } finally {
@@ -95,10 +95,14 @@ export function ReportsPage() {
         ) : null}
         <StepUpField state={stepUp} />
         {error ? <Alert tone="danger">{error}</Alert> : null}
-        <div>
-          <Button variant="outline" className="h-11" disabled={busy || !stepUp.ready} onClick={() => void exportFile()}>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" className="h-11" disabled={busy || !stepUp.ready} onClick={() => void exportFile('xlsx')}>
             <FileSpreadsheet aria-hidden="true" />
             {t('fees.reports.export')}
+          </Button>
+          <Button variant="outline" className="h-11" disabled={busy || !stepUp.ready} onClick={() => void exportFile('pdf')}>
+            <FileText aria-hidden="true" />
+            {t('fees.reports.exportPdf')}
           </Button>
         </div>
         <p className="text-xs text-muted">{t('fees.reports.exportNote')}</p>

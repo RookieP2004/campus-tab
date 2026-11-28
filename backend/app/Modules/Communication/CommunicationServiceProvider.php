@@ -3,13 +3,19 @@
 namespace App\Modules\Communication;
 
 use App\Modules\Communication\Events\NotificationCreated;
+use App\Modules\Communication\Listeners\ForgetPushDevices;
+use App\Modules\Identity\Events\DeviceSessionEnded;
 use App\Modules\Identity\Models\User;
 use App\Providers\AppServiceProvider;
+use App\Support\Push\ApnsPushSender;
 use App\Support\Push\ArrayPushSender;
+use App\Support\Push\FcmPushSender;
 use App\Support\Push\LogPushSender;
+use App\Support\Push\NativePushSender;
 use App\Support\Push\NullPushSender;
 use App\Support\Push\PushSender;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use RuntimeException;
 
@@ -32,6 +38,10 @@ class CommunicationServiceProvider extends ServiceProvider
                 'log' => new LogPushSender,
                 'array' => new ArrayPushSender,
                 'none' => new NullPushSender,
+                'native' => new NativePushSender(
+                    config('communication.push.fcm.credentials') ? FcmPushSender::fromConfig() : null,
+                    config('communication.push.apns.key') ? ApnsPushSender::fromConfig() : null,
+                ),
                 default => throw new RuntimeException("Unknown PUSH_DRIVER [{$driver}]."),
             };
         });
@@ -39,6 +49,8 @@ class CommunicationServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Event::listen(DeviceSessionEnded::class, ForgetPushDevices::class);
+
         // POST /api/v1/broadcasting/auth: the web app's socket asks here (as a
         // background request) before joining its own private channel.
         Broadcast::routes(['prefix' => 'api/v1', 'middleware' => ['api', 'account']]);

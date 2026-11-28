@@ -7,6 +7,7 @@ use App\Modules\People\Domain\Import\Importer;
 use App\Modules\People\Domain\Import\Spreadsheet;
 use App\Modules\People\Jobs\RunImport;
 use App\Modules\People\Models\ImportBatch;
+use App\Support\Exports\ExportGuard;
 use App\Support\Http\ApiException;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Http\JsonResponse;
@@ -38,7 +39,9 @@ class ImportController
         $template = $this->importer->template($this->user($request), $entity);
 
         $path = tempnam(sys_get_temp_dir(), 'ctab-tpl-').'.xlsx';
-        Spreadsheet::write($path, $template['headers'], [$template['example']]);
+        $exports = app(ExportGuard::class);
+        Spreadsheet::write($path, $template['headers'], [$template['example']], $exports->watermark($this->user($request)));
+        $exports->record($this->user($request), "{$entity}_import_template", 'xlsx', 1);
 
         return response()->download($path, "campus-tab-{$entity}-template.xlsx")->deleteFileAfterSend();
     }
@@ -76,7 +79,7 @@ class ImportController
         return response()->json(['data' => $this->present($batch)]);
     }
 
-    public function report(string $id): BinaryFileResponse
+    public function report(Request $request, string $id): BinaryFileResponse
     {
         $batch = ImportBatch::query()->findOrFail($id);
         Gate::authorize('import', [ImportBatch::class, $batch->entity]);
@@ -93,7 +96,9 @@ class ImportController
         }
 
         $path = tempnam(sys_get_temp_dir(), 'ctab-rep-').'.xlsx';
-        Spreadsheet::write($path, ['Row', 'Result', 'Record', 'What to fix'], $rows);
+        $exports = app(ExportGuard::class);
+        Spreadsheet::write($path, ['Row', 'Result', 'Record', 'What to fix'], $rows, $exports->watermark($this->user($request)));
+        $exports->record($this->user($request), "{$batch->entity}_import_report", 'xlsx', count($rows));
 
         return response()->download($path, "campus-tab-{$batch->entity}-import-report.xlsx")->deleteFileAfterSend();
     }

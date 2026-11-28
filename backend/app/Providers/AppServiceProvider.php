@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Support\Sms\ArraySmsSender;
 use App\Support\Sms\LogSmsSender;
 use App\Support\Sms\SmsSender;
+use App\Support\Uploads\ClamAvScanner;
+use App\Support\Uploads\FakeVirusScanner;
+use App\Support\Uploads\VirusScanner;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\Server;
@@ -28,6 +31,19 @@ class AppServiceProvider extends ServiceProvider
             'log' => new LogSmsSender,
             'array' => new ArraySmsSender,
             default => throw new RuntimeException('Unknown SMS_DRIVER ['.self::smsDriver().'].'),
+        });
+
+        $this->app->singleton(VirusScanner::class, function (): VirusScanner {
+            $driver = (string) config('uploads.scanner');
+            if ($driver === 'fake' && ! $this->app->environment('testing')) {
+                throw new RuntimeException('VIRUS_SCAN_DRIVER=fake is allowed only in tests.');
+            }
+
+            return match ($driver) {
+                'fake' => new FakeVirusScanner,
+                'clamav' => new ClamAvScanner((string) config('uploads.clamav.host'), (int) config('uploads.clamav.port'), (float) config('uploads.clamav.timeout')),
+                default => throw new RuntimeException("Unknown VIRUS_SCAN_DRIVER [{$driver}]."),
+            };
         });
     }
 

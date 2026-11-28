@@ -59,6 +59,12 @@ export interface ApiClientOptions {
   csrfUrl?: string;
   /** Called when a request finds the session ended (idle, revoked, signed out). */
   onSessionEnded?: (error: ApiError) => void;
+  /**
+   * The apps (Phase 9): the bearer token, kept in memory only. When given,
+   * the client sends `Authorization: Bearer …`, never cookies, and skips
+   * the CSRF cookie (a bearer request cannot be forged by another site).
+   */
+  getToken?: () => string | null;
   /** For tests. */
   fetch?: typeof globalThis.fetch;
 }
@@ -105,15 +111,22 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
   const origin = typeof location !== 'undefined' ? location.origin : undefined;
   const baseUrl = origin ? new URL(options.baseUrl, origin).toString().replace(/\/$/, '') : options.baseUrl;
 
+  const bearer = options.getToken;
+
   const client = createClient<paths>({
     baseUrl,
-    credentials: 'include',
+    credentials: bearer ? 'omit' : 'include',
     headers: { Accept: 'application/json' },
     fetch: (request: Request) => doFetch(request),
   });
 
   const middleware: Middleware = {
     async onRequest({ request }) {
+      if (bearer) {
+        const token = bearer();
+        if (token) request.headers.set('Authorization', `Bearer ${token}`);
+        return request;
+      }
       if (UNSAFE.has(request.method)) {
         await ensureCsrf();
         const token = readCookie('XSRF-TOKEN');

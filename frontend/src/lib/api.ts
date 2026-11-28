@@ -1,6 +1,7 @@
 import { ApiError, apiErrorFrom, backgroundHeaders, createApiClient, unwrap } from '@campus-tab/api';
 import type { QueryFunctionContext } from '@tanstack/react-query';
 import { useActivity } from '@/stores/activity';
+import { useAppToken } from '@/stores/appToken';
 import { useSessionState } from '@/stores/session';
 import { env } from './env';
 
@@ -16,8 +17,20 @@ export { ApiError, apiErrorFrom, unwrap };
  */
 export const api = createApiClient({
   baseUrl: env.apiBaseUrl,
-  onSessionEnded: (error) => useSessionState.getState().end(error.code),
+  onSessionEnded: (error) => {
+    // In the apps the token is useless once the server ended it.
+    if (env.shell !== 'web') useAppToken.getState().set(null);
+    useSessionState.getState().end(error.code);
+  },
+  // The apps send the in-memory bearer token instead of cookies.
+  getToken: env.shell === 'web' ? undefined : () => useAppToken.getState().token,
 });
+
+/** Headers a direct fetch needs: the bearer token in the apps, nothing in the browser (it has the cookie). */
+export function authHeaders(): Record<string, string> {
+  const token = env.shell === 'web' ? null : useAppToken.getState().token;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
 
 // Real use: every request without the background header. The idle warning
 // counts from the last one, as the server does.

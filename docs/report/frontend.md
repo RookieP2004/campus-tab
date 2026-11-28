@@ -246,3 +246,13 @@ Report cards (`features/reports/`), the public verification page `/verify/:schoo
 ## Navigation rule
 
 A menu entry (`features/shell/navItems.ts`) shows when the person holds one of its abilities in any scope, or an exact `ability:scope`. A longer ability that only starts the same (`fees.receipt_cancel_request` against `fees.receipt_cancel`) does not count. Hiding is for tidiness only; the server checks every request. Tested in `navItems.test.ts`.
+
+## Phase 9: apps, privacy, exports
+
+- **App builds** (`VITE_APP_SHELL=mobile|desktop`): the API client sends a bearer token kept in memory only ([`stores/appToken.ts`](../../frontend/src/stores/appToken.ts), `getToken` in [`packages/api`](../../packages/api/src/index.ts)), never cookies or the CSRF call; [`lib/native.ts`](../../frontend/src/lib/native.ts) handles deep links (`deepLinkPath` allow-list), push registration and the desktop window closing. It is loaded only in app builds, so the browser bundle never fetches the native plugins. See [apps.md](apps.md).
+- **Privacy screens** ([`features/privacy/`](../../frontend/src/features/privacy/)): `/privacy` for everyone (account menu: notice, grievance contact, a parent's consents, own requests) and `/privacy/office` (Privacy office: requests, notice editor, retention, incidents; tabs by permission). See [modules/privacy.md](modules/privacy.md).
+- **School settings** gain the grievance contact fields.
+- **Year-end wizard** gains the unpaid-dues step ([`features/reports/DuesStep.tsx`](../../frontend/src/features/reports/DuesStep.tsx)); **Apply** stays off until every balance is decided.
+- **Fee reports** export to Excel or PDF (both watermarked).
+- **Strict CSP:** no inline `<style>`; printing setup codes uses a constructed stylesheet ([`SetupCodesPage.tsx`](../../frontend/src/features/people/SetupCodesPage.tsx)).
+- **Tests:** `features/privacy/privacy.test.tsx`, `features/reports/reports.test.tsx` (dues step), `lib/native.test.ts` (deep links, bearer client).

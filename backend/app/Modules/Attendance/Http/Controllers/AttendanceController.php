@@ -13,6 +13,7 @@ use App\Modules\People\Domain\Import\Spreadsheet;
 use App\Modules\People\Domain\StudentRecords;
 use App\Modules\People\Models\Student;
 use App\Modules\Tenancy\Models\Tenant;
+use App\Support\Exports\ExportGuard;
 use App\Support\Http\ApiException;
 use App\Support\Privacy\Aadhaar;
 use App\Support\Tenancy\TenantContext;
@@ -82,7 +83,9 @@ class AttendanceController
 
         $rows = array_map(fn (array $s) => [$s['roll_no'], $s['admission_no'], $s['name'], 'P'], $this->register->roll($section));
         $path = tempnam(sys_get_temp_dir(), 'ctab-att-').'.xlsx';
-        Spreadsheet::write($path, ['roll_no', 'admission_no', 'name', 'status (P, A, L or HD)'], $rows);
+        $exports = app(ExportGuard::class);
+        Spreadsheet::write($path, ['roll_no', 'admission_no', 'name', 'status (P, A, L or HD)'], $rows, $exports->watermark($this->user($request)));
+        $exports->record($this->user($request), 'attendance_template', 'xlsx', count($rows), ['section' => $section->label, 'date' => $date]);
 
         return response()->download($path, "attendance-{$section->label}-{$date}.xlsx")->deleteFileAfterSend();
     }
@@ -189,6 +192,9 @@ class AttendanceController
             $record = AttendanceDay::query()->find($day);
             $path = $record?->late_entry['photo_path'] ?? null;
 
+            if (($record?->late_entry['photo_removed'] ?? false) === true) {
+                throw new ApiException('removed_under_retention', 'This photo was deleted under the school\'s data retention rules.', 410);
+            }
             if (! is_string($path) || ! Storage::disk('local')->exists($path)) {
                 throw new ApiException('not_found', 'The record was not found.', 404);
             }

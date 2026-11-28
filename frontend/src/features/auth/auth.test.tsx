@@ -101,6 +101,28 @@ describe('MFA enrolment', () => {
     expect(screen.getByRole('button', { name: 'Print' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled();
   });
+
+  it('takes the one-time token out of the address of a password link, and still sends it', async () => {
+    fakeApi.me = null;
+    let sent = null as Record<string, unknown> | null;
+    fakeApi.handlers.push(async (r) => {
+      if (path(r).endsWith('/auth/password/set')) {
+        sent = (await r.clone().json()) as Record<string, unknown>;
+        return json({ data: { message: 'ok' } });
+      }
+      return undefined;
+    });
+    const user = userEvent.setup();
+    const { router } = await renderApp('/password/set?school=SUNRISE-BPL&token=' + 't'.repeat(40));
+
+    await waitFor(() => expect(router.state.location.search).not.toContain('token'));
+    expect(router.state.location.search).toContain('school=SUNRISE-BPL');
+
+    await user.type(await screen.findByLabelText('New password'), 'correct-horse-42-battery');
+    await user.type(screen.getByLabelText('Type it again'), 'correct-horse-42-battery');
+    await user.click(screen.getByRole('button', { name: 'Save password' }));
+    await waitFor(() => expect(sent?.token).toBe('t'.repeat(40)));
+  });
 });
 
 describe('idle sign-out', () => {

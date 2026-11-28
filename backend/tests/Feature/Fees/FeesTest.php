@@ -14,6 +14,7 @@ use App\Modules\Fees\Models\GatewayOrder;
 use App\Modules\Fees\Models\Payment;
 use App\Modules\Fees\Models\Receipt;
 use App\Modules\Identity\Domain\Role;
+use App\Modules\People\Domain\Import\Spreadsheet;
 use App\Modules\People\Domain\ParentLogins;
 use App\Modules\People\Models\Student;
 use App\Modules\Tenancy\Domain\SchoolConfigService;
@@ -405,6 +406,43 @@ it('reports collections and exports Excel only after step-up, with an audit entr
     $file = $this->actingWithToken($this->clerk['user'], steppedUp: true)->get('/api/v1/fees/reports/daily/export')->assertOk();
     expect($file->headers->get('Content-Disposition'))->toContain('fees-daily-');
     expect($this->inSchool($this->tenant, fn () => AuditLog::query()->where('action', 'fees.report_exported')->exists()))->toBeTrue();
+});
+
+it('watermarks Excel and PDF exports with who, when and which school, and alerts the Chief on a large one', function () {
+    feeCollect($this, $this->aarav, '500')->assertCreated();
+    $clerk = $this->clerk['user'];
+
+    // Excel: the first row, the printed footer and the file's properties.
+    $xlsx = $this->actingWithToken($clerk, steppedUp: true)->get('/api/v1/fees/reports/dues/export')->assertOk();
+    $path = $xlsx->baseResponse->getFile()->getPathname();
+    $zip = new ZipArchive;
+    $zip->open($path);
+    $sheet = (string) $zip->getFromName('xl/worksheets/sheet1.xml');
+    $props = (string) $zip->getFromName('docProps/core.xml');
+    $zip->close();
+    $school = $this->tenant->name;
+    expect($sheet)->toContain('Campus TAB · '.$school.' · exported by '.$clerk->name.' (Clerk) on ')
+        ->toContain('&amp;LCampus TAB')
+        ->and($props)->toContain($clerk->name.' (Clerk)');
+    // A template with the watermark still imports (the first row is skipped).
+    expect(Spreadsheet::read($path, 'x.xlsx')[0])->toHaveKey('student');
+
+    // PDF: the same facts on every page (diagonal and footer).
+    $pdf = $this->actingWithToken($clerk, steppedUp: true)->get('/api/v1/fees/reports/dues/export?format=pdf')->assertOk()->assertHeader('Content-Type', 'application/pdf');
+    expect($pdf->getContent())->toStartWith('%PDF')->toContain($school.' · '.$clerk->name.' (Clerk)')->toContain('confidential');
+
+    // Under the threshold: audited, no alert. Over it: the Chief is told.
+    $this->inSchool($this->tenant, function () {
+        expect(AuditLog::query()->where('action', 'export.made')->count())->toBe(2)
+            ->and(AuditLog::query()->where('action', 'export.large_alert')->exists())->toBeFalse();
+    });
+    config(['exports.large_rows' => 2]);
+    $this->actingWithToken($clerk, steppedUp: true)->get('/api/v1/fees/reports/dues/export')->assertOk();
+    $this->inSchool($this->tenant, function () use ($clerk) {
+        expect(AuditLog::query()->where('action', 'export.large_alert')->firstOrFail()->after)->toMatchArray(['rows' => 3, 'threshold' => 2, 'by' => $clerk->name]);
+        $note = Notification::query()->where('user_id', (string) $this->school['chief']->getKey())->where('type', 'export.large')->firstOrFail();
+        expect($note->title)->toContain('3 rows')->toContain($clerk->name);
+    });
 });
 
 it('reconciles the day\'s online payments against the gateway\'s settlement report', function () {

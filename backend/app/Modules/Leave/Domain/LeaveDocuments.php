@@ -51,6 +51,9 @@ class LeaveDocuments
      */
     public function read(LeaveRequest $request, string $documentId): array
     {
+        if (($request->getAttribute('documents_removed') ?? false) === true) {
+            throw new ApiException('removed_under_retention', 'The documents were deleted under the school\'s data retention rules.', 410);
+        }
         foreach ($request->documents as $doc) {
             if ($doc['id'] === $documentId && Storage::disk('local')->exists($doc['path'])) {
                 return [

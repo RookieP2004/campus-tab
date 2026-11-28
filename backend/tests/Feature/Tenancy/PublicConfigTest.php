@@ -19,7 +19,7 @@ it('returns public branding and nothing else', function () {
         ->assertOk()
         ->assertHeader('Cache-Control', 'max-age=300, public');
 
-    expect(array_keys($response->json('data')))->toEqualCanonicalizing(['code', 'name', 'short_name', 'logo_url', 'accent', 'languages', 'login_methods'])
+    expect(array_keys($response->json('data')))->toEqualCanonicalizing(['code', 'name', 'short_name', 'logo_url', 'accent', 'languages', 'login_methods', 'grievance'])
         ->and($response->json('data.code'))->toBe('SUNRISE-BPL')
         ->and($response->json('data.name'))->toBe($school['tenant']->name)
         ->and($response->json('data.accent'))->toBe('#0F766E')

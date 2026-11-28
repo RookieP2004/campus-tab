@@ -23,16 +23,17 @@ use App\Support\Models\SchoolModel;
  * @property array{id: string, name: string}|null $decided_by
  * @property string|null $decision_reason
  * @property string|null $decided_at
+ * @property string|null $source year_end: carried forward in the year-end wizard (one Principal approval)
  */
 class FeeAdjustment extends SchoolModel
 {
     protected $table = 'fee_adjustments';
 
     /** @var list<string> */
-    protected $fillable = ['tenant_id', 'student_id', 'student_name', 'year_id', 'kind', 'demand_id', 'amount_paise', 'percent_bp', 'reason', 'status', 'proposed_by', 'decided_by', 'decision_reason', 'decided_at'];
+    protected $fillable = ['tenant_id', 'student_id', 'student_name', 'year_id', 'kind', 'demand_id', 'amount_paise', 'percent_bp', 'reason', 'status', 'proposed_by', 'decided_by', 'decision_reason', 'decided_at', 'source'];
 
     /** @var array<string, mixed> */
-    protected $attributes = ['status' => 'proposed', 'demand_id' => null, 'percent_bp' => null, 'decided_by' => null, 'decision_reason' => null, 'decided_at' => null];
+    protected $attributes = ['status' => 'proposed', 'demand_id' => null, 'percent_bp' => null, 'decided_by' => null, 'decision_reason' => null, 'decided_at' => null, 'source' => null];
 
     /**
      * @return array<string, string>
