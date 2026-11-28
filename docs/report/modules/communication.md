@@ -1,6 +1,6 @@
 # Communication
 
-> Status: **built in Phase 3.** Notices, in-app notifications with a live bell, email, and push (the push sender is ready; real push arrives with the apps in Phase 9).
+> Status: **built in Phase 3.** Notices, in-app notifications with a live bell, email, and push (FCM for Android and APNs for iOS since Phase 9, see [apps.md](../apps.md)).
 
 ## 1. What it does (plain words, no code)
 
@@ -52,7 +52,7 @@ Front-end files: `frontend/src/features/notices/` and `frontend/src/features/not
 | `GET /me/notifications` `?unread=1` | The last 50, newest first, plus the `unread` count |
 | `POST /me/notifications/{id}/read` · `POST /me/notifications/read-all` | Mark one or all read |
 | `GET /me/notification-preferences` · `PUT /me/notification-preferences` | `{push, email, muted[]}` and the `types` that can be muted |
-| `POST /me/push-devices` `{token, platform}` · `DELETE /me/push-devices` `{token}` | Register or forget a device for push (android, ios, web, desktop) |
+| `POST /me/push-devices` `{token, platform}` · `DELETE /me/push-devices` `{token}` | Register or forget a device for push (android, ios, web, desktop). Registering stores the sign-in it came from and `last_seen_at`. A device stays registered after the app closes; it is forgotten on a sign-out on purpose, a remote sign-out, an account-wide reset, when FCM/APNs say it is gone, or after 30 days without a sign-in (decision 0016) |
 | `POST /broadcasting/auth` | Lets the socket join the person's own private channel, nobody else's |
 
 **Errors:**
@@ -78,7 +78,8 @@ Front-end files: `frontend/src/features/notices/` and `frontend/src/features/not
 | [`Events/NotificationCreated.php`](../../../backend/app/Modules/Communication/Events/NotificationCreated.php) | Broadcast `notification.created` on `school.{tenant}.user.{user}` |
 | [`Mail/NotificationMail.php`](../../../backend/app/Modules/Communication/Mail/NotificationMail.php) | The generic email |
 | [`Models/*`](../../../backend/app/Modules/Communication/Models/) | Notice, NoticeRead, Notification, PushDevice |
-| [`Support/Push/`](../../../backend/app/Support/Push/) | `PushSender` and its drivers: `LogPushSender`, `ArrayPushSender`, `NullPushSender` |
+| [`Support/Push/`](../../../backend/app/Support/Push/) | `PushSender` and its drivers: `LogPushSender`, `ArrayPushSender`, `NullPushSender`, and `NativePushSender` (Android → `FcmPushSender`, HTTP v1 with the service account; iOS → `ApnsPushSender`, HTTP/2 with an ES256 key). A driver returns the tokens the service says are gone |
+| [`Listeners/ForgetPushDevices.php`](../../../backend/app/Modules/Communication/Listeners/ForgetPushDevices.php), [`Console/ForgetStalePushDevicesCommand.php`](../../../backend/app/Modules/Communication/Console/ForgetStalePushDevicesCommand.php) | Stop push on a sign-out on purpose (`DeviceSessionEnded`); daily `push:forget-stale` (30 days) |
 | [`config/communication.php`](../../../backend/config/communication.php) | Limits, push driver, default preferences, generic texts, mutable types |
 
 ## 5. How the code works, step by step
@@ -115,7 +116,7 @@ sequenceDiagram
 | `notices` | title, body, audience{type, refs}, attachments[{id, name, mime, size, path}], sent_by{id, name}, sent_scope, recipient_count, published_at, deleted_at | tenant_id + audience.type + published_at; tenant_id + published_at |
 | `notice_reads` | notice_id, user_id, read_at (not audited: bookkeeping) | tenant_id + notice_id + user_id (unique); tenant_id + user_id |
 | `notifications` | user_id, type, title, body, link, data, read_at, created_at | tenant_id + user_id + created_at; tenant_id + user_id + read_at |
-| `push_devices` | user_id, token (encrypted), token_hash (HMAC with the app key), platform | tenant_id + token_hash (unique); tenant_id + user_id |
+| `push_devices` | user_id, token (encrypted), token_hash (HMAC with the app key), platform, device_session_id, last_seen_at | tenant_id + token_hash (unique); tenant_id + user_id |
 | `users` (new field) | notification_prefs{push, email, muted[]} | — |
 
 Migration: [`2026_11_29_000001_create_communication_collections.php`](../../../backend/database/migrations/2026_11_29_000001_create_communication_collections.php). Files: `storage/app/private/tenants/<tenant_id>/notices/<notice_id>/`.
@@ -163,7 +164,7 @@ Decision: [0012](../decisions/0012-notices-and-notifications-privacy.md).
 
 - **A new notification type:** call `Notifier::notify($tenant, $users, '<type>', $title, …)` from the module, add a generic text under `generic_texts.<type>` and add the type to `types` so people can mute it. Never put private detail in the generic text.
 - **A new attachment type:** add the extension to `notices.attachment_types`. Avoid types that can carry script (SVG, HTML).
-- **A real push service (Phase 9):** add a `PushSender` driver and a `match` arm in `CommunicationServiceProvider::register()`.
+- **Another push service:** add a `PushSender` driver and a `match` arm in `CommunicationServiceProvider::register()` (`native` already routes Android to FCM and iOS to APNs).
 
 ## 11. Tests that cover it
 
@@ -193,6 +194,7 @@ Decision: [0012](../decisions/0012-notices-and-notifications-privacy.md).
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 3 | Module built: notices with server-side audiences, receipts and signed attachment links; notifications in the app, by email and push with generic text; preferences; the live bell over Reverb | Phase 3 of `docs/BUILD-PROMPTS.md` |
+| 2026-11-28 | 9 | Real push: FCM and APNs drivers (`PUSH_DRIVER=native`), devices tied to their sign-in, kept after the app closes, forgotten on purpose or after 30 days | Phase 9 apps, owner's choice on push after closing |
 | 2026-11-27 | 4 | Type `attendance.absent` for parents of absent students | Phase 4 attendance |
 | 2026-11-27 | 5 | Types `leave.updated` and `leave.waiting` (mutable); generic texts that never name the person, type or reason; the socket refetches leave screens on a `leave.*` notification | Phase 5, owner's rule 2 |
 | 2026-11-27 | 6 | Types `results.published` ("Results are out", never the marks) and `marks.correction` | Phase 6, owner's rule 4 |

@@ -713,8 +713,8 @@ One React build goes into three shells: the browser (as a PWA), Capacitor 8 for 
 | Channel | Technology | Notes |
 | --- | --- | --- |
 | Web / PWA | Vite build served from a CDN | Installable; caches the app shell and the offline queue |
-| Android and iOS | Capacitor 8 | Renders our React UI in the system WebView; needs Node 22+, Xcode 26 and Android SDK 36 to build ([source](https://capawesome.io/docs/blog/page/4/)); push via FCM/APNs; fingerprint or face unlock; one store app plus school code; branded per-school builds as a premium |
-| Windows and macOS | Tauri 2 | Uses the system WebView instead of bundling Chromium, so installers stay small ([source](https://www.noqta.tn/en/blog/tauri-2-desktop-apps-rust-web-technologies-2026)); MSI/EXE and DMG; code signing and notarisation; auto-update; printing for office staff |
+| Android and iOS | Capacitor 8 | Renders our React UI in the system WebView; needs Node 22+, Xcode 26 and Android SDK 36 to build ([source](https://capawesome.io/docs/blog/page/4/)); push via FCM/APNs with generic texts; **sign in every time: the token is kept in memory only, closing the app signs out, no biometric or PIN unlock** (owner's rule, decision 0016); online only, no offline queue; one store app plus school code; branded per-school builds as a premium |
+| Windows and macOS | Tauri 2 | Uses the system WebView instead of bundling Chromium, so installers stay small ([source](https://www.noqta.tn/en/blog/tauri-2-desktop-apps-rust-web-technologies-2026)); NSIS installer (EXE) and DMG; code signing and notarisation once the certificates exist; auto-update once there is an update host; printing for office staff; same sign-in rule as the phone apps |
 
 **Hosting**
 

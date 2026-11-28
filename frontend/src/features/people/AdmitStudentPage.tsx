@@ -46,8 +46,6 @@ export function AdmitStudentPage() {
     g2_email: optionalEmail,
     pen: z.string().trim().max(20),
     apaar: z.string().trim().max(20),
-    consent_pen: z.boolean(),
-    consent_apaar: z.boolean(),
     aadhaar_last4: z.string().regex(/^(\d{4})?$/, t('students.ids.aadhaarInvalid')),
   });
   type Values = z.infer<typeof schema>;
@@ -71,13 +69,11 @@ export function AdmitStudentPage() {
       g2_email: '',
       pen: '',
       apaar: '',
-      consent_pen: false,
-      consent_apaar: false,
       aadhaar_last4: '',
     },
   });
   const err = form.formState.errors;
-  const [pen, apaar, aadhaarLast4, consentPen, consentApaar] = useWatch({ control: form.control, name: ['pen', 'apaar', 'aadhaar_last4', 'consent_pen', 'consent_apaar'] });
+  const [pen, apaar, aadhaarLast4] = useWatch({ control: form.control, name: ['pen', 'apaar', 'aadhaar_last4'] });
 
   const admit = async (body: AdmitInput) => {
     setBusy(true);
@@ -109,16 +105,8 @@ export function AdmitStudentPage() {
     });
     const guardians = [guardian('g1')];
     if (secondGuardian && v.g2_name) guardians.push(guardian('g2'));
+    // PEN and APAAR come later, after the parent consents from their own account (Phase 9).
     const ids: NonNullable<AdmitInput['ids']> = {};
-    const consents: Record<string, boolean> = {};
-    if (v.pen) {
-      ids.pen = v.pen;
-      consents.pen = v.consent_pen;
-    }
-    if (v.apaar) {
-      ids.apaar = v.apaar;
-      consents.apaar = v.consent_apaar;
-    }
     if (v.aadhaar_last4) ids.aadhaar_last4 = v.aadhaar_last4;
 
     await admit({
@@ -130,7 +118,6 @@ export function AdmitStudentPage() {
       roll_no: v.roll_no ? Number(v.roll_no) : null,
       guardians,
       ids,
-      consents,
     });
   });
 
@@ -256,8 +243,7 @@ export function AdmitStudentPage() {
             onChange={(next) => {
               for (const [key, value] of Object.entries(next)) form.setValue(key as 'pen' | 'apaar' | 'aadhaar_last4', value ?? '', { shouldValidate: key === 'aadhaar_last4' });
             }}
-            consents={{ pen: consentPen, apaar: consentApaar }}
-            onConsent={(purpose, given) => form.setValue(purpose === 'pen' ? 'consent_pen' : 'consent_apaar', given)}
+            parentConsent={{ pen: false, apaar: false }}
           />
           {err.aadhaar_last4?.message ? <p className="text-sm text-danger">{err.aadhaar_last4.message}</p> : null}
         </Card>

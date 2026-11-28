@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, api, apiGet, unwrap } from '@/lib/api';
+import { env } from '@/lib/env';
+import { useAppToken } from '@/stores/appToken';
 
 /** GET /public/tenants/{code}/config: public branding only. */
 export interface PublicConfig {
@@ -94,19 +96,44 @@ export function isSignedOutError(error: unknown): boolean {
   return error instanceof ApiError && (error.status === 401 || error.code === 'mfa_enrolment_required');
 }
 
+/**
+ * In the apps the sign-in answer carries a bearer token: it is kept in
+ * memory only (stores/appToken) and push is registered for this device.
+ * The browser gets its session cookie and ignores this.
+ */
+async function keep(result: Promise<SignInResult>): Promise<SignInResult> {
+  const answer = (await result) as SignInResult & { token?: string };
+  if (env.shell !== 'web' && answer.token) {
+    useAppToken.getState().set(answer.token);
+    if (!('mfa_enrolment_required' in answer && answer.mfa_enrolment_required)) void import('@/lib/native').then((n) => n.afterSignIn());
+  }
+  return answer;
+}
+
+/** The apps name the device in the session list ("Campus TAB phone app"). */
+const device = () => (env.shell === 'web' ? {} : { device_name: `Campus TAB ${env.shell === 'mobile' ? 'phone' : 'desktop'} app` });
+
 export const signIn = {
   password: (body: { school_code: string; login: string; password: string }) =>
-    unwrap<SignInResult>(api.POST('/auth/login', { body })),
-  mfa: (body: { challenge: string; code: string }) => unwrap<SignInResult>(api.POST('/auth/mfa/verify', { body })),
+    keep(unwrap<SignInResult>(api.POST('/auth/login', { body: { ...body, ...device() } as never }))),
+  mfa: (body: { challenge: string; code: string }) => keep(unwrap<SignInResult>(api.POST('/auth/mfa/verify', { body: { ...body, ...device() } as never }))),
   requestOtp: (body: { school_code: string; phone: string }) =>
     unwrap<{ message?: string; expires_in?: number }>(api.POST('/auth/otp/request', { body })),
   verifyOtp: (body: { school_code: string; phone: string; code: string }) =>
-    unwrap<SignInResult>(api.POST('/auth/otp/verify', { body })),
+    keep(unwrap<SignInResult>(api.POST('/auth/otp/verify', { body: { ...body, ...device() } as never }))),
   forgot: (body: { school_code: string; login: string }) => unwrap<{ message: string }>(api.POST('/auth/password/forgot', { body })),
   /** `language`: the one picked on the page becomes the person's own. */
   setPassword: (body: { school_code: string; token: string; password: string; password_confirmation: string; language?: string }) =>
     unwrap<{ message: string }>(api.POST('/auth/password/set', { body: body as never })),
-  logout: () => unwrap(api.POST('/auth/logout')),
+  /** A sign-out on purpose: in the apps it also stops push to this device, then forgets the token. */
+  logout: async () => {
+    if (env.shell !== 'web') await import('@/lib/native').then((n) => n.beforeSignOut()).catch(() => undefined);
+    try {
+      return await unwrap(api.POST('/auth/logout'));
+    } finally {
+      useAppToken.getState().set(null);
+    }
+  },
   stepUp: (code: string) => unwrap<{ stepped_up_until: string }>(api.POST('/auth/step-up', { body: { code } })),
 };
 

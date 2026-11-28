@@ -7,6 +7,7 @@ use App\Modules\AcademicStructure\Models\SchoolClass;
 use App\Modules\AcademicStructure\Models\Section;
 use App\Modules\AcademicStructure\Models\TeachingAssignment;
 use App\Modules\Audit\Domain\AuditRecorder;
+use App\Modules\Fees\Domain\YearEndDues;
 use App\Modules\Identity\Models\User;
 use App\Modules\People\Models\Enrolment;
 use App\Modules\People\Models\Student;
@@ -30,6 +31,11 @@ use Illuminate\Support\Facades\DB;
  *     new enrolment or is marked left, the old enrolments record the
  *     outcome, the new year becomes current and the old year is closed.
  *     After that the old year is read-only (ClosedYears).
+ *  2a. Unpaid dues: the preview lists every student whose fee balance for
+ *     the year is above zero. Before the year can close, the Principal
+ *     approves the list once (step-up fees_carry_forward): each balance is
+ *     carried forward into the new year or left in the closed year
+ *     (YearEndDues). Apply refuses while any balance is undecided.
  *  3. The whole run is audited (year.promoted, with the counts), on top of
  *     the audit entry of every record it writes.
  */
@@ -37,7 +43,7 @@ class Promotion
 {
     public const ACTIONS = ['promote', 'detain', 'leave', 'graduate'];
 
-    public function __construct(private readonly AuditRecorder $audit) {}
+    public function __construct(private readonly AuditRecorder $audit, private readonly YearEndDues $dues) {}
 
     /**
      * @param  array{to_year_id?: string|null, name?: string|null, starts_on?: string|null, ends_on?: string|null}  $target
@@ -127,7 +133,18 @@ class Promotion
             'sections' => $rows,
         ];
 
-        return $plan + ['digest' => hash('sha256', (string) json_encode([$plan['to'], $counts, array_map(fn ($r) => [$r['section_id'], array_map(fn ($s) => [$s['id'], $s['action']], $r['students'])], $rows), $plan['roll_forward']]))];
+        // Students with unpaid fees (shown with their section); not part of
+        // the digest: apply checks them directly.
+        $sectionOf = [];
+        foreach ($rows as $r) {
+            foreach ($r['students'] as $st) {
+                $sectionOf[$st['id']] = $r['section'];
+            }
+        }
+        $dues = $this->dues->unpaid((string) $from->getKey());
+        $dues['students'] = array_map(fn ($d) => $d + ['section' => $sectionOf[$d['id']] ?? null], $dues['students']);
+
+        return $plan + ['dues' => $dues, 'digest' => hash('sha256', (string) json_encode([$plan['to'], $counts, array_map(fn ($r) => [$r['section_id'], array_map(fn ($s) => [$s['id'], $s['action']], $r['students'])], $rows), $plan['roll_forward']]))];
     }
 
     /**
@@ -140,6 +157,10 @@ class Promotion
         $plan = $this->preview($target, $exceptions);
         if (! hash_equals($plan['digest'], $digest)) {
             throw new ApiException('preview_stale', 'Something changed since the preview (a student, a section or a choice). Look at the preview again, then apply.', 409);
+        }
+        $open = $this->dues->unresolved($plan['from']['id']);
+        if ($open > 0) {
+            throw new ApiException('dues_unresolved', "{$open} unpaid fee balance(s) are not decided yet. Carry them forward or confirm leaving them in {$plan['from']['name']}, then apply.", 422, ['count' => $open]);
         }
 
         $result = DB::connection('mongodb')->transaction(function () use ($user, $plan): array {
@@ -222,6 +243,30 @@ class Promotion
         ], ['digest' => $digest]);
 
         return $result + ['counts' => $plan['counts'], 'roll_forward' => $plan['roll_forward']];
+    }
+
+    /**
+     * The dues step: one approval for every unpaid balance. The new year is
+     * created here (as planned) when the wizard names a new one, so the
+     * carried dues have a year to open in.
+     *
+     * @param  array{to_year_id?: string|null, name?: string|null, starts_on?: string|null, ends_on?: string|null}  $target
+     * @param  array<string, string>  $decisions  student id => carry | leave
+     * @return array<string, mixed>
+     */
+    public function carryForward(User $user, array $target, array $decisions, string $duesDigest): array
+    {
+        $from = AcademicYear::current() ?? throw new ApiException('no_current_year', 'There is no current academic year to close.', 422);
+        $to = $this->target($from, $target);
+
+        return DB::connection('mongodb')->transaction(function () use ($user, $from, $to, $decisions, $duesDigest): array {
+            $year = $to['id'] !== null
+                ? AcademicYear::query()->findOrFail($to['id'])
+                : AcademicYear::create(['name' => $to['name'], 'starts_on' => $to['starts_on'], 'ends_on' => $to['ends_on'], 'status' => AcademicYear::STATUS_PLANNED]);
+            $result = $this->dues->settle($user, $from, $year, $decisions, $duesDigest);
+
+            return ['to' => ['id' => (string) $year->getKey(), 'name' => $year->name]] + $result;
+        }, 5);
     }
 
     /** The grade a class moves into, given the next class in the school's order. */

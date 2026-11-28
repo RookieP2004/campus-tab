@@ -42,7 +42,7 @@ Every coding session reads this file first and follows it for the whole session.
 
 - **Back end:** a modular monolith. Each module lives in `backend/app/Modules/<Module>/` with its own `Http/`, `Models/`, `Policies/`, `Domain/`, `routes.php` and tests under `backend/tests/Feature/<Module>/`. Shared code lives in `backend/app/Support/`.
 - **API:** REST under `/api/v1`, plural nouns, actions as sub-resources, one error shape `{"error":{"code":"…","message":"…","details":{}}}`, an `Idempotency-Key` header on creates and workflow actions, and `ETag`/`If-Match` on markbook and config saves.
-- **Database:** MongoDB through `mongodb/laravel-mongodb`. Every index on a school collection starts with `tenant_id`. Use transactions for multi-document changes (the database runs as a replica set, `rs0`, even in development).
+- **Database:** MongoDB through `mongodb/laravel-mongodb`. Every index on a school collection starts with `tenant_id`. The one exception is the unique `(provider, order_id)` index on `gateway_orders`, which serves the payment webhook's school lookup (decision 0015); a new exception needs a decision record. Use transactions for multi-document changes (the database runs as a replica set, `rs0`, even in development).
 - **Tests:** Pest. Database tests use the `Tests\Concerns\RefreshMongoDatabase` trait, which drops and recreates the test database. Laravel's `RefreshDatabase` does not work with MongoDB.
 - **Quality gates (CI):** Pint, PHPStan level 6, Pest, ESLint, `tsc`, Vitest, and the production build must all pass.
 - **Front end:** React 19 + TypeScript, feature folders under `frontend/src/features/<feature>/`, server data through TanStack Query, UI state through Zustand, forms through React Hook Form + Zod.

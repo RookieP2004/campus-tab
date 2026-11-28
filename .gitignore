@@ -24,3 +24,14 @@ storage/*.key
 .vscode/
 .DS_Store
 Thumbs.db
+
+# App signing and push keys: never in the repository (Phase 9)
+*.jks
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+# App icons are generated in CI from packages/ui/assets/logo-mark.svg
+apps/mobile/assets/

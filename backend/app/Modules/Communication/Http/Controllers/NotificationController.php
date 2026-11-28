@@ -5,6 +5,7 @@ namespace App\Modules\Communication\Http\Controllers;
 use App\Modules\Communication\Domain\Notifier;
 use App\Modules\Communication\Models\Notification;
 use App\Modules\Communication\Models\PushDevice;
+use App\Modules\Identity\Models\DeviceSession;
 use App\Modules\Identity\Models\User;
 use App\Support\Http\ApiException;
 use Illuminate\Http\JsonResponse;
@@ -84,7 +85,13 @@ class NotificationController
         $user = $this->user($request);
         $hash = PushDevice::hashToken($input['token']);
         $device = PushDevice::query()->where('token_hash', $hash)->first() ?? new PushDevice(['token_hash' => $hash]);
-        $device->fill(['user_id' => (string) $user->getKey(), 'token' => $input['token'], 'platform' => $input['platform']])->save();
+        // Each sign-in on the device registers again: it belongs to that
+        // sign-in, and the 30-day clock starts over.
+        $session = $request->attributes->get('device_session');
+        $device->fill([
+            'user_id' => (string) $user->getKey(), 'token' => $input['token'], 'platform' => $input['platform'],
+            'device_session_id' => $session instanceof DeviceSession ? (string) $session->getKey() : null, 'last_seen_at' => now(),
+        ])->save();
 
         return response()->json(['data' => ['registered' => true]], 201);
     }

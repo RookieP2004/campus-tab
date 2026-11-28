@@ -112,6 +112,7 @@ The full table is in [modules/assessment.md](modules/assessment.md), section 9.
 
 | `fees_adjust_approve` | `POST /fees/adjustments/{id}/approve` (rebate, waiver, fine waiver, refund, scholarship, carry-forward; never the proposer) | 10 minutes |
 | `receipt_cancel_approve` | `POST /fees/cancellations/{id}/approve` (never whoever requested or proposed it) | 10 minutes |
+| `fees_carry_forward` | `POST /promotions/carry-forward` (the year-end wizard's one approval for every unpaid balance) | 10 minutes |
 
 `export` now also guards `GET /fees/reports/{type}/export` (audited as `fees.report_exported`). `marks_unlock` was removed in Phase 6 (owner's decision: there is no unlock).
 
@@ -120,6 +121,19 @@ The full table is in [modules/assessment.md](modules/assessment.md), section 9.
 - **Report cards:** `report_templates.manage` (Chief, Principal), `report_cards.reissue` (Principal; the code also requires the Principal role), `year.promote` (Chief, Principal).
 - **Fees:** the blueprint's "Who can do what" table, as listed in [modules/fees.md](modules/fees.md) section 9, plus **`fees.closing_confirm`** (Chief, Principal, Clerk), new because the matrix names who confirms a day-end closing but had no right for it. Separation of duty is checked in code: no one approves their own adjustment or cancellation, no collector confirms their own closing, and a Clerk's closing is confirmed only by the Principal or the Chief.
 - Existing schools: `php artisan identity:sync-roles --with-new-permissions`.
+
+## Phase 9 abilities (privacy, DPDP)
+
+| Ability | Scopes | Default holders | What it allows |
+| --- | --- | --- | --- |
+| `privacy.self` | own, child | everyone (parents: child) | Own Privacy page: notice, grievance contact, own requests; a parent's consents for their children |
+| `privacy.notices` | school | Chief | Draft and publish privacy notice versions |
+| `privacy.requests` | school | Chief, Principal | The data-requests inbox; the access copy (step-up `export`) |
+| `privacy.erase` | school | Chief | Erase a child's details for an open erasure request (step-up `permanent_delete`, typed admission number) |
+| `privacy.retention` | school | Chief | Retention dry runs; confirming one deletes (step-up `permanent_delete`) |
+| `privacy.incidents` | school | Chief, Principal | The incident log |
+
+Rule fixed in code: a consent counts only when the parent gives it from their own account (decision 0017). Existing schools: `php artisan identity:sync-roles --with-new-permissions`.
 
 ## Default roles as coded
 

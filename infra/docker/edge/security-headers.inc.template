@@ -1,0 +1,16 @@
+# Security headers for the web app's own pages and files (included by
+# default.conf). The API sets its own (App\Support\Http\SecurityHeaders).
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' ${CONNECT_EXTRA}; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" always;
+add_header X-Frame-Options "DENY" always;
+add_header X-Content-Type-Options "nosniff" always;
+# same-origin, not no-referrer: Sanctum knows the app's own GET requests
+# (which carry no Origin) only by their Referer. Nothing goes to other sites,
+# and the password pages take their token out of the address on load.
+add_header Referrer-Policy "same-origin" always;
+add_header Permissions-Policy "camera=(self), microphone=(), geolocation=(self), payment=(), usb=(), interest-cohort=()" always;
+add_header Cross-Origin-Opener-Policy "same-origin" always;
+add_header Cross-Origin-Resource-Policy "same-origin" always;
+add_header Cross-Origin-Embedder-Policy "require-corp" always;
+# Empty locally (nginx then sends nothing); production sets HSTS_HEADER to
+# "max-age=31536000; includeSubDomains" behind TLS.
+add_header Strict-Transport-Security "${HSTS_HEADER}" always;

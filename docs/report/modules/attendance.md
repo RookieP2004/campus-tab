@@ -275,3 +275,4 @@ Plus `locale.timezone` (the school clock) and `ATTENDANCE_QR_MINUTES` (5). See [
 | 2026-11-27 | 4 | Screens built (taking attendance, late entry and upload, summary, monthly register, check-in, office staff view and QR, calendar, student Attendance tab); parents told once a day in period mode too | Phase 4, owner's version |
 | 2026-11-27 | 5 | LV from approved student leave (`StudentLeaveDays`); staff attendance takes source `leave` with `leave_request_id` and `replaced`, written by approved leave as a system entry | Phase 5 leave, owner's rule 5 |
 | 2026-11-27 | 6 | `AttendanceRegister::roll` also gives the markbook its roll | Phase 6 |
+| 2026-11-28 | 9 | The paper-register template carries the export watermark and is audited (`export.made`); a register photo deleted under retention answers `410 removed_under_retention` | Phase 9 exports and DPDP retention |

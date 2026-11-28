@@ -133,6 +133,47 @@ jobs:
       - name: Build
         run: npm run build --workspace @campus-tab/frontend
 
+      - name: No tracking or third-party analytics (DPDP)
+        run: node .github/scripts/no-trackers.mjs
+
+  security:
+    name: Security (dependency audits, secret scan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mongodb-2.5.9
+          coverage: none
+          tools: composer:v2
+
+      - name: composer audit (fails on high or critical)
+        working-directory: backend
+        run: composer audit --locked --format=json --no-interaction | node ../.github/scripts/audit-gate.mjs composer
+
+      - name: npm audit, web app (fails on high or critical)
+        run: npm audit --json | node .github/scripts/audit-gate.mjs npm web
+
+      - name: npm audit, phone app (fails on high or critical)
+        working-directory: apps/mobile
+        run: npm audit --json | node ../../.github/scripts/audit-gate.mjs npm mobile
+
+      - name: npm audit, desktop app (fails on high or critical)
+        working-directory: apps/desktop
+        run: npm audit --json | node ../../.github/scripts/audit-gate.mjs npm desktop
+
+      - name: Secret scan (gitleaks, whole history)
+        run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --redact --no-banner --config /repo/.gitleaks.toml
+
   report:
     name: Application Report updated
     if: github.event_name == 'pull_request'

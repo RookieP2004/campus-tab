@@ -1,0 +1,10 @@
+# Secret scan (gitleaks) settings: the default rules, plus a narrow
+# allowlist for made-up values that tests use on purpose. Anything else
+# that looks like a secret fails CI.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Made-up test values (never real secrets)"
+paths = ['''^backend/tests/''']
+regexes = ['''whsec-test-123456''', '''sunrise-chief-2026''']

@@ -3,6 +3,7 @@
 namespace App\Modules\Identity\Domain;
 
 use App\Modules\Audit\Domain\AuditRecorder;
+use App\Modules\Identity\Events\DeviceSessionEnded;
 use App\Modules\Identity\Models\DeviceSession;
 use App\Modules\Identity\Models\PersonalAccessToken;
 use App\Modules\Identity\Models\User;
@@ -95,6 +96,8 @@ class SessionIssuer
         if ($session->kind === DeviceSession::KIND_TOKEN && is_string($session->token_id)) {
             PersonalAccessToken::query()->whereKey($session->token_id)->delete();
         }
+
+        DeviceSessionEnded::dispatch($session->tenant_id, $session->user_id, (string) $session->getKey(), $reason);
     }
 
     /** Ends every device of a user, except one (the current one) when given. */

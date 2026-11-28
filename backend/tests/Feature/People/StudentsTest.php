@@ -74,14 +74,16 @@ describe('admission', function () {
         $this->actingWithToken($this->chief)->getJson('/api/v1/students/seats')->assertJsonPath('data.warning', true);
     });
 
-    it('keeps PEN and APAAR only with consent, recorded per purpose', function () {
+    it('keeps PEN and APAAR only after the parent consents from their own account (Phase 9)', function () {
         $this->actingWithToken($this->chief)->postJson('/api/v1/students', admission($this, ['ids' => ['pen' => 'PEN123456']]))
             ->assertStatus(422)->assertJsonPath('error.code', 'consent_required');
+        // The office can no longer record a consent for the parent.
+        $this->actingWithToken($this->chief)->postJson('/api/v1/students', admission($this, ['ids' => ['pen' => 'PEN123456'], 'consents' => ['pen' => true]]))
+            ->assertStatus(422)->assertJsonPath('error.code', 'consent_parent_only');
 
-        $id = $this->actingWithToken($this->chief)->postJson('/api/v1/students', admission($this, ['ids' => ['pen' => 'PEN123456'], 'consents' => ['pen' => true]]))
-            ->assertCreated()->assertJsonPath('data.ids.pen', 'PEN123456')->assertJsonPath('data.consents.pen.given', true)->json('data.id');
-
-        $this->inSchool($this->tenant, fn () => expect(Consent::latestGiven($id, 'pen'))->toBeTrue());
+        $id = $this->actingWithToken($this->chief)->postJson('/api/v1/students', admission($this))->assertCreated()->json('data.id');
+        $this->inSchool($this->tenant, fn () => expect(Consent::latestGiven($id, 'pen'))->toBeFalse());
+        // The parent's own consent: tests/Feature/Privacy/PrivacyTest.php.
     });
 
     it('keeps only the last four Aadhaar digits', function () {

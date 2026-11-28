@@ -46,6 +46,11 @@ flowchart LR
 | Results published | Assessment (`PaperLifecycle::tellResultsOut`) | Communication | `Notifier::notify()` type `results.published`, "Results are out" only |
 | Correction raised or decided | Assessment (`Corrections`) | Communication | type `marks.correction`; the Chief told of a self-approval |
 | Markbook roll | Assessment (`Markbook`) | Attendance | `AttendanceRegister::roll()` |
+| Year-end unpaid dues (Phase 9 fix) | Reports (`Promotion`) | Fees | `YearEndDues::unpaid()`, `settle()` inside the promotion's transaction; apply checks `unresolved()` |
+| A sign-in ended (Phase 9) | Identity (`SessionIssuer::revoke`) | Communication | event `DeviceSessionEnded` → listener `ForgetPushDevices` (stops push only for a sign-out on purpose, a remote sign-out or an account reset) |
+| Privacy notice published, data request moved, retention report ready (Phase 9) | Privacy | Communication | `Notifier::notify()`, types `privacy.notice`, `privacy.request`, `privacy.retention` (generic texts) |
+| Large export (Phase 9) | `ExportGuard` (Fees, Attendance, People, Privacy) | Communication, Audit | `export.made` audit; type `export.large` to the Chief |
+| Every upload (Phase 9) | the `school` middleware group | ClamAV | `ScanUploadedFiles` before any controller |
 
 | Event (planned) | Sent by | Listened to by | Phase |
 | --- | --- | --- | --- |

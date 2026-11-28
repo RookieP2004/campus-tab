@@ -23,7 +23,7 @@ import {
   type StudentProfile,
   students,
 } from './api';
-import { Checkbox, CustomValueInput, PageHeader, StatusChip } from './ui';
+import { CustomValueInput, PageHeader, StatusChip } from './ui';
 
 type Tab = 'details' | 'guardians' | 'custom' | 'ids' | 'attendance' | 'results';
 
@@ -61,7 +61,7 @@ export function StudentProfilePage() {
         actions={<StatusChip status={student.status === 'active' ? 'active' : 'inactive'} label={t(`students.status.${student.status}`, { defaultValue: student.status })} />}
       />
 
-      <div role="tablist" aria-label={t('students.profile.tabsLabel')} className="flex gap-1 relative overflow-x-auto border-b border-border">
+      <div role="tablist" aria-label={t('students.profile.tabsLabel')} className="flex gap-1 relative overflow-x-auto overflow-y-hidden border-b border-border">
         {tabs.map((item) => (
           <button
             key={item.id}
@@ -405,17 +405,15 @@ function CustomTab({ student }: { student: StudentProfile }) {
   );
 }
 
-const OTHER_CONSENTS = ['photo_public', 'third_party_sharing'] as const;
-
 function IdsTab({ student }: { student: StudentProfile }) {
   const { t } = useTranslation();
   const save = useStudentUpdate(student.id);
-  const given = (purpose: string) => student.consents[purpose]?.given === true;
+  // Only the parent's own answer, given in their account, counts (Phase 9).
+  const parentSaidYes = (purpose: string) => student.consents[purpose]?.given === true;
   const [form, setForm] = useState({
     pen: student.ids?.pen ?? '',
     apaar: student.ids?.apaar ?? '',
     aadhaar_last4: student.ids?.aadhaar_last4 ?? '',
-    consents: Object.fromEntries(['pen', 'apaar', ...OTHER_CONSENTS].map((p) => [p, given(p)])) as Record<string, boolean>,
   });
 
   if (student.ids === null || !student.can.edit) {
@@ -427,8 +425,6 @@ function IdsTab({ student }: { student: StudentProfile }) {
     );
   }
 
-  const consent = (purpose: string, value: boolean) => setForm({ ...form, consents: { ...form.consents, [purpose]: value } });
-
   return (
     <Card>
       <form
@@ -437,26 +433,18 @@ function IdsTab({ student }: { student: StudentProfile }) {
         onSubmit={(e) => {
           e.preventDefault();
           save.mutate({
-            ids: { pen: form.pen.trim() || null, apaar: form.apaar.trim() || null, aadhaar_last4: form.aadhaar_last4 || null },
-            consents: form.consents,
+            ids: {
+              ...(parentSaidYes('pen') ? { pen: form.pen.trim() || null } : {}),
+              ...(parentSaidYes('apaar') ? { apaar: form.apaar.trim() || null } : {}),
+              aadhaar_last4: form.aadhaar_last4 || null,
+            },
           });
         }}
       >
         {save.isError ? <Alert tone="danger">{errorText(t, save.error)}</Alert> : null}
         {save.isSuccess ? <Alert tone="success">{t('students.profile.saved')}</Alert> : null}
         <p className="text-sm text-muted">{t('students.ids.consentIntro')}</p>
-        <IdFields
-          values={form}
-          onChange={(next) => setForm({ ...form, ...next })}
-          consents={form.consents}
-          onConsent={consent}
-        />
-        <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-sm font-medium">{t('students.ids.otherConsents')}</legend>
-          {OTHER_CONSENTS.map((p) => (
-            <Checkbox key={p} label={t(`students.ids.consent.${p}`)} checked={form.consents[p] ?? false} onChange={(e) => consent(p, e.target.checked)} />
-          ))}
-        </fieldset>
+        <IdFields values={form} onChange={(next) => setForm({ ...form, ...next })} parentConsent={{ pen: parentSaidYes('pen'), apaar: parentSaidYes('apaar') }} />
         <ConsentList student={student} />
         <div className="flex justify-end">
           <Button type="submit" disabled={save.isPending}>
@@ -468,17 +456,19 @@ function IdsTab({ student }: { student: StudentProfile }) {
   );
 }
 
-/** PEN and APAAR with their consent boxes, and the Aadhaar last four digits. Shared with the admit form. */
+/**
+ * PEN and APAAR, open only once the parent has said yes in their own
+ * account (Phase 9), and the Aadhaar last four digits. Shared with the
+ * admit form, where nobody has consented yet.
+ */
 export function IdFields({
   values,
   onChange,
-  consents,
-  onConsent,
+  parentConsent,
 }: {
   values: { pen: string; apaar: string; aadhaar_last4: string };
   onChange: (next: Partial<{ pen: string; apaar: string; aadhaar_last4: string }>) => void;
-  consents: Record<string, boolean>;
-  onConsent: (purpose: 'pen' | 'apaar', given: boolean) => void;
+  parentConsent: { pen: boolean; apaar: boolean };
 }) {
   const { t } = useTranslation();
 
@@ -486,7 +476,7 @@ export function IdFields({
     <div className="grid gap-4 sm:grid-cols-2">
       {(['pen', 'apaar'] as const).map((kind) => (
         <div key={kind} className="flex flex-col gap-2">
-          <Field label={t(`students.ids.${kind}`)} hint={t('students.ids.idHint')}>
+          <Field label={t(`students.ids.${kind}`)} hint={parentConsent[kind] ? t('students.ids.idHint') : t('students.ids.waitingForParent')}>
             {(p) => (
               <Input
                 {...p}
@@ -494,11 +484,10 @@ export function IdFields({
                 maxLength={20}
                 autoComplete="off"
                 onChange={(e) => onChange({ [kind]: e.target.value.replace(/[^A-Za-z0-9]/g, '') })}
-                disabled={!consents[kind]}
+                disabled={!parentConsent[kind]}
               />
             )}
           </Field>
-          <Checkbox label={t(`students.ids.consent.${kind}`)} checked={consents[kind] ?? false} onChange={(e) => onConsent(kind, e.target.checked)} />
         </div>
       ))}
       <Field label={t('students.ids.aadhaarLast4')} hint={t('students.ids.aadhaarHint')} className="sm:col-span-2 sm:max-w-xs">
@@ -527,12 +516,14 @@ function ConsentList({ student }: { student: StudentProfile }) {
     <ul className="flex flex-col gap-1 text-xs text-muted">
       {recorded.map(([purpose, c]) => (
         <li key={purpose}>
-          {t('students.ids.consentRecord', {
-            purpose: t(`students.ids.consent.${purpose}`, { defaultValue: purpose }),
-            state: c?.given ? t('students.ids.given') : t('students.ids.withdrawn'),
-            at: c?.at ?? '—',
-            by: c?.recorded_by ?? '—',
-          })}
+          {c?.needs_parent
+            ? t('students.ids.needsParent', { purpose: t(`students.ids.consent.${purpose}`, { defaultValue: purpose }) })
+            : t('students.ids.consentRecord', {
+                purpose: t(`students.ids.consent.${purpose}`, { defaultValue: purpose }),
+                state: c?.given ? t('students.ids.given') : t('students.ids.withdrawn'),
+                at: c?.at?.slice(0, 10) ?? '—',
+                by: c?.recorded_by ?? '—',
+              })}
         </li>
       ))}
     </ul>

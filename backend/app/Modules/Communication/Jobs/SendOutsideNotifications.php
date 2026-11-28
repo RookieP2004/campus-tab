@@ -52,10 +52,14 @@ class SendOutsideNotifications implements ShouldQueue
                 }
 
                 if ($prefs['push']) {
-                    $tokens = PushDevice::query()->where('user_id', (string) $user->getKey())->get()->map(fn (PushDevice $d) => $d->token)->all();
+                    $devices = PushDevice::query()->where('user_id', (string) $user->getKey())->get();
 
-                    if ($tokens !== []) {
-                        $push->send(array_values($tokens), 'Campus TAB', $text);
+                    if ($devices->isNotEmpty()) {
+                        $gone = $push->send($devices->map(fn (PushDevice $d) => ['token' => $d->token, 'platform' => $d->platform])->values()->all(), 'Campus TAB', $text);
+                        // Uninstalled apps and expired tokens are forgotten.
+                        foreach ($gone as $token) {
+                            PushDevice::query()->where('token_hash', PushDevice::hashToken($token))->delete();
+                        }
                     }
                 }
 

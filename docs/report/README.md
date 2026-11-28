@@ -26,6 +26,10 @@ Parts marked "Written by `php artisan report:generate`" are produced from the co
 | [configuration.md](configuration.md) | Environment variables now; every school-config key from Phase 1 |
 | [links-and-events.md](links-and-events.md) | Which module calls which, events and listeners |
 | [integrations.md](integrations.md) | Email, SMS, push, payments, file storage: what we send and where keys live (names only) |
+| [apps.md](apps.md) | The Android, iOS, Windows and macOS apps: sign-in in memory, push, deep links, builds |
+| [security.md](security.md) | Security headers, upload virus scan, ZAP results, dependency and secret scans, the OWASP ASVS level 2 checklist |
+| [performance.md](performance.md) | The k6 load test (50 schools × 1,000 students) and its p95 times |
+| [pilot/](pilot/) | Pilot checklist, admin training guide, before going live |
 | [decisions/](decisions/) | One short record per design decision |
 | [how-to/](how-to/) | Step-by-step recipes |
 | [operations.md](operations.md) | Running locally, environment, troubleshooting |
@@ -78,7 +82,8 @@ The thirteen business modules from the blueprint each have a page in [modules/](
 | Licensing | [`backend/app/Modules/Licensing/`](../../backend/app/Modules/Licensing/) | 2 | [modules/licensing.md](modules/licensing.md) |
 | People | [`backend/app/Modules/People/`](../../backend/app/Modules/People/) | 23 | [modules/people.md](modules/people.md) |
 | Platform | [`backend/app/Modules/Platform/`](../../backend/app/Modules/Platform/) | 26 | [modules/platform.md](modules/platform.md) |
-| Reports | [`backend/app/Modules/Reports/`](../../backend/app/Modules/Reports/) | 22 | [modules/reports.md](modules/reports.md) |
+| Privacy | [`backend/app/Modules/Privacy/`](../../backend/app/Modules/Privacy/) | 16 | [modules/privacy.md](modules/privacy.md) |
+| Reports | [`backend/app/Modules/Reports/`](../../backend/app/Modules/Reports/) | 23 | [modules/reports.md](modules/reports.md) |
 | System | [`backend/app/Modules/System/`](../../backend/app/Modules/System/) | 1 | [modules/system.md](modules/system.md) |
 | Tenancy | [`backend/app/Modules/Tenancy/`](../../backend/app/Modules/Tenancy/) | 7 | [modules/tenancy.md](modules/tenancy.md) |
 

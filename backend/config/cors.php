@@ -33,4 +33,8 @@ return [
 
     'supports_credentials' => true,
 
+    // The apps' local web-view origins (Phase 9). Allowed without
+    // credentials, bearer token only (App\Support\Http\AppOriginCors).
+    'app_origins' => env('APP_ORIGINS', 'https://localhost,capacitor://localhost,http://tauri.localhost,tauri://localhost'),
+
 ];

@@ -19,7 +19,20 @@
         "short_name": { "type": "string", "minLength": 1, "maxLength": 20 },
         "logo_url": { "type": ["string", "null"], "maxLength": 300 },
         "board": { "enum": ["CBSE", "ICSE", "STATE", "IB", "CAMBRIDGE", "OTHER"] },
-        "affiliation_no": { "type": ["string", "null"], "maxLength": 40 }
+        "affiliation_no": { "type": ["string", "null"], "maxLength": 40 },
+        "grievance": {
+          "description": "DPDP grievance contact, shown on the school profile and the privacy page (Phase 9)",
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["name", "email"],
+          "properties": {
+            "name": { "type": "string", "minLength": 2, "maxLength": 100 },
+            "role": { "type": ["string", "null"], "maxLength": 60 },
+            "email": { "type": "string", "format": "email", "maxLength": 120 },
+            "phone": { "type": ["string", "null"], "maxLength": 20 },
+            "address": { "type": ["string", "null"], "maxLength": 300 }
+          }
+        }
       }
     },
     "branding": {
@@ -76,6 +89,13 @@
       "additionalProperties": false,
       "required": ["attendance", "leave", "marks", "fees"],
       "properties": {
+        "exports": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "chief_alert_rows": { "type": "integer", "minimum": 0, "maximum": 1000000 }
+          }
+        },
         "attendance": {
           "type": "object",
           "additionalProperties": false,

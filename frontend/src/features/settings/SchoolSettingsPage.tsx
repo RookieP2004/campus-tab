@@ -15,7 +15,7 @@ import { send } from '@/lib/requests';
 interface SchoolConfig {
   version: number;
   body: {
-    school: { name: string; short_name: string; logo_url?: string | null; board: string; affiliation_no?: string | null };
+    school: { name: string; short_name: string; logo_url?: string | null; board: string; affiliation_no?: string | null; grievance?: { name: string; role?: string | null; email: string; phone?: string | null; address?: string | null } | null };
     branding: { accent: string };
     modules: Record<string, boolean>;
     sign_in: { methods: string[] };
@@ -65,6 +65,10 @@ function SettingsForm({ config }: { config: SchoolConfig }) {
     board: school.board,
     affiliation_no: school.affiliation_no ?? '',
     accent: config.body.branding?.accent ?? '#0F766E',
+    g_name: school.grievance?.name ?? '',
+    g_role: school.grievance?.role ?? '',
+    g_email: school.grievance?.email ?? '',
+    g_phone: school.grievance?.phone ?? '',
   });
   const [modules, setModules] = useState<Record<string, boolean>>({ ...(config.body.modules ?? {}) });
   const [studentLogin, setStudentLogin] = useState((config.body.sign_in?.methods ?? []).includes(STUDENT_LOGIN));
@@ -85,7 +89,10 @@ function SettingsForm({ config }: { config: SchoolConfig }) {
         body: {
           body: {
             ...config.body,
-            school: { ...school, name: form.name.trim(), short_name: form.short_name.trim(), board: form.board, affiliation_no: form.affiliation_no.trim() || null },
+            school: { ...school, name: form.name.trim(), short_name: form.short_name.trim(), board: form.board, affiliation_no: form.affiliation_no.trim() || null,
+              // DPDP grievance contact: shown on the school profile and everyone's Privacy page.
+              grievance: form.g_name.trim() && form.g_email.trim() ? { name: form.g_name.trim(), role: form.g_role.trim() || null, email: form.g_email.trim(), phone: form.g_phone.trim() || null } : null,
+            },
             branding: { ...config.body.branding, accent: form.accent.toUpperCase() },
             modules,
             sign_in: { ...config.body.sign_in, methods: studentLogin ? [...methods, STUDENT_LOGIN] : methods },
@@ -164,6 +171,16 @@ function SettingsForm({ config }: { config: SchoolConfig }) {
               </div>
             )}
           </Field>
+          <h3 className="font-semibold sm:col-span-2">{t('settings.school.grievance')}</h3>
+          <p className="text-sm text-muted sm:col-span-2">{t('settings.school.grievanceHint')}</p>
+          <Field label={t('privacy.grievance.name')} error={fieldError(save.error, 'body.school.grievance.name')}>
+            {(p) => <Input {...p} value={form.g_name} maxLength={100} onChange={(e) => setForm({ ...form, g_name: e.target.value })} />}
+          </Field>
+          <Field label={t('settings.school.grievanceRole')}>{(p) => <Input {...p} value={form.g_role} maxLength={60} onChange={(e) => setForm({ ...form, g_role: e.target.value })} />}</Field>
+          <Field label={t('privacy.grievance.email')} error={fieldError(save.error, 'body.school.grievance.email')}>
+            {(p) => <Input {...p} type="email" value={form.g_email} maxLength={120} onChange={(e) => setForm({ ...form, g_email: e.target.value })} />}
+          </Field>
+          <Field label={t('privacy.grievance.phone')}>{(p) => <Input {...p} type="tel" value={form.g_phone} maxLength={20} onChange={(e) => setForm({ ...form, g_phone: e.target.value })} />}</Field>
         </fieldset>
         <LogoUpload logoUrl={school.logo_url ?? null} canEdit={canEdit} onUploaded={refresh} />
       </Card>

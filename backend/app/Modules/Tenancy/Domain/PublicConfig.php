@@ -40,6 +40,8 @@ class PublicConfig
                 'all' => array_values((array) config('identity.languages')),
             ],
             'login_methods' => array_values($body['sign_in']['methods'] ?? ['password']),
+            // DPDP: whom to contact about personal data (null until the school sets it).
+            'grievance' => $body['school']['grievance'] ?? null,
         ];
     }
 }

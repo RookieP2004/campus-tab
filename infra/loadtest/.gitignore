@@ -1,0 +1,3 @@
+# Made by `php artisan loadtest:seed` and by k6 runs
+fixtures.json
+results/

@@ -20,10 +20,16 @@ function printSheet(title: string, headers: string[], sheet: SetupCodeSheet, not
   document.body.appendChild(frame);
   const doc = frame.contentDocument;
   if (doc) {
-    const style = doc.createElement('style');
-    style.textContent =
+    // A constructed stylesheet, not a <style> element: the Content-Security-Policy
+    // forbids inline styles, and the frame inherits the page's policy.
+    const css =
       'body{font:13px system-ui,sans-serif;margin:16px}h1{font-size:18px}table{border-collapse:collapse;width:100%}th,td{border:1px solid currentColor;padding:6px 8px;text-align:left}td.code{font:15px monospace;letter-spacing:2px}p{font-size:12px}';
-    doc.head.appendChild(style);
+    const View = doc.defaultView as (Window & typeof globalThis) | null;
+    if (View && 'adoptedStyleSheets' in doc) {
+      const sheetStyle = new View.CSSStyleSheet();
+      sheetStyle.replaceSync(css);
+      doc.adoptedStyleSheets = [sheetStyle];
+    }
     const h1 = doc.createElement('h1');
     h1.textContent = title;
     doc.body.appendChild(h1);

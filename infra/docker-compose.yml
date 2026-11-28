@@ -4,7 +4,16 @@
 # every node_modules folder live in named volumes, never on the host drive.
 name: campus-tab
 
+# Container logs: at most 3 files of 10 MB each per service (mongo's log
+# reached 2.2 GB in a day without this).
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 x-api-base: &api-base
+  logging: *logging
   build:
     context: ..
     dockerfile: infra/docker/api/Dockerfile
@@ -22,7 +31,7 @@ x-api-base: &api-base
     APP_ENV: local
     APP_URL: http://127.0.0.1:${API_PORT:-8000}
     FRONTEND_URL: http://127.0.0.1:${WEB_PORT:-5173}
-    SANCTUM_STATEFUL_DOMAINS: 127.0.0.1:${WEB_PORT:-5173}
+    SANCTUM_STATEFUL_DOMAINS: 127.0.0.1:${WEB_PORT:-5173},127.0.0.1:${EDGE_PORT:-8088}
     DB_CONNECTION: mongodb
     MONGODB_URI: mongodb://mongo:27017/?replicaSet=rs0
     MONGODB_DATABASE: campus_tab
@@ -40,11 +49,15 @@ x-api-base: &api-base
     MAIL_HOST: mailpit
     MAIL_PORT: 1025
     GOTENBERG_URL: http://gotenberg:3000
+    # Every upload is virus-scanned by the clamav service before it is stored (Phase 9).
+    CLAMAV_HOST: clamav
+    CLAMAV_PORT: "3310"
     # The fake payment gateway (local only) sends its signed webhook here, from the queue worker.
     FAKE_GATEWAY_WEBHOOK_URL: http://api:8000/api/v1/webhooks/payments/fake
 
 services:
   mongo:
+    logging: *logging
     image: mongo:8.0
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     ports:
@@ -67,6 +80,7 @@ services:
       start_period: 10s
 
   redis:
+    logging: *logging
     image: redis:7-alpine
     ports:
       - "${REDIS_PORT:-6379}:6379"
@@ -81,10 +95,104 @@ services:
   # Report card PDFs (Phase 7): Chromium with the Noto fonts, reached only
   # from the API containers. Not published on the host.
   gotenberg:
+    logging: *logging
     image: gotenberg/gotenberg:8
     command: ["gotenberg", "--chromium-disable-javascript=true", "--chromium-allow-list=file:///tmp/.*"]
 
+  # ClamAV (Phase 9): scans every upload. Loads its virus definitions on
+  # first start (a few minutes, needs internet); until it is healthy,
+  # uploads are refused (fail closed). Reached only from the API containers.
+  clamav:
+    logging: *logging
+    image: clamav/clamav:1.5
+    volumes:
+      - clamav_db:/var/lib/clamav
+    healthcheck:
+      test: ["CMD", "clamdcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 180s
+
+  # The production build behind nginx with the security headers (Phase 9).
+  # Not started by default: build the web app first, then
+  #   docker compose --profile edge up -d edge   →  http://127.0.0.1:8088
+  # The ZAP baseline scan targets it (docs/report/security.md).
+  edge:
+    logging: *logging
+    image: nginx:1.31-alpine
+    profiles: ["edge"]
+    environment:
+      CONNECT_EXTRA: ws://127.0.0.1:${REVERB_PORT:-8080}
+      HSTS_HEADER: ""
+    ports:
+      - "${EDGE_PORT:-8088}:80"
+    volumes:
+      - ../frontend/dist:/usr/share/nginx/html:ro
+      - ./docker/edge/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./docker/edge/security-headers.inc.template:/etc/nginx/templates/security-headers.inc.template:ro
+    depends_on:
+      - api
+
+  # Load test (Phase 9), started only with --profile loadtest:
+  #   docker compose --profile loadtest up -d api-load
+  #   docker compose exec api-load php artisan migrate --force
+  #   docker compose exec api-load php artisan loadtest:seed
+  #   docker compose --profile loadtest run --rm k6
+  # A second API on its own database (campus_tab_load) with several PHP
+  # workers; jobs run inside the request (no queue shared with the dev stack).
+  api-load:
+    <<: *api-base
+    profiles: ["loadtest"]
+    # php -S directly (not artisan serve), so these settings beat backend/.env.
+    # Production-like: config, routes and events cached (into /tmp, so the dev
+    # API's bootstrap/cache is untouched), OPcache on, debug off. Laravel's
+    # server.php takes the working directory as the public folder.
+    command: ["sh", "-c", "php artisan config:cache >/dev/null && php artisan route:cache >/dev/null && php artisan event:cache >/dev/null && cd public && exec php -d opcache.enable_cli=1 -d opcache.validate_timestamps=0 -d opcache.memory_consumption=192 -S 0.0.0.0:8000 ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"]
+    volumes:
+      - ../backend:/app
+      - backend_vendor:/app/vendor
+      - composer_cache:/composer/cache
+      # loadtest:seed writes the k6 fixtures here.
+      - ./loadtest:/loadtest
+    environment:
+      <<: *api-env
+      LOADTEST_FIXTURES: /loadtest/fixtures.json
+      APP_DEBUG: "false"
+      APP_CONFIG_CACHE: /tmp/config.php
+      APP_ROUTES_CACHE: /tmp/routes.php
+      APP_EVENTS_CACHE: /tmp/events.php
+      MONGODB_DATABASE: campus_tab_load
+      PHP_CLI_SERVER_WORKERS: "8"
+      QUEUE_CONNECTION: sync
+      CACHE_PREFIX: load_
+      REDIS_PREFIX: load_
+      BROADCAST_CONNECTION: "null"
+      PUSH_DRIVER: none
+      LOG_LEVEL: warning
+    ports:
+      - "${API_LOAD_PORT:-8001}:8000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  k6:
+    logging: *logging
+    image: grafana/k6:1.8.3
+    profiles: ["loadtest"]
+    working_dir: /scripts
+    command: ["run", "/scripts/campus.js"]
+    environment:
+      BASE_URL: http://api-load:8000/api/v1
+    volumes:
+      - ./loadtest:/scripts
+    depends_on:
+      - api-load
+
   mailpit:
+    logging: *logging
     image: axllent/mailpit:latest
     ports:
       - "${MAILPIT_SMTP_PORT:-1025}:1025"
@@ -135,6 +243,7 @@ services:
         condition: service_healthy
 
   web:
+    logging: *logging
     image: node:22-bookworm-slim
     working_dir: /workspace
     entrypoint: ["sh", "/workspace/infra/docker/web/entrypoint.sh"]
@@ -155,6 +264,7 @@ services:
       - api
 
 volumes:
+  clamav_db:
   mongo_data:
   mongo_config:
   redis_data:

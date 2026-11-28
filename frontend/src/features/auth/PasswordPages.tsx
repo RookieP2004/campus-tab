@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
@@ -72,9 +72,17 @@ export function ForgotPasswordPage() {
  */
 export function SetPasswordPage() {
   const { purpose } = useParams();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const school = params.get('school') ?? '';
-  const token = params.get('token') ?? '';
+  // The one-time token is read once, then taken out of the address so it
+  // never travels in a Referer header or stays in the browser history.
+  const [token] = useState(() => params.get('token') ?? '');
+  useEffect(() => {
+    if (!params.has('token')) return;
+    const next = new URLSearchParams(params);
+    next.delete('token');
+    setParams(next, { replace: true });
+  }, [params, setParams]);
   const { data: config } = usePublicConfig(school || null);
   const { t } = useTranslation();
   const setCode = useSchoolCode((s) => s.setCode);

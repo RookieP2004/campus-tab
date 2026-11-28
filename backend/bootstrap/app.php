@@ -10,8 +10,11 @@ use App\Modules\Platform\Http\Middleware\ConsoleAuthenticate;
 use App\Modules\Platform\Http\Middleware\ConsoleStepUp;
 use App\Modules\Tenancy\Http\Middleware\SetTenantFromUser;
 use App\Support\Http\ApiExceptionRenderer;
+use App\Support\Http\AppOriginCors;
 use App\Support\Http\Idempotency;
+use App\Support\Http\SecurityHeaders;
 use App\Support\Privacy\RefuseFullAadhaar;
+use App\Support\Uploads\ScanUploadedFiles;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,6 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands(glob(__DIR__.'/../app/Modules/*/Console', GLOB_ONLYDIR) ?: [])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
+        // The apps' web views: bearer token only, never cookies (Phase 9).
+        $middleware->prepend(AppOriginCors::class);
+        // CSP, frame-ancestors, Referrer-Policy, HSTS in production only (Phase 9).
+        $middleware->append(SecurityHeaders::class);
 
         $middleware->alias([
             'tenant' => SetTenantFromUser::class,
@@ -52,7 +59,8 @@ return Application::configure(basePath: dirname(__DIR__))
         //          route adds permission:<ability> and, if sensitive, step-up:<action>.
         $middleware->group('enrol', ['auth:sanctum', 'tenant', 'device']);
         $middleware->group('account', ['auth:sanctum', 'tenant', 'device', 'mfa.enrolled']);
-        $middleware->group('school', ['auth:sanctum,platform', 'tenant', 'device', 'mfa.enrolled', 'licence', 'no-aadhaar']);
+        // scan-uploads: every file is virus-scanned before a controller sees it (Phase 9).
+        $middleware->group('school', ['auth:sanctum,platform', 'tenant', 'device', 'mfa.enrolled', 'licence', 'no-aadhaar', ScanUploadedFiles::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         ApiExceptionRenderer::register($exceptions);

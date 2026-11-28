@@ -80,3 +80,18 @@ A school made before Phase 5 needs `php artisan identity:sync-roles --with-new-p
 - **Kamla Devi** has the Fee Collector duty and one cash payment today; **Ramesh Kumar** took two counter UPI payments for Aarav. Both can close their day at `/fees/closings`; Ramesh's own closing is confirmed by Dr. Meera Iyer.
 - A **waiver** Ramesh proposed waits for Dr. Meera Iyer in `/approvals` (step-up).
 - The **local test gateway** is on: Suresh Patel presses **Pay now** at `/fees`, chooses **Pay** in the test checkout, and the dues turn Paid when the signed webhook arrives (the `horizon` container sends it).
+
+## Year-end dues and privacy (Phase 9)
+
+`DemoPrivacySeeder` (run by `DemoSchoolSeeder`, or `php artisan db:seed --class=DemoPrivacySeeder` for a school seeded earlier):
+
+- A **sample privacy notice**, version 1 (marked as sample text that needs a legal review), and the grievance contact *Anita Desai, privacy@sunrise.test* on the school profile.
+- **Suresh Patel** has said yes to keeping Aarav's PEN and no to public photos, from his own account (Account menu → **Privacy**).
+- An **access request** from Suresh Patel about Riya waits in **Privacy office → Requests** for Vikram Malviya (Chief) or Dr. Meera Iyer (Principal).
+
+What to try:
+
+- As **Dr. Meera Iyer**: **Report cards → Year-end promotion**, preview 2026-27 → 2027-28. Step 3 lists everyone who still owes fees; **Apply** stays off until you approve the list with a code. (Applying really closes the demo year: reload the demo school afterwards with `docker compose down -v`.)
+- As **Suresh Patel**: **Privacy**: read the notice, change a consent, send a request.
+- As **Ramesh Kumar** (Clerk): a student's **IDs** tab: PEN is open only for Aarav (his parent said yes); Riya's waits for the parent.
+- As **Vikram Malviya** (Chief): **Privacy office → Retention**: make a dry run (nothing is deleted), and **Incidents**.

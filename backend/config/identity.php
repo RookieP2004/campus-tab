@@ -49,6 +49,7 @@ return [
             'mfa_reset',          // switching off someone else's MFA (lost authenticator)
             'fees_adjust_approve',    // approving a rebate, waiver, refund or other fee adjustment (Phase 8)
             'receipt_cancel_approve', // approving a receipt cancellation (Phase 8)
+            'fees_carry_forward',     // the year-end wizard's one approval for every unpaid balance
         ],
     ],
 

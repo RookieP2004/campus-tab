@@ -53,7 +53,8 @@
 | `GET /files/report-cards/{tenant}/{card}` | The PDF, signed link only | signature |
 | `GET /report-cards/students/{id}`, `GET /report-cards/mine` | A student's cards (families: published only) | `results.view` |
 | `GET /public/verify/{school}/{code}` | Identity facts only | public, rate-limited |
-| `POST /promotions/preview`, `POST /promotions/apply {digest}` | The wizard | `year.promote` |
+| `POST /promotions/preview`, `POST /promotions/apply {digest}` | The wizard; the preview carries `dues` (students with unpaid fees, total, `unresolved`, `digest`); apply answers `422 dues_unresolved` while a balance is undecided | `year.promote` |
+| `POST /promotions/carry-forward {to, decisions: {student_id: carry|leave}, dues_digest}` | The unpaid-dues step: one approval for every balance; makes the new year (planned) if needed. Errors `dues_changed` (409), `no_unpaid_dues` | `year.promote` + step-up `fees_carry_forward` |
 
 Errors use the one shape; notable codes: `no_scheme`, `no_template`, `nothing_to_publish`, `principal_only`, `reason_required`, `not_current_version`, `preview_stale`, `section_missing`, `year_closed`.
 
@@ -68,7 +69,9 @@ Errors use the one shape; notable codes: `no_scheme`, `no_template`, `nothing_to
 | `…/Domain/CardAccess.php` | Who sees which card and which parts |
 | `…/Domain/CardRenderer.php` | The printable HTML (blocks, letterhead, QR as an inline SVG) |
 | `…/Domain/Pdf/GotenbergRenderer.php`, `FakePdfRenderer.php` | PDF rendering; the fake one only in tests |
-| `…/Domain/Promotion.php` | Preview with digest; apply in one transaction; close the year |
+| `…/Domain/Promotion.php` | Preview with digest and unpaid dues; the dues step (`carryForward`); apply in one transaction; close the year |
+| `backend/app/Modules/Fees/Domain/YearEndDues.php` | Unpaid balances of a year; carry forward or leave each, with one audit entry per student |
+| `frontend/src/features/reports/DuesStep.tsx` | Step 3 of the wizard: the unpaid-fees list and the one approval |
 | `…/Http/Controllers/*` | Templates, cards, verification, promotion |
 | `…/Jobs/ProcessReportCardRun.php` | Runs a generate/publish/re-issue inside the school |
 | `backend/app/Support/Models/ClosedYears.php`, `GuardsClosedYear.php` | A closed year is read-only for every school model |
@@ -98,7 +101,7 @@ sequenceDiagram
 - `report_templates` (name, grades, blocks, preset, letterhead) — index `tenant_id, name`.
 - `report_cards` — one document per **version**: snapshot (the computed result), remarks, co-scholastic grades, attendance, status (draft, reviewed, published, replaced), `verify_hash`, pdf {path, size, sha256}, history. Unique `tenant_id, student_id, year_id, version`; `tenant_id, verify_hash`.
 - `report_card_runs` — kind, status, progress.
-- Reads papers, assessments, schemes, attendance days, enrolments; the promotion writes academic years, classes, sections, teaching assignments, enrolments.
+- Reads papers, assessments, schemes, attendance days, enrolments; the promotion writes academic years, classes, sections, teaching assignments, enrolments. The dues step writes fee adjustments (`source: year_end`), ledger entries, carried-forward demands and `fee_year_end_decisions`.
 
 ## 7. Links to other modules
 
@@ -123,12 +126,13 @@ sequenceDiagram
 
 - `backend/tests/Unit/Reports/GradingEngineTest.php` — each starter preset, rounding once, best-of, grace, AB/ML, exactness.
 - `backend/tests/Feature/Reports/ReportCardsTest.php` — 45 cards in the background from locked papers only and every QR verifies; identity-only verification and guessed codes; parents and signed links; remarks scope; re-issue keeps the old version; promotion preview, transaction, audit and the read-only old year.
-- `frontend/src/features/reports/reports.test.tsx` — the verification page and the family's versions.
+- `backend/tests/Feature/Fees/YearEndDuesTest.php` — the preview lists every unpaid balance; apply is refused until each is decided; one step-up approval carries or leaves each, with an audit entry per student and the dues opening in the new year; a stale list is refused; a balance changed after "leave" must be decided again.
+- `frontend/src/features/reports/reports.test.tsx` — the verification page, the family's versions, and the wizard's dues step (Apply stays off until every balance is decided).
 
 ## 12. Decisions and limits
 
 - Card HTML has no scripts; Gotenberg runs with JavaScript off and only reads inlined files.
-- A carry-forward of unpaid fees must be done before the promotion closes the year (the closed year is read-only).
+- **Unpaid fees at year end:** the year cannot close until every unpaid balance is carried forward or the Principal confirms leaving it in the closed year. Carrying forward moves a balance and forgives nothing, so the Principal approves the whole list alone, once, with step-up (owner's rule, session 5). A balance left in a closed year can only be viewed: Campus TAB can no longer collect it, and the screen says so.
 - The demo seeder (`DemoReportsSeeder`) publishes one 7-B card; it needs the `gotenberg` container.
 
 ## 13. Change history
@@ -137,4 +141,5 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-28 | 7 | Module built: grading engine, templates, generation, verification, re-issue, promotion | Phase 7 of BUILD-PROMPTS with the owner's six rules |
+| 2026-11-28 | 9 (fix 1) | Unpaid-dues step in the promotion wizard; the year closes only when every balance is decided | Owner's fix: dues were left behind silently in a read-only year |
 | 2026-11-28 | 7 (review) | A numbered class moves to the next number; a skipped class is made as a draft (`new_classes`). Cards carry `replaced_by_id` and, for the class teacher, `co_scholastic_options` | Browser review: 3-A was moving to Class 6; class teachers could not set co-scholastic grades |

@@ -239,7 +239,24 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | POST | `/api/v1/platform/schools/{code}/payments` | platform.schools.payments.store | `ConsoleSchoolController` | api, console |
 | POST | `/api/v1/platform/schools/{code}/stats/refresh` | platform.schools.stats.refresh | `ConsoleSchoolController` | api, console |
 | POST | `/api/v1/platform/support/sessions` | platform.support.sessions | `PlatformSupportController` | api, auth:platform, throttle:activation |
+| GET | `/api/v1/privacy` | privacy.mine | `PrivacyController` | api, school, permission:privacy.self |
+| POST | `/api/v1/privacy/consents` | privacy.consents.answer | `PrivacyController` | api, school, permission:privacy.self, idempotent |
+| GET | `/api/v1/privacy/incidents` | privacy.incidents.index | `PrivacyOfficeController` | api, school, permission:privacy.incidents |
+| POST | `/api/v1/privacy/incidents` | privacy.incidents.store | `PrivacyOfficeController` | api, school, permission:privacy.incidents, idempotent |
+| POST | `/api/v1/privacy/incidents/{id}/entries` | privacy.incidents.entries | `PrivacyOfficeController` | api, school, permission:privacy.incidents, idempotent |
+| GET | `/api/v1/privacy/notices` | privacy.notices.index | `PrivacyController` | api, school, permission:privacy.notices |
+| PUT | `/api/v1/privacy/notices/draft` | privacy.notices.draft | `PrivacyController` | api, school, permission:privacy.notices |
+| POST | `/api/v1/privacy/notices/publish` | privacy.notices.publish | `PrivacyController` | api, school, permission:privacy.notices, idempotent |
+| GET | `/api/v1/privacy/requests` | privacy.requests.index | `PrivacyOfficeController` | api, school, permission:privacy.requests |
+| POST | `/api/v1/privacy/requests` | privacy.requests.store | `PrivacyController` | api, school, permission:privacy.self, idempotent |
+| GET | `/api/v1/privacy/requests/{id}/copy` | privacy.requests.copy | `PrivacyOfficeController` | api, school, permission:privacy.requests, step-up:export |
+| POST | `/api/v1/privacy/requests/{id}/erase` | privacy.requests.erase | `PrivacyOfficeController` | api, school, permission:privacy.erase, step-up:permanent_delete, idempotent |
+| POST | `/api/v1/privacy/requests/{id}/move` | privacy.requests.move | `PrivacyOfficeController` | api, school, permission:privacy.requests, idempotent |
+| GET | `/api/v1/privacy/retention` | privacy.retention.index | `PrivacyOfficeController` | api, school, permission:privacy.retention |
+| POST | `/api/v1/privacy/retention/runs/{id}/confirm` | privacy.retention.confirm | `PrivacyOfficeController` | api, school, permission:privacy.retention, step-up:permanent_delete, idempotent |
+| POST | `/api/v1/privacy/retention/{kind}/dry-run` | privacy.retention.dry-run | `PrivacyOfficeController` | api, school, permission:privacy.retention, idempotent |
 | POST | `/api/v1/promotions/apply` | promotions.apply | `PromotionController` | api, school, module:reports, permission:year.promote, idempotent |
+| POST | `/api/v1/promotions/carry-forward` | promotions.carry-forward | `PromotionController` | api, school, module:reports, permission:year.promote, step-up:fees_carry_forward, idempotent |
 | POST | `/api/v1/promotions/preview` | promotions.preview | `PromotionController` | api, school, module:reports, permission:year.promote |
 | GET | `/api/v1/public/tenants/{code}/config` | public.tenants.config | `PublicConfigController` | api, throttle:public |
 | GET | `/api/v1/public/tenants/{code}/logo` | public.tenants.logo | `SchoolLogoController` | api, throttle:public |

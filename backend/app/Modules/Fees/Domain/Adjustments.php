@@ -189,7 +189,7 @@ class Adjustments
             return;
         }
         if ($adj->kind === 'carry_forward') {
-            $this->carryForward($user, $adj, $base);
+            $this->carryInto($user, $adj, $this->nextYear($adj));
 
             return;
         }
@@ -214,23 +214,27 @@ class Adjustments
         }
     }
 
-    /**
-     * Unpaid dues leave this year's ledger and are raised in the next year as
-     * one "carried forward" instalment.
-     *
-     * @param  array<string, mixed>  $base
-     */
-    private function carryForward(User $user, FeeAdjustment $adj, array $base): void
+    private function nextYear(FeeAdjustment $adj): AcademicYear
     {
         $from = AcademicYear::query()->findOrFail($adj->year_id);
         $next = AcademicYear::query()->where('starts_on', '>', $from->starts_on)->where('status', '!=', AcademicYear::STATUS_CLOSED)->orderBy('starts_on')->first();
-        if (! $next instanceof AcademicYear) {
-            throw new ApiException('no_next_year', 'Make the next academic year first (School setup), then carry the dues into it.', 422);
-        }
+
+        return $next instanceof AcademicYear ? $next : throw new ApiException('no_next_year', 'Make the next academic year first (School setup), then carry the dues into it.', 422);
+    }
+
+    /**
+     * Unpaid dues leave this year's ledger and are raised in the next year as
+     * one "carried forward" instalment. Also used by the year-end wizard
+     * (YearEndDues), which names the new year itself.
+     */
+    public function carryInto(User $user, FeeAdjustment $adj, AcademicYear $next): void
+    {
+        $from = AcademicYear::query()->findOrFail($adj->year_id);
+        $base = ['student_id' => $adj->student_id, 'year_id' => $adj->year_id, 'type' => 'adjustment', 'adjustment_id' => (string) $adj->getKey(), 'adjustment_kind' => $adj->kind, 'reason' => $adj->reason];
         $this->ledger->post($base + ['amount_paise' => -$adj->amount_paise], $user);
         $demand = FeeDemand::create([
             'student_id' => $adj->student_id, 'student_name' => $adj->student_name, 'year_id' => (string) $next->getKey(), 'section_id' => null, 'section_label' => null,
-            'plan_id' => 'carry_forward', 'instalment_key' => 'carry:'.$adj->year_id, 'label' => 'Carried forward from '.$from->name, 'due_on' => $next->starts_on,
+            'plan_id' => 'carry_forward', 'instalment_key' => 'carry:'.$adj->year_id.':'.$adj->getKey(), 'label' => 'Carried forward from '.$from->name, 'due_on' => $next->starts_on,
             'lines' => [['head_id' => 'carry_forward', 'head' => 'Carried forward', 'amount_paise' => $adj->amount_paise]], 'total_paise' => $adj->amount_paise,
             'fine_rule' => ['mode' => 'none', 'amount_paise' => 0, 'grace_days' => 0, 'cap_paise' => null],
         ]);

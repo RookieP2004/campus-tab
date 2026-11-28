@@ -55,9 +55,13 @@ export interface Guardian {
 }
 
 export interface Consent {
+  /** True only when the parent said yes from their own account (Phase 9). */
   given: boolean;
   at: string | null;
   recorded_by: string | null;
+  by_parent?: boolean;
+  /** An office tick from before Phase 9, waiting for the parent's own answer. */
+  needs_parent?: boolean;
 }
 
 export interface StudentProfile extends StudentRow {

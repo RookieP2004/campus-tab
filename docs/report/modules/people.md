@@ -8,7 +8,7 @@ Students, guardians, enrolments, staff and consents, plus Excel import.
 
 - **Admission** checks the licence's student seats (and staff accounts check the staff seats; parents never count) and refuses past them with a clear message. It also blocks a likely duplicate (same name, date of birth and guardian phone) unless the person confirms it is a different child.
 - **Siblings share a guardian.** A guardian with the same phone is reused. Turning on that guardian's **parent login** gives one Parent account for all their children; parents sign in with an SMS code.
-- **PEN and APAAR** are optional and kept only with a recorded guardian consent.
+- **PEN and APAAR** are optional and kept only after a parent consents **from their own Campus TAB account** (Phase 9, decision 0017). The office cannot record a consent, an admission or an Excel import never brings them in, and a parent saying no removes the number. See [privacy.md](privacy.md).
 - **Full Aadhaar numbers are never stored.** Any request whose body holds one, in any field, is refused; only the last four digits may be kept.
 - **Clerk drafts.** A Clerk can draft a new staff member for the Principal. The account is made only when the Principal approves.
 - **Student sign-in** is a school setting, off by default. When it is on, the class teacher prints one-time setup codes (48 hours) and each student signs in with a login name.
@@ -209,3 +209,4 @@ The full matrix is in [permissions.md](../permissions.md). For schools created e
 | 2026-11-27 | 2 | Seats moved to `Licensing\Domain\Seats` with a staff limit; the staff import report shows the staff seat check first | The owner's seat rule |
 | 2026-11-27 | Session 2 | Sensitive custom values are sealed on write and masked in `row()`; `GET /students/{id}` adds `sensitive_values` (`StudentRecords::revealed()`) for those who may fill the field. Demo school: the Clerk is also the Attendance Officer, with one approved and one pending holiday | Encryption of sensitive fields ([customisation.md](customisation.md)); Phase 4 demo data |
 | 2026-11-28 | 7–8 | `Families::users()` (guardian and student accounts of students) for card and fee notifications. The full-Aadhaar guard skips record ids (24-hex ids, ULIDs) | A random id sometimes held a 12-digit run passing the checksum, refusing requests at random |
+| 2026-11-28 | 9 | Consent counts only when the parent gives it from their own account (`method: parent_account`); the office cannot record one (`consent_parent_only`); PEN/APAAR only after it (also not by import); old office ticks show `needs_parent`; import and dry-run reports carry the export watermark | Owner's DPDP rule (decision 0017) |
