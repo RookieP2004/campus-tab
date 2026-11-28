@@ -1,6 +1,12 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach, beforeEach, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, vi } from 'vitest';
+import { i18nReady } from '@/i18n';
+
+// English loads lazily in the app; tests wait for it once before any test runs.
+beforeAll(async () => {
+  await i18nReady;
+});
 
 /**
  * jsdom has no matchMedia; tests flip `prefersDark` to simulate the device,

@@ -72,11 +72,13 @@ The thirteen business modules from the blueprint each have a page in [modules/](
 | Communication | [`backend/app/Modules/Communication/`](../../backend/app/Modules/Communication/) | 13 | [modules/communication.md](modules/communication.md) |
 | Customisation | [`backend/app/Modules/Customisation/`](../../backend/app/Modules/Customisation/) | 6 | [modules/customisation.md](modules/customisation.md) |
 | Dashboard | [`backend/app/Modules/Dashboard/`](../../backend/app/Modules/Dashboard/) | 2 | [modules/dashboard.md](modules/dashboard.md) |
+| Fees | [`backend/app/Modules/Fees/`](../../backend/app/Modules/Fees/) | 41 | [modules/fees.md](modules/fees.md) |
 | Identity | [`backend/app/Modules/Identity/`](../../backend/app/Modules/Identity/) | 33 | [modules/identity-and-access.md](modules/identity-and-access.md) |
 | Leave | [`backend/app/Modules/Leave/`](../../backend/app/Modules/Leave/) | 27 | [modules/leave.md](modules/leave.md) |
 | Licensing | [`backend/app/Modules/Licensing/`](../../backend/app/Modules/Licensing/) | 2 | [modules/licensing.md](modules/licensing.md) |
 | People | [`backend/app/Modules/People/`](../../backend/app/Modules/People/) | 23 | [modules/people.md](modules/people.md) |
 | Platform | [`backend/app/Modules/Platform/`](../../backend/app/Modules/Platform/) | 26 | [modules/platform.md](modules/platform.md) |
+| Reports | [`backend/app/Modules/Reports/`](../../backend/app/Modules/Reports/) | 22 | [modules/reports.md](modules/reports.md) |
 | System | [`backend/app/Modules/System/`](../../backend/app/Modules/System/) | 1 | [modules/system.md](modules/system.md) |
 | Tenancy | [`backend/app/Modules/Tenancy/`](../../backend/app/Modules/Tenancy/) | 7 | [modules/tenancy.md](modules/tenancy.md) |
 

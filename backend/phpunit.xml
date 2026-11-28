@@ -43,6 +43,9 @@
         <server name="PUSH_DRIVER" value="array" force="true"/>
         <env name="SMS_DRIVER" value="array" force="true"/>
         <server name="SMS_DRIVER" value="array" force="true"/>
+        <!-- Report card PDFs: a fake renderer in tests (no Gotenberg container). -->
+        <env name="REPORTS_PDF_DRIVER" value="fake" force="true"/>
+        <server name="REPORTS_PDF_DRIVER" value="fake" force="true"/>
         <!-- Any school-data query without tenant_id fails the test (Tests\TestCase). -->
         <env name="TENANCY_QUERY_GUARD" value="record" force="true"/>
         <server name="TENANCY_QUERY_GUARD" value="record" force="true"/>

@@ -21,7 +21,7 @@ function changedFiles() {
 }
 
 /** Module folders whose report page has a longer name. */
-const PAGE_ALIASES = { Identity: 'identity-and-access' };
+const PAGE_ALIASES = { Identity: 'identity-and-access', Support: 'system' };
 
 /** "AcademicStructure" -> "academic-structure" */
 function kebab(name) {

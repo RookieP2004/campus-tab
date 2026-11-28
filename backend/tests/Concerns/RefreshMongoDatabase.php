@@ -20,7 +20,9 @@ use RuntimeException;
  *      created. This is much faster than rebuilding every index each time.
  *
  * In a parallel run (`composer test` uses `pest --parallel`) each process
- * has its own database, campus_tab_<n>_test; see Tests\TestCase.
+ * of each run has its own database, campus_tab_<n>_<run>_test (see
+ * Tests\TestCase); it is dropped when the process ends, and the first
+ * migrate also drops the databases of runs that are no longer alive.
  *
  * Use it in a test file with:  uses(RefreshMongoDatabase::class);
  * Laravel calls setUpRefreshMongoDatabase() automatically for any trait.
@@ -50,6 +52,16 @@ trait RefreshMongoDatabase
 
         if (! isset(self::$migratedCollections[$name])) {
             $database->drop();
+            if (preg_match('/^(.+)_\d+_(\d+)_test$/', $name, $m) === 1) {
+                self::dropDeadRuns($connection, $m[1]);
+                register_shutdown_function(static function () use ($database): void {
+                    try {
+                        $database->drop();
+                    } catch (\Throwable) {
+                        // The server may already be gone; the next run cleans up.
+                    }
+                });
+            }
             $this->app[Kernel::class]->call('migrate', ['--force' => true]);
 
             $collections = [];
@@ -72,6 +84,19 @@ trait RefreshMongoDatabase
                 $database->selectCollection($collection)->deleteMany([]);
             } else {
                 $database->dropCollection($collection);
+            }
+        }
+    }
+
+    /** Drops campus_tab_<n>_<run>_test databases whose run (a pid) has ended. */
+    private static function dropDeadRuns(MongoConnection $connection, string $prefix): void
+    {
+        if (! is_dir('/proc')) {
+            return;
+        }
+        foreach ($connection->getClient()->listDatabaseNames() as $db) {
+            if (preg_match('/^'.preg_quote($prefix, '/').'_\d+_(\d+)_test$/', $db, $m) === 1 && ! is_dir('/proc/'.$m[1])) {
+                $connection->getClient()->dropDatabase($db);
             }
         }
     }

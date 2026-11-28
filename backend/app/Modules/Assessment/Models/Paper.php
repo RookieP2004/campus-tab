@@ -20,7 +20,8 @@ use Illuminate\Support\Carbon;
  * send If-Match with it, so two people editing at once get a conflict
  * instead of an overwrite.
  *
- *   marks[]  {student_id, value: float|null, code: AB|ML|null, remark: string|null}
+ *   marks[]  {student_id, value: float|null, code: AB|ML|null, remark: string|null,
+ *             updated_at?: ISO 8601, set when the mark changed after publishing}
  *
  * @property string $assessment_id
  * @property string $year_id

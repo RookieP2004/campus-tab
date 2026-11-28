@@ -1,15 +1,16 @@
 import i18n from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { initReactI18next } from 'react-i18next';
-import en from '@/locales/en/common.json';
 import { DEFAULT_LANGUAGE, findLanguage } from './languages';
 
 /**
- * i18next setup. English is bundled so the first screen never waits; every
- * other language is a separate chunk loaded on first use, so shipping all
- * regional languages does not grow the first download.
+ * i18next setup. Every language, English included, is its own chunk loaded
+ * on demand: the app waits for the person's language (and English, the
+ * fallback) before the first render, so the main bundle does not grow as
+ * each phase adds strings, and a Hindi reader never downloads English text
+ * they do not need beyond the fallback.
  */
-const lazyLocales = import.meta.glob<{ default: Record<string, unknown> }>(['../locales/*/*.json', '!../locales/en/*.json']);
+const lazyLocales = import.meta.glob<{ default: Record<string, unknown> }>('../locales/*/*.json');
 
 export const i18nReady = i18n
   .use(initReactI18next)
@@ -26,8 +27,6 @@ export const i18nReady = i18n
     supportedLngs: false,
     ns: ['common'],
     defaultNS: 'common',
-    resources: { en: { common: en } },
-    partialBundledLanguages: true,
     interpolation: { escapeValue: false },
     returnNull: false,
   });

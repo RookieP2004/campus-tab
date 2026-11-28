@@ -65,3 +65,5 @@ Staff drafts still appear on the dashboard's approvals card, not in this inbox.
 | --- | --- | --- | --- |
 | 2026-11-27 | 5 | Module created with the leave source | "Shared approvals inbox" in Phase 5 |
 | 2026-11-27 | 6 | Mark corrections source and panel; a tab with nothing left falls back to All | Phase 6 corrections |
+| 2026-11-28 | 8 | `FeeApprovals`: adjustments, receipt cancellations and day-end closings in the inbox, never one's own; item ids may hold a colon (`fees:adjustment:<id>`) | Phase 8 |
+| 2026-11-28 | 8 (review) | The menu entry needs an approvals ability exactly (a fee collector's `fees.receipt_cancel_request` no longer shows it) | A collector saw Approvals and got "not allowed" |

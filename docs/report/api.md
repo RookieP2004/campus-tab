@@ -101,9 +101,47 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | POST | `/api/v1/custom-fields/{id}/archive` | custom-fields.archive | `CustomFieldController` | api, school, permission:custom_fields.manage,custom_fields.clerical |
 | POST | `/api/v1/custom-fields/{id}/promote` | custom-fields.promote | `CustomFieldController` | api, school, permission:custom_fields.manage |
 | POST | `/api/v1/custom-fields/{id}/restore` | custom-fields.restore | `CustomFieldController` | api, school, permission:custom_fields.manage,custom_fields.clerical |
+| GET | `/api/v1/fees/adjustments` | fees.adjustments.index | `AdjustmentController` | api, school, module:fees, permission:fees.adjust_propose,fees.adjust_approve,fees.adjust |
+| POST | `/api/v1/fees/adjustments` | fees.adjustments.store | `AdjustmentController` | api, school, module:fees, permission:fees.adjust_propose,fees.adjust, idempotent |
+| GET | `/api/v1/fees/adjustments/{id}` | fees.adjustments.show | `AdjustmentController` | api, school, module:fees, permission:fees.adjust_propose,fees.adjust_approve,fees.adjust |
+| POST | `/api/v1/fees/adjustments/{id}/approve` | fees.adjustments.approve | `AdjustmentController` | api, school, module:fees, permission:fees.adjust_approve,fees.adjust, step-up:fees_adjust_approve, idempotent |
+| POST | `/api/v1/fees/adjustments/{id}/reject` | fees.adjustments.reject | `AdjustmentController` | api, school, module:fees, permission:fees.adjust_approve,fees.adjust, idempotent |
+| GET | `/api/v1/fees/cancellations/{id}` | fees.cancellations.show | `AdjustmentController` | api, school, module:fees, permission:fees.receipt_cancel_request,fees.receipt_cancel_propose,fees.receipt_cancel_approve,fees.receipt_cancel |
+| POST | `/api/v1/fees/cancellations/{id}/approve` | fees.cancellations.approve | `AdjustmentController` | api, school, module:fees, permission:fees.receipt_cancel_approve,fees.receipt_cancel, step-up:receipt_cancel_approve, idempotent |
+| POST | `/api/v1/fees/cancellations/{id}/forward` | fees.cancellations.forward | `AdjustmentController` | api, school, module:fees, permission:fees.receipt_cancel_propose,fees.receipt_cancel, idempotent |
+| POST | `/api/v1/fees/cancellations/{id}/reject` | fees.cancellations.reject | `AdjustmentController` | api, school, module:fees, permission:fees.receipt_cancel_propose,fees.receipt_cancel_approve,fees.receipt_cancel, idempotent |
+| GET | `/api/v1/fees/categories` | fees.categories.index | `FeeSetupController` | api, school, module:fees, permission:fees.setup |
+| POST | `/api/v1/fees/categories` | fees.categories.store | `FeeSetupController` | api, school, module:fees, permission:fees.setup, idempotent |
+| POST | `/api/v1/fees/checkout` | fees.checkout | `OnlinePaymentController` | api, school, module:fees, permission:fees.pay_online, idempotent |
+| GET | `/api/v1/fees/checkout/{id}` | fees.checkout.show | `OnlinePaymentController` | api, school, module:fees, permission:fees.pay_online |
+| POST | `/api/v1/fees/checkout/{id}/fake` | fees.checkout.fake | `OnlinePaymentController` | api, school, module:fees, permission:fees.pay_online, idempotent |
+| GET | `/api/v1/fees/closings` | fees.closings.index | `CounterController` | api, school, module:fees, permission:fees.collect,fees.closing_confirm |
+| POST | `/api/v1/fees/closings` | fees.closings.store | `CounterController` | api, school, module:fees, permission:fees.collect, idempotent |
+| GET | `/api/v1/fees/closings/{id}` | fees.closings.show | `CounterController` | api, school, module:fees, permission:fees.collect,fees.closing_confirm |
+| POST | `/api/v1/fees/closings/{id}/confirm` | fees.closings.confirm | `CounterController` | api, school, module:fees, permission:fees.closing_confirm, idempotent |
+| POST | `/api/v1/fees/demands/raise` | fees.demands.raise | `FeeSetupController` | api, school, module:fees, permission:fees.setup, idempotent |
+| GET | `/api/v1/fees/gateway` | fees.gateway.show | `OnlinePaymentController` | api, school, module:fees, permission:fees.gateway_view,fees.gateway_edit |
+| PUT | `/api/v1/fees/gateway` | fees.gateway.update | `OnlinePaymentController` | api, school, module:fees, permission:fees.gateway_edit |
+| GET | `/api/v1/fees/heads` | fees.heads.index | `FeeSetupController` | api, school, module:fees, permission:fees.setup |
+| POST | `/api/v1/fees/heads` | fees.heads.store | `FeeSetupController` | api, school, module:fees, permission:fees.setup, idempotent |
+| PATCH | `/api/v1/fees/heads/{id}` | fees.heads.update | `FeeSetupController` | api, school, module:fees, permission:fees.setup |
+| POST | `/api/v1/fees/payments` | fees.payments.store | `CounterController` | api, school, module:fees, permission:fees.collect, idempotent |
+| POST | `/api/v1/fees/payments/{id}/bounce` | fees.payments.bounce | `CounterController` | api, school, module:fees, permission:fees.collect, idempotent |
+| POST | `/api/v1/fees/payments/{id}/clear` | fees.payments.clear | `CounterController` | api, school, module:fees, permission:fees.collect, idempotent |
+| GET | `/api/v1/fees/plans` | fees.plans.index | `FeeSetupController` | api, school, module:fees, permission:fees.setup |
+| POST | `/api/v1/fees/plans` | fees.plans.store | `FeeSetupController` | api, school, module:fees, permission:fees.setup, idempotent |
+| PUT | `/api/v1/fees/plans/{id}` | fees.plans.update | `FeeSetupController` | api, school, module:fees, permission:fees.setup |
+| GET | `/api/v1/fees/reconciliations` | fees.reconciliations | `OnlinePaymentController` | api, school, module:fees, permission:fees.dues_view,fees.collect,fees.setup |
+| GET | `/api/v1/fees/reports/{type}` | fees.reports.show | `FeeReportController` | api, school, module:fees, permission:fees.reports |
+| GET | `/api/v1/fees/reports/{type}/export` | fees.reports.export | `FeeReportController` | api, school, module:fees, permission:fees.reports, step-up:export |
+| GET | `/api/v1/fees/sections/{id}/status` | fees.sections.status | `StudentFeesController` | api, school, module:fees, permission:fees.dues_view |
+| GET | `/api/v1/fees/students` | fees.students.search | `StudentFeesController` | api, school, module:fees, permission:fees.dues_view |
+| GET | `/api/v1/fees/students/{id}/setup` | fees.students.setup | `FeeSetupController` | api, school, module:fees, permission:fees.setup |
+| PUT | `/api/v1/fees/students/{id}/setup` | fees.students.setup.update | `FeeSetupController` | api, school, module:fees, permission:fees.setup |
 | GET | `/api/v1/files/attendance/{tenant}/{day}` | files.attendance-photo | `AttendanceController` | api, signed:relative, throttle:public |
 | GET | `/api/v1/files/leave/{tenant}/{request}/{doc}` | files.leave-document | `LeaveRequestController` | api, signed:relative, throttle:public |
 | GET | `/api/v1/files/notices/{tenant}/{notice}/{attachment}` | files.notice-attachment | `NoticeController` | api, signed:relative, throttle:public |
+| GET | `/api/v1/files/report-cards/{tenant}/{card}` | files.report-card | `ReportCardController` | api, signed:relative, throttle:public |
 | PATCH | `/api/v1/guardians/{id}` | guardians.update | `StudentController` | api, school, permission:guardians.manage |
 | DELETE | `/api/v1/guardians/{id}/parent-login` | guardians.parent-login.destroy | `StudentController` | api, school, permission:guardians.manage |
 | POST | `/api/v1/guardians/{id}/parent-login` | guardians.parent-login.store | `StudentController` | api, school, permission:guardians.manage |
@@ -201,11 +239,34 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | POST | `/api/v1/platform/schools/{code}/payments` | platform.schools.payments.store | `ConsoleSchoolController` | api, console |
 | POST | `/api/v1/platform/schools/{code}/stats/refresh` | platform.schools.stats.refresh | `ConsoleSchoolController` | api, console |
 | POST | `/api/v1/platform/support/sessions` | platform.support.sessions | `PlatformSupportController` | api, auth:platform, throttle:activation |
+| POST | `/api/v1/promotions/apply` | promotions.apply | `PromotionController` | api, school, module:reports, permission:year.promote, idempotent |
+| POST | `/api/v1/promotions/preview` | promotions.preview | `PromotionController` | api, school, module:reports, permission:year.promote |
 | GET | `/api/v1/public/tenants/{code}/config` | public.tenants.config | `PublicConfigController` | api, throttle:public |
 | GET | `/api/v1/public/tenants/{code}/logo` | public.tenants.logo | `SchoolLogoController` | api, throttle:public |
+| GET | `/api/v1/public/verify/{school}/{code}` | public.verify | `VerificationController` | api, throttle:verify |
+| GET | `/api/v1/receipts/{id}` | receipts.show | `StudentFeesController` | api, school, module:fees, permission:fees.dues_view |
+| POST | `/api/v1/receipts/{id}/cancel` | receipts.cancel | `AdjustmentController` | api, school, module:fees, permission:fees.receipt_cancel_request,fees.receipt_cancel_propose,fees.receipt_cancel, idempotent |
 | GET | `/api/v1/recycle-bin` | recycle-bin.index | `RecycleBinController` | api, school, permission:records.restore |
 | DELETE | `/api/v1/recycle-bin/{type}/{id}` | recycle-bin.purge | `RecycleBinController` | api, school, permission:records.purge, step-up:permanent_delete |
 | POST | `/api/v1/recycle-bin/{type}/{id}/restore` | recycle-bin.restore | `RecycleBinController` | api, school, permission:records.restore |
+| GET | `/api/v1/report-cards/mine` | report-cards.mine | `ReportCardController` | api, school, module:reports, permission:results.view |
+| GET | `/api/v1/report-cards/runs/{id}` | report-cards.runs.show | `ReportCardController` | api, school, module:reports, permission:results.publish,remarks.edit |
+| GET | `/api/v1/report-cards/sections` | report-cards.sections | `ReportCardController` | api, school, module:reports, permission:results.publish,remarks.edit |
+| GET | `/api/v1/report-cards/sections/{id}` | report-cards.section | `ReportCardController` | api, school, module:reports, permission:results.publish,remarks.edit |
+| POST | `/api/v1/report-cards/sections/{id}/generate` | report-cards.generate | `ReportCardController` | api, school, module:reports, permission:results.publish, idempotent |
+| POST | `/api/v1/report-cards/sections/{id}/publish` | report-cards.publish | `ReportCardController` | api, school, module:reports, permission:results.publish, idempotent |
+| GET | `/api/v1/report-cards/students/{id}` | report-cards.student | `ReportCardController` | api, school, module:reports, permission:results.publish,remarks.edit,results.view |
+| GET | `/api/v1/report-cards/{id}` | report-cards.show | `ReportCardController` | api, school, module:reports, permission:results.publish,remarks.edit,results.view |
+| POST | `/api/v1/report-cards/{id}/link` | report-cards.link | `ReportCardController` | api, school, module:reports, permission:results.publish,remarks.edit,results.view |
+| POST | `/api/v1/report-cards/{id}/reissue` | report-cards.reissue | `ReportCardController` | api, school, module:reports, permission:report_cards.reissue, idempotent |
+| PUT | `/api/v1/report-cards/{id}/remarks` | report-cards.remarks | `ReportCardController` | api, school, module:reports, permission:results.publish,remarks.edit, permission:remarks.edit |
+| POST | `/api/v1/report-cards/{id}/review` | report-cards.review | `ReportCardController` | api, school, module:reports, permission:results.publish, idempotent |
+| GET | `/api/v1/report-templates` | report-templates.index | `TemplateController` | api, school, module:reports, permission:report_templates.manage,results.publish |
+| POST | `/api/v1/report-templates` | report-templates.store | `TemplateController` | api, school, module:reports, permission:report_templates.manage, idempotent |
+| GET | `/api/v1/report-templates/presets` | report-templates.presets | `TemplateController` | api, school, module:reports, permission:report_templates.manage |
+| PUT | `/api/v1/report-templates/{id}` | report-templates.update | `TemplateController` | api, school, module:reports, permission:report_templates.manage |
+| DELETE | `/api/v1/report-templates/{id}/letterhead` | report-templates.letterhead.destroy | `TemplateController` | api, school, module:reports, permission:report_templates.manage |
+| POST | `/api/v1/report-templates/{id}/letterhead` | report-templates.letterhead | `TemplateController` | api, school, module:reports, permission:report_templates.manage |
 | GET | `/api/v1/results/mine` | results.mine | `AssessmentController` | api, school, module:assessment, permission:results.view |
 | GET | `/api/v1/results/students/{id}` | results.student | `AssessmentController` | api, school, module:assessment, permission:results.view |
 | GET | `/api/v1/roles` | roles.index | `RoleController` | api, school, permission:roles.view |
@@ -228,6 +289,7 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | DELETE | `/api/v1/students/{id}` | students.destroy | `StudentController` | api, school, permission:students.admit |
 | GET | `/api/v1/students/{id}` | students.show | `StudentController` | api, school, permission:students.view |
 | PATCH | `/api/v1/students/{id}` | students.update | `StudentController` | api, school, permission:students.edit |
+| GET | `/api/v1/students/{id}/fees` | students.fees | `StudentFeesController` | api, school, module:fees, permission:fees.dues_view |
 | POST | `/api/v1/students/{id}/guardians` | students.guardians.store | `StudentController` | api, school, permission:guardians.manage |
 | GET | `/api/v1/subjects` | subjects.index | `StructureController` | api, school, permission:academic.view |
 | POST | `/api/v1/subjects` | subjects.store | `StructureController` | api, school, permission:academic.manage |
@@ -247,5 +309,6 @@ Only routes under `/api` are listed. Horizon's dashboard (`/horizon`, local only
 | POST | `/api/v1/users/{id}/password-link` | users.password-link | `UserController` | api, school, permission:users.send_password_link |
 | PUT | `/api/v1/users/{id}/roles` | users.roles | `UserController` | api, school, permission:users.edit_roles, step-up:role_edit |
 | POST | `/api/v1/users/{id}/unlock` | users.unlock | `UserController` | api, school, permission:users.unlock |
+| POST | `/api/v1/webhooks/payments/{gateway}` | webhooks.payments | `OnlinePaymentController` | api, throttle:webhooks |
 
 <!-- generated:routes:end -->

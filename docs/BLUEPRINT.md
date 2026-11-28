@@ -50,7 +50,7 @@ Indian leaders win on board compliance, fee collection and WhatsApp reach to par
 **Patterns we adopt**
 
 - Approval chains per leave type with stages that can be switched on or off — the same idea as [Odoo's school leave app](https://apps.odoo.com/apps/modules/16.0/do_school_leave), which toggles class teacher, coordinator and principal stages.
-- Offline-capable attendance and marks entry: only [67.4% of Indian schools had internet in 2025-26](https://www.freepressjournal.in/education/udise-2025-26-2472-crore-students-103-crore-teachers-1-in-3-schools-still-without-internet).
+- Plan for poor internet: only [67.4% of Indian schools had internet in 2025-26](https://www.freepressjournal.in/education/udise-2025-26-2472-crore-students-103-crore-teachers-1-in-3-schools-still-without-internet). Campus TAB stays online-only, with a paper fallback that the teacher enters later.
 - Buyers check board support, UDISE+ and NEP fit, fees, WhatsApp parent access and clear pricing first ([buyer checklist](https://schoolites.com/compare/top-10-school-management-software-india)).
 - UPI fee payments carry zero MDR by RBI rule, so online fees cost schools little ([source](https://schoolites.com/school-fee-payment-gateway)).
 

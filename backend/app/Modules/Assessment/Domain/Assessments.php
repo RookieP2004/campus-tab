@@ -218,6 +218,8 @@ class Assessments
                 'max_marks' => $p->max_marks,
                 'value' => isset($mark['value']) ? (float) $mark['value'] : null,
                 'code' => $mark['code'] ?? null,
+                // Set when the mark changed after families could see it.
+                'updated_at' => $mark['updated_at'] ?? null,
                 'date' => $p->date ?? $assessment?->from,
                 'published_at' => $p->published_at?->toIso8601String(),
             ];

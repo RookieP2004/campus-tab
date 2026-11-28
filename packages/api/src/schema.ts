@@ -950,6 +950,491 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/fees/adjustments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.adjustments.index"];
+        put?: never;
+        post: operations["fees.adjustments.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/adjustments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.adjustments.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/adjustments/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.adjustments.approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/adjustments/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.adjustments.reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/cancellations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.cancellations.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/cancellations/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.cancellations.approve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/cancellations/{id}/forward": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.cancellations.forward"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/cancellations/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.cancellations.reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.categories.index"];
+        put?: never;
+        post: operations["fees.categories.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.checkout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/checkout/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.checkout.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/checkout/{id}/fake": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.checkout.fake"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/closings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.closings.index"];
+        put?: never;
+        post: operations["fees.closings.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/closings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.closings.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/closings/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.closings.confirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/demands/raise": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.demands.raise"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/gateway": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.gateway.show"];
+        put: operations["fees.gateway.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/heads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.heads.index"];
+        put?: never;
+        post: operations["fees.heads.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/heads/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["fees.heads.update"];
+        trace?: never;
+    };
+    "/fees/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.payments.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/payments/{id}/bounce": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.payments.bounce"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/payments/{id}/clear": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["fees.payments.clear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.plans.index"];
+        put?: never;
+        post: operations["fees.plans.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/plans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Changes only instalments not raised yet; raised dues stay as they are */
+        put: operations["fees.plans.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/reconciliations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.reconciliations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/reports/{type}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.reports.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/reports/{type}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.reports.export"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/sections/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.sections.status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/students": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /fees/students?q= — the counter's student search (name or
+         *     admission number): the Fee Collector duty has no other student access
+         */
+        get: operations["fees.students.search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fees/students/{id}/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fees.students.setup"];
+        put: operations["fees.students.setup.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/files/attendance/{tenant}/{day}": {
         parameters: {
             query?: never;
@@ -993,6 +1478,23 @@ export interface paths {
         };
         /** Served only through a signed link (middleware "signed"); the link was issued after a permission check */
         get: operations["files.notice-attachment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/files/report-cards/{tenant}/{card}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The PDF, only through the signed, short-lived link above */
+        get: operations["files.report-card"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2414,6 +2916,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/promotions/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["promotions.apply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/promotions/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["promotions.preview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/public/tenants/{code}/config": {
         parameters: {
             query?: never;
@@ -2440,6 +2974,54 @@ export interface paths {
         get: operations["public.tenants.logo"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/verify/{school}/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["public.verify"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/receipts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["receipts.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/receipts/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["receipts.cancel"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2488,6 +3070,263 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["recycle-bin.restore"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report-cards.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/{id}/link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["report-cards.link"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/{id}/reissue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["report-cards.reissue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/{id}/remarks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["report-cards.remarks"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/{id}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["report-cards.review"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A signed-in student's own published cards */
+        get: operations["report-cards.mine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/runs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report-cards.runs.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/sections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report-cards.sections"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/sections/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report-cards.section"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/sections/{id}/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["report-cards.generate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/sections/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["report-cards.publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-cards/students/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report-cards.student"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report-templates.index"];
+        put?: never;
+        post: operations["report-templates.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-templates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["report-templates.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-templates/{id}/letterhead": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["report-templates.letterhead"];
+        delete: operations["report-templates.letterhead.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/report-templates/presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["report-templates.presets"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2717,6 +3556,22 @@ export interface paths {
         options?: never;
         head?: never;
         patch: operations["students.update"];
+        trace?: never;
+    };
+    "/students/{id}/fees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["students.fees"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/students/{id}/guardians": {
@@ -2953,6 +3808,23 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["users.unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/webhooks/payments/{gateway}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** The gateway's callback: the raw body as sent, never re-encoded */
+        post: operations["webhooks.payments"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3283,7 +4155,7 @@ export interface operations {
                         grace_marks?: number;
                         pass_percent?: number;
                         /** @enum {string} */
-                        rounding?: "half_up" | "up" | "down" | "none";
+                        rounding?: "half_up" | "half_even" | "up" | "down" | "none";
                     };
                     /** @enum {string} */
                     status?: "draft" | "active";
@@ -6169,6 +7041,1556 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "fees.adjustments.index": {
+        parameters: {
+            query?: {
+                status?: "proposed" | "approved" | "rejected" | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            amount_paise: number;
+                            at: string | null;
+                            decided_at: string | null;
+                            decided_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            decision_reason: string | null;
+                            demand_id: string | null;
+                            id: string;
+                            kind: string;
+                            percent_bp: number | null;
+                            proposed_by: {
+                                id: string;
+                                name: string;
+                            };
+                            reason: string;
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.adjustments.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    amount?: string | null;
+                    demand_id?: string | null;
+                    /** @enum {string} */
+                    kind: "rebate" | "waiver" | "fine_waiver" | "refund" | "scholarship" | "carry_forward";
+                    percent?: string | null;
+                    reason: string;
+                    student_id: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.adjustments.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "fees.adjustments.approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    reason?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.adjustments.reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.cancellations.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            amount_paise: number;
+                            at: string | null;
+                            can: {
+                                approve: boolean;
+                                forward: boolean;
+                                reject: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            decision_reason: string | null;
+                            id: string;
+                            own: boolean;
+                            proposed_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            reason: string;
+                            receipt_id: string;
+                            receipt_no: string;
+                            requested_by: {
+                                id: string;
+                                name: string;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "fees.cancellations.approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            amount_paise: number;
+                            at: string | null;
+                            can: {
+                                approve: boolean;
+                                forward: boolean;
+                                reject: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            decision_reason: string | null;
+                            id: string;
+                            own: boolean;
+                            proposed_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            reason: string;
+                            receipt_id: string;
+                            receipt_no: string;
+                            requested_by: {
+                                id: string;
+                                name: string;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.cancellations.forward": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            amount_paise: number;
+                            at: string | null;
+                            can: {
+                                approve: boolean;
+                                forward: boolean;
+                                reject: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            decision_reason: string | null;
+                            id: string;
+                            own: boolean;
+                            proposed_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            reason: string;
+                            receipt_id: string;
+                            receipt_no: string;
+                            requested_by: {
+                                id: string;
+                                name: string;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "fees.cancellations.reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            amount_paise: number;
+                            at: string | null;
+                            can: {
+                                approve: boolean;
+                                forward: boolean;
+                                reject: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            decision_reason: string | null;
+                            id: string;
+                            own: boolean;
+                            proposed_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            reason: string;
+                            receipt_id: string;
+                            receipt_no: string;
+                            requested_by: {
+                                id: string;
+                                name: string;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.categories.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            id: string;
+                            name: string;
+                            status: string;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.categories.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            id: string;
+                            name: string;
+                            status: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    demand_ids?: string[];
+                    student_id: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.checkout.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            amount_paise: number;
+                            id: string;
+                            receipt_no: string | null;
+                            status: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "fees.checkout.fake": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    outcome: "paid" | "failed";
+                };
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            queued: boolean;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.closings.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            mine: {
+                                cash_paise: number;
+                                collector: {
+                                    id: string;
+                                    name: string;
+                                };
+                                confirmed_at: string | null;
+                                confirmed_by: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                count: number;
+                                counted_cash_paise: number | null;
+                                date: string;
+                                id: string;
+                                note: string | null;
+                                status: string;
+                                total_paise: number;
+                                totals: string;
+                            }[];
+                            open: {
+                                count: number;
+                                payments: {
+                                    allocations: {
+                                        amount_paise: number;
+                                        demand_id: string;
+                                        head: string;
+                                        head_id: string;
+                                        label: string;
+                                    }[];
+                                    amount_paise: number;
+                                    bank: string | null;
+                                    collector: {
+                                        id: string;
+                                        name: string;
+                                    } | null;
+                                    id: string;
+                                    mode: string;
+                                    outcome: {
+                                        [key: string]: unknown;
+                                    } | null;
+                                    receipt_id: string | null;
+                                    receipt_no: string | null;
+                                    received_on: string;
+                                    reference: string | null;
+                                    status: string;
+                                    student_id: string;
+                                }[];
+                                total_paise: number;
+                                totals: string;
+                            };
+                            to_confirm: {
+                                cash_paise: number;
+                                collector: {
+                                    id: string;
+                                    name: string;
+                                };
+                                confirmed_at: string | null;
+                                confirmed_by: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                count: number;
+                                counted_cash_paise: number | null;
+                                date: string;
+                                id: string;
+                                note: string | null;
+                                status: string;
+                                total_paise: number;
+                                totals: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "fees.closings.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    note?: string | null;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cash_paise: number;
+                            collector: {
+                                id: string;
+                                name: string;
+                            };
+                            confirmed_at: string | null;
+                            confirmed_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            count: number;
+                            counted_cash_paise: number | null;
+                            date: string;
+                            id: string;
+                            note: string | null;
+                            status: string;
+                            total_paise: number;
+                            totals: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.closings.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "fees.closings.confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    counted_cash: string;
+                    note?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cash_paise: number;
+                            collector: {
+                                id: string;
+                                name: string;
+                            };
+                            confirmed_at: string | null;
+                            confirmed_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            count: number;
+                            counted_cash_paise: number | null;
+                            date: string;
+                            id: string;
+                            note: string | null;
+                            status: string;
+                            total_paise: number;
+                            totals: string;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.demands.raise": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    student_id?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            raised: number;
+                            skipped_no_plan: number;
+                            students: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.gateway.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.gateway.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    key_id: string;
+                    key_secret?: string | null;
+                    /** @enum {string} */
+                    provider: "razorpay" | "fake";
+                    /** @enum {string} */
+                    status?: "active" | "off";
+                    webhook_secret?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            configured: boolean;
+                            has_secret: boolean;
+                            has_webhook_secret: boolean;
+                            key_id: string;
+                            provider: string;
+                            status: string;
+                            updated_at: string | null;
+                            updated_by: string | null;
+                        } | {
+                            configured: boolean;
+                            key_id: null;
+                            provider: null;
+                            status: null;
+                            updated_at: null;
+                            updated_by: null;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.heads.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            id: string;
+                            name: string;
+                            status: string;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.heads.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    code?: string | null;
+                    name: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            id: string;
+                            name: string;
+                            status: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.heads.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    /** @enum {string} */
+                    status?: "active" | "archived";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            code: string;
+                            id: string;
+                            name: string;
+                            status: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.payments.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    amount: string;
+                    bank?: string | null;
+                    demand_ids?: string[];
+                    /** @enum {string} */
+                    mode: "cash" | "cheque" | "dd" | "bank_transfer" | "upi_counter";
+                    reference?: string | null;
+                    student_id: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            allocations: {
+                                amount_paise: number;
+                                demand_id: string;
+                                head: string;
+                                head_id: string;
+                                label: string;
+                            }[];
+                            amount_paise: number;
+                            bank: string | null;
+                            collector: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            id: string;
+                            mode: string;
+                            outcome: {
+                                [key: string]: unknown;
+                            } | null;
+                            receipt_id: string | null;
+                            receipt_no: string | null;
+                            received_on: string;
+                            reference: string | null;
+                            status: string;
+                            student_id: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.payments.bounce": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            allocations: {
+                                amount_paise: number;
+                                demand_id: string;
+                                head: string;
+                                head_id: string;
+                                label: string;
+                            }[];
+                            amount_paise: number;
+                            bank: string | null;
+                            collector: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            id: string;
+                            mode: string;
+                            outcome: {
+                                [key: string]: unknown;
+                            } | null;
+                            receipt_id: string | null;
+                            receipt_no: string | null;
+                            received_on: string;
+                            reference: string | null;
+                            status: string;
+                            student_id: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.payments.clear": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            allocations: {
+                                amount_paise: number;
+                                demand_id: string;
+                                head: string;
+                                head_id: string;
+                                label: string;
+                            }[];
+                            amount_paise: number;
+                            bank: string | null;
+                            collector: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            id: string;
+                            mode: string;
+                            outcome: {
+                                [key: string]: unknown;
+                            } | null;
+                            receipt_id: string | null;
+                            receipt_no: string | null;
+                            received_on: string;
+                            reference: string | null;
+                            status: string;
+                            student_id: string;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "fees.plans.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: string[] | {
+                            category_ids: string[];
+                            discounts: {
+                                condition: string;
+                                head_ids: string[];
+                                key: string;
+                                kind: string;
+                                label: string;
+                                value: number;
+                            }[];
+                            fine: {
+                                amount_paise: number;
+                                cap_paise: number | null;
+                                grace_days: number;
+                                mode: string;
+                            };
+                            grades: string[];
+                            id: string;
+                            instalments: {
+                                due_on: string;
+                                key: string;
+                                label: string;
+                                lines: {
+                                    amount_paise: number;
+                                    head_id: string;
+                                }[];
+                            }[];
+                            name: string;
+                            status: string;
+                            total_paise: number;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.plans.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            category_ids: string[];
+                            discounts: {
+                                condition: string;
+                                head_ids: string[];
+                                key: string;
+                                kind: string;
+                                label: string;
+                                value: number;
+                            }[];
+                            fine: {
+                                amount_paise: number;
+                                cap_paise: number | null;
+                                grace_days: number;
+                                mode: string;
+                            };
+                            grades: string[];
+                            id: string;
+                            instalments: {
+                                due_on: string;
+                                key: string;
+                                label: string;
+                                lines: {
+                                    amount_paise: number;
+                                    head_id: string;
+                                }[];
+                            }[];
+                            name: string;
+                            status: string;
+                            total_paise: number;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.plans.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            category_ids: string[];
+                            discounts: {
+                                condition: string;
+                                head_ids: string[];
+                                key: string;
+                                kind: string;
+                                label: string;
+                                value: number;
+                            }[];
+                            fine: {
+                                amount_paise: number;
+                                cap_paise: number | null;
+                                grace_days: number;
+                                mode: string;
+                            };
+                            grades: string[];
+                            id: string;
+                            instalments: {
+                                due_on: string;
+                                key: string;
+                                label: string;
+                                lines: {
+                                    amount_paise: number;
+                                    head_id: string;
+                                }[];
+                            }[];
+                            name: string;
+                            status: string;
+                            total_paise: number;
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "fees.reconciliations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            date: string;
+                            error: string | null;
+                            id: string;
+                            matched: number;
+                            mismatches: {
+                                [key: string]: unknown;
+                            }[];
+                            provider: string;
+                            status: string;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.reports.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                type: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.reports.export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                type: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @example attachment; filename=.xlsx */
+                    "Content-Disposition": string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.sections.status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                            students: {
+                                name: string;
+                                /** @enum {string} */
+                                status: "pending" | "paid";
+                                student_id: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "fees.students.search": {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            admission_no: string;
+                            id: string;
+                            name: string;
+                            section_label: string | null;
+                        }[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "fees.students.setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            category_id: string | null;
+                            joined_on: string | null;
+                            overrides: {
+                                amount_paise: number;
+                                from: string | null;
+                                head_id: string;
+                                to: string | null;
+                            }[];
+                            plan_id: string | null;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "fees.students.setup.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    category_id?: string | null;
+                    /** Format: date */
+                    joined_on?: string | null;
+                    overrides?: {
+                        amount: string;
+                        /** Format: date */
+                        from?: string | null;
+                        head_id: string;
+                        /** Format: date */
+                        to?: string | null;
+                    }[];
+                    plan_id?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            category_id: string | null;
+                            joined_on: string | null;
+                            overrides: {
+                                amount_paise: number;
+                                from: string | null;
+                                head_id: string;
+                                to: string | null;
+                            }[];
+                            plan_id: string | null;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
     "files.attendance-photo": {
         parameters: {
             query?: never;
@@ -6245,6 +8667,40 @@ export interface operations {
             path: {
                 attachment: string;
                 notice: string;
+                tenant: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Error overview. */
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    "files.report-card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                card: string;
                 tenant: string;
             };
             cookie?: never;
@@ -8694,7 +11150,7 @@ export interface operations {
             content: {
                 "application/json": {
                     email?: boolean;
-                    muted?: ("notice" | "attendance.absent" | "leave.updated" | "leave.waiting" | "results.published" | "marks.correction")[];
+                    muted?: ("notice" | "attendance.absent" | "leave.updated" | "leave.waiting" | "results.published" | "marks.correction" | "report_card.published" | "report_card.new_version" | "fees.payment_received" | "fees.waiver_alert" | "fees.reconciliation")[];
                     push?: boolean;
                 };
             };
@@ -11124,6 +13580,48 @@ export interface operations {
             };
         };
     };
+    "promotions.apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+        };
+    };
+    "promotions.preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+        };
+    };
     "public.tenants.config": {
         parameters: {
             query?: never;
@@ -11203,6 +13701,127 @@ export interface operations {
                     };
                 };
             };
+        };
+    };
+    "public.verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+                school: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Error overview. */
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    "receipts.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+        };
+    };
+    "receipts.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            amount_paise: number;
+                            at: string | null;
+                            can: {
+                                approve: boolean;
+                                forward: boolean;
+                                reject: boolean;
+                            };
+                            decided_at: string | null;
+                            decided_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            decision_reason: string | null;
+                            id: string;
+                            own: boolean;
+                            proposed_by: {
+                                id: string;
+                                name: string;
+                            } | null;
+                            reason: string;
+                            receipt_id: string;
+                            receipt_no: string;
+                            requested_by: {
+                                id: string;
+                                name: string;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "recycle-bin.index": {
@@ -11294,6 +13913,875 @@ export interface operations {
             };
         };
     };
+    "report-cards.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            attendance: {
+                                present_halves: number;
+                                working: number;
+                            } | null;
+                            can: {
+                                download: boolean;
+                                reissue: boolean;
+                                remark_class: boolean;
+                                remark_subjects: unknown[];
+                                review: boolean;
+                            };
+                            co_scholastic: {
+                                [key: string]: string;
+                            };
+                            /** @description The areas and grades the class teacher chooses from (only for whoever may set them). */
+                            co_scholastic_options: string | null;
+                            current: boolean;
+                            has_pdf: boolean;
+                            history: {
+                                [key: string]: unknown;
+                            }[];
+                            id: string;
+                            issued_at: string | null;
+                            reissue_reason: string | null;
+                            remarks: string[] | {
+                                subjects: unknown[];
+                            };
+                            replaced_by_id: string | null;
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                            snapshot: {
+                                overall: unknown;
+                            } | {
+                                [key: string]: unknown;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                            version: number;
+                            year: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            url: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.reissue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            at: string | null;
+                            done: number;
+                            error: string | null;
+                            id: string;
+                            kind: string;
+                            status: string;
+                            total: number;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "report-cards.remarks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    class_teacher?: string | null;
+                    co_scholastic?: (string | null)[];
+                    subjects?: (string | null)[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            attendance: {
+                                present_halves: number;
+                                working: number;
+                            } | null;
+                            can: {
+                                download: boolean;
+                                reissue: boolean;
+                                remark_class: boolean;
+                                remark_subjects: unknown[];
+                                review: boolean;
+                            };
+                            co_scholastic: {
+                                [key: string]: string;
+                            };
+                            /** @description The areas and grades the class teacher chooses from (only for whoever may set them). */
+                            co_scholastic_options: string | null;
+                            current: boolean;
+                            has_pdf: boolean;
+                            history: {
+                                [key: string]: unknown;
+                            }[];
+                            id: string;
+                            issued_at: string | null;
+                            reissue_reason: string | null;
+                            remarks: string[] | {
+                                subjects: unknown[];
+                            };
+                            replaced_by_id: string | null;
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                            snapshot: {
+                                overall: unknown;
+                            } | {
+                                [key: string]: unknown;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                            version: number;
+                            year: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "report-cards.review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            attendance: {
+                                present_halves: number;
+                                working: number;
+                            } | null;
+                            can: {
+                                download: boolean;
+                                reissue: boolean;
+                                remark_class: boolean;
+                                remark_subjects: unknown[];
+                                review: boolean;
+                            };
+                            co_scholastic: {
+                                [key: string]: string;
+                            };
+                            /** @description The areas and grades the class teacher chooses from (only for whoever may set them). */
+                            co_scholastic_options: string | null;
+                            current: boolean;
+                            has_pdf: boolean;
+                            history: {
+                                [key: string]: unknown;
+                            }[];
+                            id: string;
+                            issued_at: string | null;
+                            reissue_reason: string | null;
+                            remarks: string[] | {
+                                subjects: unknown[];
+                            };
+                            replaced_by_id: string | null;
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                            snapshot: {
+                                overall: unknown;
+                            } | {
+                                [key: string]: unknown;
+                            };
+                            status: string;
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                            version: number;
+                            year: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cards: {
+                                attendance: {
+                                    present_halves: number;
+                                    working: number;
+                                } | null;
+                                can: {
+                                    download: boolean;
+                                    reissue: boolean;
+                                    remark_class: boolean;
+                                    remark_subjects: unknown[];
+                                    review: boolean;
+                                };
+                                co_scholastic: {
+                                    [key: string]: string;
+                                };
+                                /** @description The areas and grades the class teacher chooses from (only for whoever may set them). */
+                                co_scholastic_options: string | null;
+                                current: boolean;
+                                has_pdf: boolean;
+                                history: {
+                                    [key: string]: unknown;
+                                }[];
+                                id: string;
+                                issued_at: string | null;
+                                reissue_reason: string | null;
+                                remarks: string[] | {
+                                    subjects: unknown[];
+                                };
+                                replaced_by_id: string | null;
+                                section: {
+                                    id: string;
+                                    label: string;
+                                };
+                                snapshot: {
+                                    overall: unknown;
+                                } | {
+                                    [key: string]: unknown;
+                                };
+                                status: string;
+                                student: {
+                                    id: string;
+                                    name: string;
+                                };
+                                version: number;
+                                year: {
+                                    id: string;
+                                    name: string;
+                                };
+                            }[];
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.runs.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            at: string | null;
+                            done: number;
+                            error: string | null;
+                            id: string;
+                            kind: string;
+                            status: string;
+                            total: number;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "report-cards.sections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            counts: string;
+                            id: string;
+                            label: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.section": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            can: {
+                                generate: boolean;
+                                publish: boolean;
+                            };
+                            cards: {
+                                attendance: {
+                                    present_halves: number;
+                                    working: number;
+                                } | null;
+                                can: {
+                                    download: boolean;
+                                    reissue: boolean;
+                                    remark_class: boolean;
+                                    remark_subjects: unknown[];
+                                    review: boolean;
+                                };
+                                co_scholastic: {
+                                    [key: string]: string;
+                                };
+                                /** @description The areas and grades the class teacher chooses from (only for whoever may set them). */
+                                co_scholastic_options: string | null;
+                                current: boolean;
+                                has_pdf: boolean;
+                                history: {
+                                    [key: string]: unknown;
+                                }[];
+                                id: string;
+                                issued_at: string | null;
+                                reissue_reason: string | null;
+                                remarks: string[] | {
+                                    subjects: unknown[];
+                                };
+                                replaced_by_id: string | null;
+                                section: {
+                                    id: string;
+                                    label: string;
+                                };
+                                snapshot: {
+                                    overall: unknown;
+                                } | {
+                                    [key: string]: unknown;
+                                };
+                                status: string;
+                                student: {
+                                    id: string;
+                                    name: string;
+                                };
+                                version: number;
+                                year: {
+                                    id: string;
+                                    name: string;
+                                };
+                            }[];
+                            papers: {
+                                locked: number;
+                                not_locked: number;
+                            };
+                            run: {
+                                at: string | null;
+                                done: number;
+                                error: string | null;
+                                id: string;
+                                kind: string;
+                                status: string;
+                                total: number;
+                            } | null;
+                            section: {
+                                id: string;
+                                label: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            at: string | null;
+                            done: number;
+                            error: string | null;
+                            id: string;
+                            kind: string;
+                            status: string;
+                            total: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            at: string | null;
+                            done: number;
+                            error: string | null;
+                            id: string;
+                            kind: string;
+                            status: string;
+                            total: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-cards.student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cards: {
+                                attendance: {
+                                    present_halves: number;
+                                    working: number;
+                                } | null;
+                                can: {
+                                    download: boolean;
+                                    reissue: boolean;
+                                    remark_class: boolean;
+                                    remark_subjects: unknown[];
+                                    review: boolean;
+                                };
+                                co_scholastic: {
+                                    [key: string]: string;
+                                };
+                                /** @description The areas and grades the class teacher chooses from (only for whoever may set them). */
+                                co_scholastic_options: string | null;
+                                current: boolean;
+                                has_pdf: boolean;
+                                history: {
+                                    [key: string]: unknown;
+                                }[];
+                                id: string;
+                                issued_at: string | null;
+                                reissue_reason: string | null;
+                                remarks: string[] | {
+                                    subjects: unknown[];
+                                };
+                                replaced_by_id: string | null;
+                                section: {
+                                    id: string;
+                                    label: string;
+                                };
+                                snapshot: {
+                                    overall: unknown;
+                                } | {
+                                    [key: string]: unknown;
+                                };
+                                status: string;
+                                student: {
+                                    id: string;
+                                    name: string;
+                                };
+                                version: number;
+                                year: {
+                                    id: string;
+                                    name: string;
+                                };
+                            }[];
+                            student: {
+                                id: string;
+                                name: string;
+                            };
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "report-templates.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            blocks: {
+                                options: {
+                                    [key: string]: unknown;
+                                };
+                                type: string;
+                            }[];
+                            grades: string[];
+                            has_letterhead: boolean;
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            updated_at: string | null;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "report-templates.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            blocks: {
+                                options: {
+                                    [key: string]: unknown;
+                                };
+                                type: string;
+                            }[];
+                            grades: string[];
+                            has_letterhead: boolean;
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "report-templates.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            blocks: {
+                                options: {
+                                    [key: string]: unknown;
+                                };
+                                type: string;
+                            }[];
+                            grades: string[];
+                            has_letterhead: boolean;
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "report-templates.letterhead": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Maximum file size: 1024 kilobytes.
+                     */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            blocks: {
+                                options: {
+                                    [key: string]: unknown;
+                                };
+                                type: string;
+                            }[];
+                            grades: string[];
+                            has_letterhead: boolean;
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "report-templates.letterhead.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            blocks: {
+                                options: {
+                                    [key: string]: unknown;
+                                };
+                                type: string;
+                            }[];
+                            grades: string[];
+                            has_letterhead: boolean;
+                            id: string;
+                            name: string;
+                            preset: string | null;
+                            updated_at: string | null;
+                        };
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "report-templates.presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        blocks: string;
+                        co_scholastic: string;
+                        data: {
+                            blocks: string;
+                            key: string;
+                            label: string;
+                            note: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
     "results.mine": {
         parameters: {
             query?: never;
@@ -11320,6 +14808,8 @@ export interface operations {
                                 subject: string;
                                 term: string | null;
                                 type: string | null;
+                                /** @description Set when the mark changed after families could see it. */
+                                updated_at: string | null;
                                 value: number | null;
                             }[];
                             student: {
@@ -11360,6 +14850,8 @@ export interface operations {
                                 subject: string;
                                 term: string | null;
                                 type: string | null;
+                                /** @description Set when the mark changed after families could see it. */
+                                updated_at: string | null;
                                 value: number | null;
                             }[];
                             student: {
@@ -12368,6 +15860,30 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "students.fees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
     "students.guardians.store": {
         parameters: {
             query?: never;
@@ -13207,6 +16723,39 @@ export interface operations {
                 };
             };
             403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "webhooks.payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                gateway: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Error overview. */
+                        message: string;
+                    };
+                };
+            };
         };
     };
 }

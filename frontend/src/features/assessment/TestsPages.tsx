@@ -14,6 +14,7 @@ import type { StudentProfile } from '@/features/people/api';
 import { apiGet } from '@/lib/api';
 import { formatDate, formatDateTime } from '@/lib/format';
 import { apiGetBody } from '@/lib/requests';
+import { FamilyCards } from '@/features/reports/FamilyCards';
 import { type AssessmentDetail, type AssessmentListItem, type Completion, type Correction, cellText, marks, paperChip, type StudentResults } from './api';
 
 const asDate = (ymd: string) => `${ymd}T12:00:00+05:30`;
@@ -402,11 +403,14 @@ export function ResultsPage() {
   const children = scopeOf(me).children;
   const [params, setParams] = useSearchParams();
   const chosen = params.get('student') ?? children[0] ?? null;
+  const tab = params.get('tab') === 'cards' ? 'cards' : 'marks';
+  const setTab = (next: 'marks' | 'cards') => setParams({ ...(chosen ? { student: chosen } : {}), ...(next === 'cards' ? { tab: 'cards' } : {}) }, { replace: true });
   const names = useQueries({ queries: children.map((id) => ({ queryKey: ['students', id], queryFn: apiGet<StudentProfile>(`/students/${id}`), retry: false })) });
   const results = useQuery({
     queryKey: ['marks', 'results', chosen ?? 'mine'],
     queryFn: apiGet<StudentResults>(chosen ? `/results/students/${chosen}` : '/results/mine'),
     retry: false,
+    enabled: tab === 'marks',
   });
 
   return (
@@ -420,7 +424,7 @@ export function ResultsPage() {
               type="button"
               role="tab"
               aria-selected={c === chosen}
-              onClick={() => setParams({ student: c }, { replace: true })}
+              onClick={() => setParams({ student: c, ...(tab === 'cards' ? { tab: 'cards' } : {}) }, { replace: true })}
               className={`h-11 rounded-full border px-4 text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring ${c === chosen ? 'border-primary bg-primary-soft text-primary' : 'border-border'}`}
             >
               {names[i]?.data?.name ?? t('tests.results.childN', { n: i + 1 })}
@@ -428,9 +432,24 @@ export function ResultsPage() {
           ))}
         </div>
       ) : null}
-      {results.isPending ? <Spinner label={t('common.loading')} /> : null}
-      {results.error ? <Alert tone="danger">{errorText(t, results.error)}</Alert> : null}
-      {results.data ? (
+      <div role="tablist" aria-label={t('tests.results.view')} className="flex gap-1 border-b border-border">
+        {(['marks', 'cards'] as const).map((k) => (
+          <button
+            key={k}
+            type="button"
+            role="tab"
+            aria-selected={tab === k}
+            onClick={() => setTab(k)}
+            className={`-mb-px h-11 border-b-2 px-4 text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring ${tab === k ? 'border-primary text-primary' : 'border-transparent text-muted'}`}
+          >
+            {t(`tests.results.tabs.${k}`)}
+          </button>
+        ))}
+      </div>
+      {tab === 'cards' ? <FamilyCards studentId={chosen} /> : null}
+      {tab === 'marks' && results.isPending ? <Spinner label={t('common.loading')} /> : null}
+      {tab === 'marks' && results.error ? <Alert tone="danger">{errorText(t, results.error)}</Alert> : null}
+      {tab === 'marks' && results.data ? (
         <>
           <p className="text-sm text-muted">{t('tests.results.for', { name: results.data.student.name })}</p>
           {results.data.results.length === 0 ? <EmptyState icon={<ClipboardList className="size-5" />} title={t('tests.results.none')} /> : null}
@@ -444,6 +463,11 @@ export function ResultsPage() {
                     {r.date ? ` · ${formatDate(asDate(r.date), i18n.language)}` : ''}
                   </p>
                 </div>
+                {r.updated_at ? (
+                  <span className="rounded-full bg-status-pending-bg px-2 py-0.5 text-xs font-medium text-status-pending-fg" title={t('tests.results.updatedOn', { date: formatDate(asDate(r.updated_at.slice(0, 10)), i18n.language) })}>
+                    {t('tests.results.updated')}
+                  </span>
+                ) : null}
                 <p className="text-lg font-semibold tabular-nums">
                   {r.code ? t(`tests.codeNames.${r.code}`) : `${r.value ?? '–'} / ${r.max_marks}`}
                 </p>

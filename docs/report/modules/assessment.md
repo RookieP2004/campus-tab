@@ -239,3 +239,4 @@ Fixed rules in code:
 | --- | --- | --- | --- |
 | 2026-11-27 | 0 | Page created from the template | Phase 0 starts the Application Report |
 | 2026-11-27 | 6 | Assessment module built: schemes with presets, exams and class tests, papers, the markbook with ETag conflicts, the lifecycle with transactional lock and publish, Principal-only corrections with step-up, results for parents and students, screens | Phase 6 of `docs/BUILD-PROMPTS.md` with the owner's six rules |
+| 2026-11-28 | 7 (fix 3) | A changed mark on an auto-published class test (before lock) carries `updated_at`; families see an "Updated" tag. Marks of a closed year are read-only | So a mark a family has seen never changes silently |

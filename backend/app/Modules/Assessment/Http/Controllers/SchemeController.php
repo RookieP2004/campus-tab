@@ -87,7 +87,7 @@ class SchemeController
             'grade_scale.*.min' => ['required', 'numeric', 'min:0', 'max:100'],
             'rules' => ['sometimes', 'array'],
             'rules.pass_percent' => ['sometimes', 'numeric', 'min:0', 'max:100'],
-            'rules.rounding' => ['sometimes', Rule::in(['half_up', 'up', 'down', 'none'])],
+            'rules.rounding' => ['sometimes', Rule::in(['half_up', 'half_even', 'up', 'down', 'none'])],
             'rules.best_of' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:10'],
             'rules.grace_marks' => ['sometimes', 'numeric', 'min:0', 'max:20'],
             'status' => ['sometimes', Rule::in(['draft', 'active'])],

@@ -135,7 +135,8 @@
           "properties": {
             "gateway": { "enum": ["none", "razorpay"] },
             "waiver_by": { "enum": ["principal", "chief"] },
-            "receipt_prefix": { "type": ["string", "null"], "maxLength": 30 }
+            "receipt_prefix": { "type": ["string", "null"], "maxLength": 30 },
+            "chief_alert_paise": { "type": "integer", "minimum": 0, "maximum": 100000000000 }
           }
         }
       }

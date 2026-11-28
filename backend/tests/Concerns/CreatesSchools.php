@@ -75,7 +75,9 @@ trait CreatesSchools
     public function schoolUser(Tenant $tenant, Role $role, bool $mfaEnabled = true, ?string $email = null, array $extraRoles = [], ?string $phone = null): User
     {
         return app(TenantContext::class)->run($tenant->id, fn () => tap(User::create([
-            'name' => Str::headline($role->value).' '.Str::random(4),
+            // Lower case only: tests check that words such as "SL" or "Dental" never leak, and a
+            // random upper-case suffix could contain them by chance.
+            'name' => Str::headline($role->value).' '.Str::lower(Str::random(4)),
             'email' => $email ?? Str::lower($role->value.'.'.Str::random(6).'@'.Str::lower($tenant->code).'.test'),
             'phone' => $phone ?? '+9197'.str_pad((string) random_int(0, 99_999_999), 8, '0', STR_PAD_LEFT),
             'password' => TestData::PASSWORD,

@@ -61,6 +61,15 @@ final class Aadhaar
             return false;
         }
 
+        // Record ids are not Aadhaar numbers. A MongoDB id (24 hex characters)
+        // or a ULID (26 characters) is random, so now and then it holds a run
+        // of 12 digits that passes the checksum; such a request used to be
+        // refused at random (a test that sent ids failed now and then).
+        $text = self::withoutIds($text);
+        if (strlen(trim($text)) < 12) {
+            return false;
+        }
+
         $whole = preg_replace('/[\s-]/', '', trim($text)) ?? '';
 
         if (self::isFullNumber($whole)) {
@@ -76,6 +85,17 @@ final class Aadhaar
         }
 
         return false;
+    }
+
+    /**
+     * Blanks out record ids: 24-hex MongoDB ids and 26-character ULIDs (with
+     * at least one letter, so a long run of plain digits is still checked).
+     */
+    public static function withoutIds(string $text): string
+    {
+        $text = preg_replace('/(?<![0-9A-Za-z])(?=[0-9a-fA-F]*[a-fA-F])[0-9a-fA-F]{24}(?![0-9A-Za-z])/', ' ', $text) ?? $text;
+
+        return preg_replace('/(?<![0-9A-Za-z])(?=[0-9A-HJKMNP-TV-Z]*[A-HJKMNP-TV-Z])[0-9A-HJKMNP-TV-Z]{26}(?![0-9A-Za-z])/', ' ', $text) ?? $text;
     }
 
     /**

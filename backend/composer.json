@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.4",
+        "bacon/bacon-qr-code": "^3.0",
         "dedoc/scramble": "^0.13.55",
         "laravel/framework": "^13.17",
         "laravel/horizon": "^5.52",
@@ -60,6 +61,7 @@
             "@php artisan migrate --force"
         ],
         "test": [
+            "Composer\\Config::disableProcessTimeout",
             "@php artisan config:clear --ansi @no_additional_args",
             "@php vendor/bin/pest --parallel"
         ],

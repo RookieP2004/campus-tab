@@ -14,6 +14,7 @@ import { LeaveRequestView } from '@/features/leave/LeaveRequestView';
 import { apiGet } from '@/lib/api';
 import { formatDate, formatDateTime } from '@/lib/format';
 import { apiGetBody } from '@/lib/requests';
+import { rupees } from '@/features/fees/api';
 
 /**
  * Other kinds of approval (mark corrections in Phase 6, fees in Phase 8)
@@ -21,6 +22,7 @@ import { apiGetBody } from '@/lib/requests';
  */
 const detailPanels: Partial<Record<ApprovalItem['kind'], ComponentType<{ id: string }>>> = {
   marks: lazy(() => import('@/features/assessment/CorrectionPanel').then((m) => ({ default: m.CorrectionPanel }))),
+  fees: lazy(() => import('@/features/fees/FeeApprovalPanel').then((m) => ({ default: m.FeeApprovalPanel }))),
 };
 
 function LeaveDetailPanel({ id }: { id: string }) {
@@ -32,7 +34,7 @@ function LeaveDetailPanel({ id }: { id: string }) {
 }
 
 function ItemLine({ item }: { item: ApprovalItem }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dates = useLeaveDates();
   const s = (item.subtitle ?? {}) as Record<string, string | number | boolean | null>;
 
@@ -51,6 +53,13 @@ function ItemLine({ item }: { item: ApprovalItem }) {
     const next = s.new as { value: number | null; code: string | null } | undefined;
     const show = (m?: { value: number | null; code: string | null }) => (m ? (m.code ?? (m.value === null ? '–' : String(m.value))) : '–');
     return <>{t('approvals.marksLine', { old: show(old), new: show(next), name: String(s.by ?? '') })}</>;
+  }
+
+  if (item.kind === 'fees') {
+    const amount = typeof s.amount_paise === 'number' ? rupees(s.amount_paise, i18n.language) : '';
+    if (s.type === 'adjustment') return <>{t('approvals.feesAdjustment', { kind: t(`fees.kinds.${String(s.adjustment_kind)}`), amount, name: String(s.by ?? '') })}</>;
+    if (s.type === 'cancellation') return <>{t('approvals.feesCancellation', { amount, name: String(s.by ?? '') })}</>;
+    if (s.type === 'closing') return <>{t('approvals.feesClosing', { amount })}</>;
   }
 
   return <>{item.detail ?? ''}</>;
@@ -82,7 +91,8 @@ export function ApprovalsPage() {
   // A tab with nothing left in it (everything decided) falls back to All.
   const tab = requested !== 'all' && inbox.data && !kinds.includes(requested) ? 'all' : requested;
   const items = (inbox.data?.data ?? []).filter((i) => tab === 'all' || i.kind === tab);
-  const [kind, id] = item ? (item.split(':') as [ApprovalItem['kind'], string]) : [null, null];
+  // "fees:adjustment:<id>": the kind, then the item's own id (which may hold a colon).
+  const [kind, id] = item ? ([item.split(':')[0] as ApprovalItem['kind'], item.split(':').slice(1).join(':')] as const) : [null, null];
   const open = (next: string | null) => {
     const p = new URLSearchParams(params);
     if (next) p.set('item', next);

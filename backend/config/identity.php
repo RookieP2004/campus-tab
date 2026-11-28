@@ -36,7 +36,7 @@ return [
     | Step-up MFA: these actions ask for a fresh TOTP code. Routes name an
     | action with the middleware step-up:<action>; a name not in this list is
     | a programming error and fails loudly. Later phases add fee rebates,
-    | waivers here.
+    | waivers here (done in Phase 8).
     */
     'step_up' => [
         'valid_minutes' => 10,
@@ -47,6 +47,8 @@ return [
             'marks_correction_approve', // the Principal approving a change to a locked mark (Phase 6)
             'support_grant',
             'mfa_reset',          // switching off someone else's MFA (lost authenticator)
+            'fees_adjust_approve',    // approving a rebate, waiver, refund or other fee adjustment (Phase 8)
+            'receipt_cancel_approve', // approving a receipt cancellation (Phase 8)
         ],
     ],
 
